@@ -3,6 +3,7 @@
  */
 // import { useUser } from "@/context/UserProvider";
 import { ROLES } from "@/constants/role";
+import { useUser } from "@/context/UserProvider/UserProvider";
 import { useForm } from "@/hooks/useForm";
 import { object, ref, string } from "yup";
 
@@ -23,7 +24,7 @@ const validationSchema = object({
 });
 
 export const useSignUpForm = () => {
-  // const { signUp } = useUser();
+  const { signUp } = useUser();
 
   const form = useForm({
     validationSchema,
@@ -40,7 +41,7 @@ export const useSignUpForm = () => {
   const onSubmit = async ({ role, firstName, lastName, email, password }) => {
     const payload = { role, firstName, lastName, email, password };
 
-    // await signUp(payload);
+    await signUp(payload);
   };
 
   return {

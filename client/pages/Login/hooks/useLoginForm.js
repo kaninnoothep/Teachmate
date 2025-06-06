@@ -3,7 +3,7 @@
  */
 import { object, string } from "yup";
 import { useForm } from "@/hooks/useForm";
-// import { useUser } from "@/context/UserProvider";
+import { useUser } from "@/context/UserProvider/UserProvider";
 
 // Validation for Login page form
 const validationSchema = object({
@@ -18,18 +18,18 @@ const validationSchema = object({
  * useLoginForm - Custom hook to manage Login form
  */
 export const useLoginForm = () => {
-  // const { login } = useUser();
+  const { login } = useUser();
   const form = useForm({ validationSchema });
 
   const onSubmit = async (formValues) => {
-    // await login(formValues, {
-    //   onError: () => {
-    //     form.setError("email");
-    //     form.setError("password", {
-    //       message: "Email or password is incorrect!",
-    //     });
-    //   },
-    // });
+    await login(formValues, {
+      onError: () => {
+        form.setError("email");
+        form.setError("password", {
+          message: "Email or password is incorrect!",
+        });
+      },
+    });
   };
 
   return {
