@@ -43,4 +43,7 @@ export default [
   pluginReact.configs.flat.recommended,
   pluginReact.configs.flat["jsx-runtime"],
   ...pluginQuery.configs["flat/recommended"],
+  {
+    rules: { "react/prop-types": "off" },
+  },
 ];
