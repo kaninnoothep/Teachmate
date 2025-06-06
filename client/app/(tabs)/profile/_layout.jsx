@@ -1,5 +1,6 @@
 import { BackButton } from "@/components/BackButton/BackButton";
 import { LogoHeaderTitle } from "@/components/LogoHeaderTitle/LogoHeaderTitle";
+import { LogoutButton } from "@/components/LogoutButton/LogoutButton";
 import { Stack } from "expo-router";
 import { useTheme } from "react-native-paper";
 
@@ -20,6 +21,7 @@ export default function ProfileLayout() {
         options={{
           title: "Profile",
           headerTitle: () => <LogoHeaderTitle />,
+          headerRight: () => <LogoutButton />,
         }}
       />
 
