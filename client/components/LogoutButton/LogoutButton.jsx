@@ -18,8 +18,6 @@ export const LogoutButton = () => {
     <TouchableOpacity
       onPress={handleLogout}
       style={{
-        // borderWidth: 1,
-        // borderColor: "red",
         marginRight: -16,
         width: 48,
         height: 40,
@@ -31,7 +29,6 @@ export const LogoutButton = () => {
         name="log-out"
         size={24}
         color={theme.colors.inverseText}
-        // style={{ marginLeft: 18 }}
       />
     </TouchableOpacity>
   );
