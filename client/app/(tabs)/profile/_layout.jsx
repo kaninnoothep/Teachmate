@@ -34,6 +34,16 @@ export default function ProfileLayout() {
           headerLeft: () => <BackButton />,
         }}
       />
+
+      {/* Availability Screen */}
+      <Stack.Screen
+        name="availability"
+        options={{
+          title: "Availability",
+          headerTintColor: theme.colors.inverseText,
+          headerLeft: () => <BackButton />,
+        }}
+      />
     </Stack>
   );
 }

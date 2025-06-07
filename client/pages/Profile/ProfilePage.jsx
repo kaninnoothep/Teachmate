@@ -86,7 +86,7 @@ export const ProfilePage = () => {
 
         {/* Availability */}
         <Divider />
-        <TouchableOpacity onPress={() => router.push("/profile/account")}>
+        <TouchableOpacity onPress={() => router.push("/profile/availability")}>
           <View style={[styles.container, styles.availability]}>
             <Text variant="titleLarge">Availability</Text>
             <MaterialCommunityIcons
