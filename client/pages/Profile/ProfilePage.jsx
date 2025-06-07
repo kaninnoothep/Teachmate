@@ -103,7 +103,7 @@ export const ProfilePage = () => {
           <View style={styles.titleWrapper}>
             <Text variant="titleLarge">Preferred Location</Text>
             <TouchableOpacity
-              onPress={() => router.push("/profile/account")}
+              onPress={() => router.push("/profile/preferredLocation")}
               style={{ padding: 4 }}
             >
               <MaterialCommunityIcons

@@ -44,6 +44,16 @@ export default function ProfileLayout() {
           headerLeft: () => <BackButton />,
         }}
       />
+
+      {/* Preferred Location Screen */}
+      <Stack.Screen
+        name="preferredLocation"
+        options={{
+          title: "Preferred Location",
+          headerTintColor: theme.colors.inverseText,
+          headerLeft: () => <BackButton />,
+        }}
+      />
     </Stack>
   );
 }
