@@ -30,6 +30,7 @@ export default function ProfileLayout() {
         name="account"
         options={{
           title: "Account",
+          headerTintColor: theme.colors.inverseText,
           headerLeft: () => <BackButton />,
         }}
       />

@@ -26,7 +26,7 @@ export const Colors = {
     onSurface: "rgb(26, 28, 30)",
     surfaceVariant: "rgb(223, 226, 235)",
     onSurfaceVariant: "rgb(67, 71, 78)",
-    outline: "#BFBFBF",
+    outline: "#E0E0E0",
     outlineVariant: "rgb(195, 198, 207)",
     shadow: "rgb(0, 0, 0)",
     scrim: "rgb(0, 0, 0)",
@@ -49,6 +49,9 @@ export const Colors = {
     warning: "#FACB5C",
     onSurfacePrimary: "#F5FAFF",
     onSurfacePrimary2: "#D1E7FF",
+    tabBackground: "#FCFCFC",
+    white: "#FFF",
+    divider: "#ECECEC",
   },
   dark: {
     text: "#FFFFFF",
@@ -101,5 +104,8 @@ export const Colors = {
     dangerZoneBackground: "rgb(32, 37, 41)",
     onSurfacePrimary: "#324754",
     onSurfacePrimary2: "#2A3035",
+    tabBackground: "#FCFCFC",
+    white: "#FFF",
+    divider: "#ECECEC",
   },
 };

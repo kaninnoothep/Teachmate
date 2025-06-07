@@ -13,7 +13,7 @@ export const BackButton = ({ onPress }) => {
       <MaterialCommunityIcons
         name="chevron-left"
         size={40}
-        color={theme.colors.text}
+        color={theme.colors.inverseText}
         style={{ marginLeft: -14 }}
       />
     </TouchableOpacity>

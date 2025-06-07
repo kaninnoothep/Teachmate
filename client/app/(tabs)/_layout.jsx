@@ -1,20 +1,24 @@
 import { Redirect, Tabs } from "expo-router";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
-import { Colors } from "@/constants/Colors";
 import { useUser } from "@/context/UserProvider/UserProvider";
+import { useTheme } from "react-native-paper";
 
 export default function TabLayout() {
   const { user } = useUser();
+  const theme = useTheme();
 
-  if (!user) {
-    return <Redirect href="/login" />;
-  }
+  // if (!user) {
+  //   return <Redirect href="/login" />;
+  // }
 
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors.light.primary,
+        tabBarActiveTintColor: theme.colors.primary,
         headerShown: false,
+        tabBarStyle: {
+          backgroundColor: theme.colors.tabBackground,
+        },
       }}
     >
       <Tabs.Screen

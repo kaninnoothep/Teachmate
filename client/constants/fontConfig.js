@@ -9,7 +9,7 @@ export const fontConfig = {
   headlineLarge: { fontWeight: "600" },
   headlineMedium: { fontWeight: "600" },
   headlineSmall: { fontWeight: "600" },
-  titleLarge: { fontWeight: "500" },
+  titleLarge: { fontWeight: "600" },
   caption: {
     fontFamily: Platform.select({
       web: 'Inter, "Helvetica Neue", Helvetica, Arial, sans-serif',

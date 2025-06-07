@@ -18,18 +18,14 @@ export const LogoutButton = () => {
     <TouchableOpacity
       onPress={handleLogout}
       style={{
-        marginRight: -16,
+        marginRight: -10,
         width: 48,
         height: 40,
         justifyContent: "center",
         alignItems: "center",
       }}
     >
-      <Feather
-        name="log-out"
-        size={24}
-        color={theme.colors.inverseText}
-      />
+      <Feather name="log-out" size={24} color={theme.colors.inverseText} />
     </TouchableOpacity>
   );
 };

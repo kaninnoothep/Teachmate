@@ -52,13 +52,14 @@ export const UserProvider = ({ children }) => {
 
   // Handle Set User
   const handleSetUser = async (userResponse) => {
-    const { _id, firstName, lastName, email } = userResponse.data;
+    const { _id, firstName, lastName, email, role } = userResponse.data;
 
     const userObject = {
       _id,
       firstName,
       lastName,
       email,
+      role,
     };
 
     setUser(userObject);
