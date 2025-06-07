@@ -1,6 +1,10 @@
 import { useState } from "react";
 import { View } from "react-native";
-import { HelperText, TextInput as PaperTextInput } from "react-native-paper";
+import {
+  HelperText,
+  TextInput as PaperTextInput,
+  useTheme,
+} from "react-native-paper";
 import { styles } from "./TextInput.styles";
 import PropTypes from "prop-types";
 
@@ -20,6 +24,7 @@ export const TextInput = ({
   ...props
 }) => {
   const [enableSecureText, setEnableSecureText] = useState(secureTextEntry);
+  const paperTheme = useTheme();
 
   return (
     <View
@@ -29,6 +34,7 @@ export const TextInput = ({
         theme={{ roundness: 10, ...theme }}
         style={style}
         secureTextEntry={enableSecureText}
+        placeholderTextColor={paperTheme.colors.textSecondary}
         right={
           !right &&
           secureTextEntry && (

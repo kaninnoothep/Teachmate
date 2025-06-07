@@ -77,7 +77,7 @@ export const SignUpPage = () => {
         <FormTextInput
           name="firstName"
           label="First Name *"
-          placeholder="e.g. John"
+          placeholder="e.g., John"
           fullWidth
           {...{ control }}
         />
@@ -85,7 +85,7 @@ export const SignUpPage = () => {
         <FormTextInput
           name="lastName"
           label="Last Name *"
-          placeholder="e.g. Smith"
+          placeholder="e.g., Smith"
           fullWidth
           {...{ control }}
         />

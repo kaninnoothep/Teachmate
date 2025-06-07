@@ -37,10 +37,6 @@ export const useStyles = (theme) =>
       alignItems: "center",
       justifyContent: "space-between",
     },
-    divider: {
-      height: 2,
-      backgroundColor: theme.colors.divider,
-    },
     titleWrapper: {
       flexDirection: "row",
       justifyContent: "space-between",

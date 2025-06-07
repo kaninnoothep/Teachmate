@@ -1,11 +1,5 @@
-// import { AccountPage } from "@/pages/Account";
-import { View } from "react-native";
-import { Text } from "react-native-paper";
+import { AccountPage } from "@/pages/Account/AccountPage";
 
 export default function AccountScreen() {
-  return (
-    <View>
-      <Text>Account Page</Text>
-    </View>
-  );
+  return <AccountPage />;
 }

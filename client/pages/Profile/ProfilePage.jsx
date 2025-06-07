@@ -1,13 +1,14 @@
 import { Button } from "@/components/Button/Button";
 import { useUser } from "@/context/UserProvider/UserProvider";
 import { Pressable, ScrollView, TouchableOpacity, View } from "react-native";
-import { Avatar, Divider, Text, useTheme } from "react-native-paper";
+import { Avatar, Text, useTheme } from "react-native-paper";
 import { useStyles } from "./ProfilePage.styles";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { useRouter } from "expo-router";
 import { InfoItem } from "./units/InfoItem";
 import { Chip } from "@/components/Chip/Chip";
 import { BackgroundItem } from "./units/BackgroundItem";
+import { Divider } from "@/components/Divider/Divider";
 
 export const ProfilePage = () => {
   const { user } = useUser();
@@ -72,7 +73,7 @@ export const ProfilePage = () => {
         </View>
 
         {/* Availability */}
-        <Divider style={styles.divider} />
+        <Divider />
         <TouchableOpacity onPress={() => router.push("/profile/account")}>
           <View style={[styles.container, styles.availability]}>
             <Text variant="titleLarge">Availability</Text>
@@ -121,7 +122,7 @@ export const ProfilePage = () => {
         </View>
 
         {/* Education */}
-        <Divider style={styles.divider} />
+        <Divider />
         <View style={styles.container}>
           <View style={styles.titleWrapper}>
             <Text variant="titleLarge">Education</Text>
@@ -147,7 +148,7 @@ export const ProfilePage = () => {
         </View>
 
         {/* Experience */}
-        <Divider style={styles.divider} />
+        <Divider />
         <View style={styles.container}>
           <View style={styles.titleWrapper}>
             <Text variant="titleLarge">Experience</Text>
