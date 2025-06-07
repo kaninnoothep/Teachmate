@@ -99,7 +99,6 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     marginBottom: 16,
-    fontWeight: "600",
   },
   timeSlotsGrid: {
     flexDirection: "row",
