@@ -30,7 +30,10 @@ export const AccountPage = () => {
     <SafeKeyboardScrollView ignoreSafeArea>
       <Pressable style={{ paddingBottom: 40 }}>
         <View style={styles.container}>
-          <View style={styles.avatarWrapper}>
+          <Text variant="titleLarge" style={{ marginBottom: 8 }}>
+            Personal Info
+          </Text>
+          {/* <View style={styles.avatarWrapper}>
             <TouchableOpacity onPress={() => {}} style={styles.avatarContainer}>
               <Avatar.Text
                 size={96}
@@ -45,7 +48,7 @@ export const AccountPage = () => {
                 style={styles.iconContainer}
               />
             </TouchableOpacity>
-          </View>
+          </View> */}
 
           <FormTextInput
             name="firstName"

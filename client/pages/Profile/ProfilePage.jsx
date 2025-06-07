@@ -23,11 +23,23 @@ export const ProfilePage = () => {
         <View style={styles.mainList}>
           <View style={styles.listContainer}>
             <View style={styles.leftWrapper}>
-              <Avatar.Text
-                size={100}
-                label={`${user.firstName[0]}${user.lastName[0]}`}
-                style={{ backgroundColor: theme.colors.primary }}
-              />
+              <TouchableOpacity
+                onPress={() => {}}
+                style={styles.avatarContainer}
+              >
+                <Avatar.Text
+                  size={100}
+                  label={`${user.firstName[0]}${user.lastName[0]}`}
+                  style={{ backgroundColor: theme.colors.primary }}
+                />
+
+                <MaterialCommunityIcons
+                  name="plus-circle"
+                  size={24}
+                  color={theme.colors.textSecondary}
+                  style={styles.iconContainer}
+                />
+              </TouchableOpacity>
 
               <Text variant="headlineSmall" style={{ fontWeight: 700 }}>
                 {user.firstName} {user.lastName}

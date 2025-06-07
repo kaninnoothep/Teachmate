@@ -27,6 +27,20 @@ export const useStyles = (theme) =>
       alignItems: "center",
       gap: 16,
     },
+    avatarContainer: {
+      position: "relative",
+    },
+    iconContainer: {
+      position: "absolute",
+      bottom: 0,
+      right: 0,
+      width: 24,
+      height: 24,
+      borderRadius: 50,
+      justifyContent: "center",
+      alignItems: "center",
+      backgroundColor: "white",
+    },
     contactContainer: {
       marginTop: -32,
       gap: 8,
