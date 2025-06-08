@@ -15,6 +15,28 @@ export const ProfilePage = () => {
   const styles = useStyles(theme);
   const router = useRouter();
 
+  // Helper function to format location string
+  const formatLocation = () => {
+    const locationParts = [];
+
+    if (user.city) {
+      locationParts.push(user.city);
+    }
+
+    if (user.postalCode) {
+      locationParts.push(user.postalCode);
+    }
+
+    if (user.country?.name) {
+      locationParts.push(user.country.name);
+    }
+
+    return locationParts.join(", ");
+  };
+
+  // Check if user has any location data
+  const hasLocationData = user.city || user.postalCode || user.country?.name;
+
   return (
     <ScrollView contentContainerStyle={styles.scrollContainer}>
       <Pressable>
@@ -61,26 +83,17 @@ export const ProfilePage = () => {
         {/* Contact Info */}
         <View style={[styles.container, styles.contactContainer]}>
           <InfoItem icon="email" value={user.email} />
-          <InfoItem icon="phone" value={"user.phone"} />
-          <InfoItem
-            icon="map-marker"
-            value={"Regina, Saskatchewan, S4S 3H1, Canada"}
-          />
+          {user.phone && <InfoItem icon="phone" value={user.phone} />}
+          {hasLocationData && (
+            <InfoItem icon="map-marker" value={formatLocation()} />
+          )}
         </View>
 
         {/* About */}
         <View style={styles.container}>
           <Text variant="titleLarge">About {user.firstName}</Text>
-          <Chip value={`$25/hour`} />
-          <Text variant="bodyMedium">
-            Lorem ipsum dolor sit amet consectetur. Pharetra egestas augue
-            turpis dolor posuere rhoncus. At vulputate sagittis fames et sed
-            neque facilisis et nisl. Sed facilisis lectus nunc at massa dictum
-            varius. Odio scelerisque massa elit odio pulvinar feugiat justo
-            quam. Aenean urna turpis eu id. Volutpat purus mattis erat rhoncus
-            viverra at non sed. Et pellentesque dictumst velit vulputate sit
-            nibh ullamcorper arcu aliquet.
-          </Text>
+          <Chip value={`$${user.hourlyRate}/hour`} />
+          <Text variant="bodyMedium">{user.about}</Text>
         </View>
 
         {/* Availability */}
