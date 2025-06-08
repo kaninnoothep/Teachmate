@@ -43,7 +43,10 @@ export const MonthYearPicker = ({
     { label: "December", value: "12" },
   ];
 
-  const years = Array.from({ length: 100 }, (_, i) => currentYear - i);
+  const years = Array.from(
+    { length: 100 },
+    (_, i) => currentYear - i
+  ).reverse();
 
   // Function to get available months for a given year
   const getAvailableMonths = (year) => {
