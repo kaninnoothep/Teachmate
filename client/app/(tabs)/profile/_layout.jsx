@@ -74,6 +74,26 @@ export default function ProfileLayout() {
           headerLeft: () => <BackButton />,
         }}
       />
+
+      {/* Add Experience Screen */}
+      <Stack.Screen
+        name="experience/index"
+        options={{
+          title: "Experience",
+          headerTintColor: theme.colors.inverseText,
+          headerLeft: () => <BackButton />,
+        }}
+      />
+
+      {/* Update Experience Screen */}
+      <Stack.Screen
+        name="experience/[experienceId]"
+        options={{
+          title: "Experience",
+          headerTintColor: theme.colors.inverseText,
+          headerLeft: () => <BackButton />,
+        }}
+      />
     </Stack>
   );
 }

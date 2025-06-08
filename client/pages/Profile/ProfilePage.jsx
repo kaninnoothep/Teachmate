@@ -165,7 +165,7 @@ export const ProfilePage = () => {
           <View style={styles.titleWrapper}>
             <Text variant="titleLarge">Experience</Text>
             <TouchableOpacity
-              onPress={() => router.push("/profile/account")}
+              onPress={() => router.push("/profile/experience")}
               style={{ padding: 4 }}
             >
               <MaterialCommunityIcons
@@ -181,7 +181,7 @@ export const ProfilePage = () => {
             title={"University of Regina"}
             subtitle={`Master of Science (MS), Mathematics`}
             durationText={`Jan 2021 - Oct 2023`}
-            onPressEdit={() => {}}
+            onPressEdit={() => router.push("/profile/experience/1234")}
           />
         </View>
       </Pressable>

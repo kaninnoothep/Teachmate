@@ -4,32 +4,26 @@ import { FormTextInput } from "@/components/Form/FormTextInput/FormTextInput";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useMemo, useState } from "react";
-import {
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  View,
-  TouchableOpacity,
-} from "react-native";
+import { Pressable, ScrollView, StyleSheet, View } from "react-native";
 import { Text, useTheme } from "react-native-paper";
-import { useEducationForm } from "./hooks/useEducationForm";
+import { useExperienceForm } from "./hooks/useExperienceForm";
 import { MonthYearPicker } from "@/components/MonthYearPicker/MonthYearPicker";
 import { DatePickerButton } from "@/components/MonthYearPicker/DatePickerButton";
 
-export const EducationPage = () => {
-  const { educationId } = useLocalSearchParams();
+export const ExperiencePage = () => {
+  const { experienceId } = useLocalSearchParams();
   const theme = useTheme();
   const router = useRouter();
-  const { control, handleSubmit } = useEducationForm();
+  const { control, handleSubmit } = useExperienceForm();
 
   const [showStartDatePicker, setShowStartDatePicker] = useState(false);
   const [showEndDatePicker, setShowEndDatePicker] = useState(false);
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
 
-  const isAdd = useMemo(() => !educationId, [educationId]);
+  const isAdd = useMemo(() => !experienceId, [experienceId]);
 
-  const pageTitle = () => (isAdd ? "Add Education" : "Update Education");
+  const pageTitle = () => (isAdd ? "Add Experience" : "Update Experience");
 
   const handleStartDateSelect = (dateData) => {
     setStartDate(dateData);
@@ -46,25 +40,17 @@ export const EducationPage = () => {
           <Text variant="headlineSmall">{pageTitle()}</Text>
 
           <FormTextInput
-            name="school"
-            label="School *"
-            placeholder="e.g., University of Regina"
+            name="title"
+            label="Title *"
+            placeholder="e.g., Software Developer"
             fullWidth
             {...{ control }}
           />
 
           <FormTextInput
-            name="degree"
-            label="Degree"
-            placeholder="e.g., Master of Science"
-            fullWidth
-            {...{ control }}
-          />
-
-          <FormTextInput
-            name="fieldOfStudy"
-            label="Field of Study"
-            placeholder="e.g., Mathematics"
+            name="company"
+            label="Company or Organization"
+            placeholder="e.g., Microsoft"
             fullWidth
             {...{ control }}
           />
@@ -104,7 +90,7 @@ export const EducationPage = () => {
                   />
                 )}
               >
-                Delete Education
+                Delete Experience
               </Button>
             </View>
           </>
