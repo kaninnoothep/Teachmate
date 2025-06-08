@@ -1,6 +1,6 @@
 import { Divider as PaperDivider, useTheme } from "react-native-paper";
 
-export const Divider = () => {
+export const Divider = ({ style }) => {
   const theme = useTheme();
 
   return (
@@ -8,6 +8,7 @@ export const Divider = () => {
       style={{
         height: 2,
         backgroundColor: theme.colors.divider,
+        ...style,
       }}
     />
   );
