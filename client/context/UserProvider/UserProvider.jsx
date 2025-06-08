@@ -52,15 +52,8 @@ export const UserProvider = ({ children }) => {
 
   // Handle Set User
   const handleSetUser = async (userResponse) => {
-    const { _id, firstName, lastName, email, role } = userResponse.data;
-
-    const userObject = {
-      _id,
-      firstName,
-      lastName,
-      email,
-      role,
-    };
+    // eslint-disable-next-line no-unused-vars
+    const { password, ...userObject } = userResponse.data;
 
     setUser(userObject);
     await storeData(ACCESS_USER_KEY, JSON.stringify(userObject));

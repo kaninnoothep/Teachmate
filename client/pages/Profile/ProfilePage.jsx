@@ -1,4 +1,3 @@
-import { Button } from "@/components/Button/Button";
 import { useUser } from "@/context/UserProvider/UserProvider";
 import { Pressable, ScrollView, TouchableOpacity, View } from "react-native";
 import { Avatar, Text, useTheme } from "react-native-paper";

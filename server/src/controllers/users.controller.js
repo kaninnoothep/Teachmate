@@ -41,7 +41,7 @@ async function login(req, res) {
 
 async function updateUser(req, res) {
   try {
-    const response = await usersServices.updateUser(req.body);
+    const response = await usersServices.updateUser(req.user, req.body);
     res.status(response.statusCode).json(response);
   } catch (error) {
     res.status(500).json({

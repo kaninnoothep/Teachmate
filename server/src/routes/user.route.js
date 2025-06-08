@@ -16,7 +16,11 @@ router.post("/create-account", userControllers.createAccount);
 router.post("/login", userControllers.login);
 
 // POST request to /update-user
-router.post("/update-user", userControllers.updateUser);
+router.post(
+  "/update-user",
+  authMiddleware.authenticate,
+  userControllers.updateUser
+);
 
 /**
  * Export router object

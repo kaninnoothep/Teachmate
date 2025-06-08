@@ -94,8 +94,8 @@ async function login(payload) {
   };
 }
 
-async function updateUser(payload) {
-  const currentUser = await users.findById(payload._id);
+async function updateUser(user, payload) {
+  const currentUser = await users.findById(user._id);
   if (!currentUser) {
     return {
       message: "User not found",
@@ -105,12 +105,12 @@ async function updateUser(payload) {
   }
 
   const updatedUser = await users.findByIdAndUpdate(
-    payload._id,
+    user._id,
     { $set: payload }, // Update the fields provided in the payload
     { new: true, useFindAndModify: false }
   );
 
-  // Check if the course was found and updated
+  // Check if the user was found and updated
   if (!updatedUser) {
     return {
       message: "User not found",

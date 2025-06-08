@@ -34,8 +34,14 @@ const userSchema = mongoose.Schema(
       required: false,
     },
     country: {
-      type: String,
-      required: false,
+      code: {
+        type: String,
+        required: false,
+      },
+      name: {
+        type: String,
+        required: false,
+      },
     },
     postalCode: {
       type: String,
@@ -46,10 +52,10 @@ const userSchema = mongoose.Schema(
       required: false,
     },
     hourlyRate: {
-      type: Number,
+      type: String,
       required: false,
     },
-    description: {
+    about: {
       type: String,
       required: false,
     },

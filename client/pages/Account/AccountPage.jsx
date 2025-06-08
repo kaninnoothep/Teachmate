@@ -2,13 +2,12 @@ import { FormTextInput } from "@/components/Form/FormTextInput/FormTextInput";
 import { useEditProfileForm } from "./hooks/useEditProfileForm";
 import { SafeKeyboardScrollView } from "@/components/SafeKeyboardScrollView/SafeKeyboardScrollView";
 import { Button } from "@/components/Button/Button";
-import { Avatar, Text, useTheme } from "react-native-paper";
+import { Text, useTheme } from "react-native-paper";
 import { useUser } from "@/context/UserProvider/UserProvider";
-import { Pressable, TouchableOpacity, View } from "react-native";
+import { Pressable, View } from "react-native";
 import { TextInput } from "@/components/TextInput/TextInput";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Divider } from "@/components/Divider/Divider";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useStyles } from "./AccountPage.styles";
 import { CountrySelector } from "@/components/CountrySelector/CountrySelector";
 
@@ -16,14 +15,24 @@ export const AccountPage = () => {
   const { user } = useUser();
   const theme = useTheme();
   const styles = useStyles(theme);
-  const { control, handleSubmit } = useEditProfileForm();
+  const { control, handleSubmit, setValue, watch } = useEditProfileForm();
 
-  const [countryCode, setCountryCode] = useState("");
-  const [country, setCountry] = useState(null);
+  const watchedCountry = watch("country");
 
-  const onCountrySelect = (country) => {
-    setCountryCode(country.cca2);
-    setCountry(country);
+  const [countryCode, setCountryCode] = useState(watchedCountry?.cca2 || "");
+
+  // Initialize country state from form values
+  useEffect(() => {
+    if (watchedCountry) {
+      setCountryCode(watchedCountry.cca2);
+    }
+  }, [watchedCountry]);
+
+  const onCountrySelect = (selectedCountry) => {
+    setCountryCode(selectedCountry.cca2);
+
+    // Update the form with the selected country
+    setValue("country", selectedCountry);
   };
 
   return (
@@ -99,10 +108,6 @@ export const AccountPage = () => {
             countryCode={countryCode}
           />
 
-          {/* {country !== null && (
-          <Text style={styles.data}>{JSON.stringify(country, null, 2)}</Text>
-        )} */}
-
           <FormTextInput
             name="postalCode"
             label="Postal Code"
@@ -139,7 +144,7 @@ export const AccountPage = () => {
           />
 
           <FormTextInput
-            name="description"
+            name="about"
             multiline
             label="Description"
             placeholder="Write some information about yourself..."

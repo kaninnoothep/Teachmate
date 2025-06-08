@@ -7,9 +7,9 @@ export default function TabLayout() {
   const { user } = useUser();
   const theme = useTheme();
 
-  // if (!user) {
-  //   return <Redirect href="/login" />;
-  // }
+  if (!user) {
+    return <Redirect href="/login" />;
+  }
 
   return (
     <Tabs
