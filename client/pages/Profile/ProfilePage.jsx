@@ -139,7 +139,7 @@ export const ProfilePage = () => {
           <View style={styles.titleWrapper}>
             <Text variant="titleLarge">Education</Text>
             <TouchableOpacity
-              onPress={() => router.push("/profile/account")}
+              onPress={() => router.push("/profile/education")}
               style={{ padding: 4 }}
             >
               <MaterialCommunityIcons
@@ -155,7 +155,7 @@ export const ProfilePage = () => {
             title={"University of Regina"}
             subtitle={`Master of Science (MS), Mathematics`}
             durationText={`Jan 2021 - Oct 2023`}
-            onPressEdit={() => {}}
+            onPressEdit={() => router.push("/profile/education/1234")}
           />
         </View>
 

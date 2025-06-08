@@ -54,6 +54,26 @@ export default function ProfileLayout() {
           headerLeft: () => <BackButton />,
         }}
       />
+
+      {/* Add Education Screen */}
+      <Stack.Screen
+        name="education/index"
+        options={{
+          title: "Education",
+          headerTintColor: theme.colors.inverseText,
+          headerLeft: () => <BackButton />,
+        }}
+      />
+
+      {/* Update Education Screen */}
+      <Stack.Screen
+        name="education/[educationId]"
+        options={{
+          title: "Education",
+          headerTintColor: theme.colors.inverseText,
+          headerLeft: () => <BackButton />,
+        }}
+      />
     </Stack>
   );
 }
