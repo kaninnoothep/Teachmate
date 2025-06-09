@@ -28,6 +28,6 @@ const useStyles = (theme) =>
       borderRadius: 20,
       borderWidth: 1,
       borderColor: theme.colors.outline,
-      backgroundColor: theme.colors.white,
+      backgroundColor: theme.colors.background,
     },
   });
