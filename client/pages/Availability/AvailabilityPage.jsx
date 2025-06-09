@@ -45,45 +45,30 @@ export const AvailabilityPage = () => {
 
   // Add this debugging useEffect to see what's in your availability data
   useEffect(() => {
-    console.log("Raw availability data:", availability);
     if (availability && availability.length > 0) {
       const initialMap = {};
-      availability.forEach((item, index) => {
-        console.log(`Processing availability item ${index}:`, item);
-        console.log(`Date from API: "${item.date}"`);
-        console.log(`Slots from API:`, item.slots);
-
+      availability.forEach((item) => {
         // Try different date parsing approaches
         const rawDate = item.date;
         const dateObj = new Date(rawDate);
         const dateKey = dateObj.toISOString().split("T")[0];
 
-        console.log(`Converted date key: "${dateKey}"`);
-
         initialMap[dateKey] = item.slots.map((s) => ({
           startTime: s.startTime,
           endTime: s.endTime,
         }));
-
-        console.log(`Mapped slots for ${dateKey}:`, initialMap[dateKey]);
       });
 
       setAvailabilityMap(initialMap);
-      console.log("Final availabilityMap:", initialMap);
-      console.log("Available date keys:", Object.keys(initialMap));
-    } else {
-      console.log("No availability data or empty array");
     }
   }, [availability]);
 
   // Updated handleChangeDate function that uses the most current availabilityMap
   const handleChangeDate = ({ dates }) => {
-    console.log("=== DATE CHANGE EVENT ===");
     setSelectedDates(dates);
     setShowDateWarning(false);
 
     if (dates.length === 0) {
-      console.log("No dates selected, clearing time slots");
       setSelectedTimeSlots([]);
       return;
     }
@@ -91,21 +76,10 @@ export const AvailabilityPage = () => {
     if (dates.length === 1) {
       const selectedDate = dates[0];
       const key = selectedDate.toISOString().split("T")[0];
-      console.log(`Single date selected: ${key}`);
 
       // Use functional update to get the most current availabilityMap
       setAvailabilityMap((currentAvailabilityMap) => {
-        console.log(
-          "Current availabilityMap in functional update:",
-          currentAvailabilityMap
-        );
-        console.log(
-          "AvailabilityMap keys:",
-          Object.keys(currentAvailabilityMap)
-        );
-
         const existingSlots = currentAvailabilityMap[key] || [];
-        console.log("Existing slots found:", existingSlots);
 
         setSelectedTimeSlots(existingSlots);
 
@@ -116,7 +90,6 @@ export const AvailabilityPage = () => {
       return;
     }
 
-    console.log("Multiple dates selected, comparing slots across dates");
     setAvailabilityMap((currentAvailabilityMap) => {
       const dateKeys = dates.map((date) => date.toISOString().split("T")[0]);
 
@@ -137,12 +110,8 @@ export const AvailabilityPage = () => {
       );
 
       if (allSame) {
-        console.log(
-          "All dates have the same slots — keeping current selection."
-        );
         setSelectedTimeSlots(slotsByDate[0]);
       } else {
-        console.log("Dates have different slots — clearing selection.");
         setSelectedTimeSlots([]);
         setShowDateWarning(true);
       }
@@ -150,15 +119,6 @@ export const AvailabilityPage = () => {
       return currentAvailabilityMap;
     });
   };
-
-  // Add this debug log right before your return statement in the component
-  console.log("=== RENDER DEBUG ===");
-  console.log("Current selectedTimeSlots:", selectedTimeSlots);
-  console.log(
-    "Current selectedDates:",
-    selectedDates.map((d) => d.toISOString().split("T")[0])
-  );
-  console.log("Current availabilityMap:", availabilityMap);
 
   const handleTimeSlotPress = (timeSlot) => {
     setSelectedTimeSlots((prev) => {
@@ -180,13 +140,10 @@ export const AvailabilityPage = () => {
     const formatDate = (date) => date.toISOString().split("T")[0];
 
     const payload = {
-      availability: selectedDates.map((date) => {
-        console.log("formatDate(date)", formatDate(date));
-        return {
-          date: formatDate(date),
-          slots: selectedTimeSlots,
-        };
-      }),
+      availability: selectedDates.map((date) => ({
+        date: formatDate(date),
+        slots: selectedTimeSlots,
+      })),
     };
 
     setAvailability(payload, {
@@ -201,8 +158,6 @@ export const AvailabilityPage = () => {
         setSelectedDates([]);
         setSelectedTimeSlots([]);
         setShowDateWarning(false);
-
-        console.log("updated", updated);
       },
       onError: (error) => {
         Toast.show({ type: "error", text1: error.message });
