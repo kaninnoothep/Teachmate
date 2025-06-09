@@ -51,12 +51,15 @@ export const useEditProfileForm = () => {
     },
   });
 
-  const onSubmit = async ({ country, ...res }) => {
+  const onSubmit = async ({ country, hourlyRate, ...res }) => {
     const tranformedCountry = {
       code: country?.cca2 || null,
       name: country?.name || null,
     };
-    const payload = { country: tranformedCountry, ...res };
+    const payload =
+      user.role === "tutor"
+        ? { country: tranformedCountry, hourlyRate, ...res }
+        : { country: tranformedCountry, ...res };
     console.log("payload", payload);
 
     await updateUser(payload);
