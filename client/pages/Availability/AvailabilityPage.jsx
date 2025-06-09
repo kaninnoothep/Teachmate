@@ -212,7 +212,9 @@ export const AvailabilityPage = () => {
         </View>
 
         <View style={styles.container}>
-          <Button onPress={handleSave}>Save</Button>
+          <Button onPress={handleSave} disabled={selectedDates.length === 0}>
+            Save
+          </Button>
         </View>
       </Pressable>
     </ScrollView>
