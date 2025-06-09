@@ -132,8 +132,8 @@ export const AvailabilityPage = () => {
   };
 
   const handleSave = () => {
-    if (selectedDates.length === 0 || selectedTimeSlots.length === 0) {
-      Toast.show({ type: "error", text1: "Please select Date and Time slots" });
+    if (selectedDates.length === 0) {
+      Toast.show({ type: "error", text1: "Please select Date" });
       return;
     }
 

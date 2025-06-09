@@ -133,7 +133,8 @@ async function updateUser(user, payload) {
  * @param {Object} user - Authenticated user object
  * @param {Array} availability - Array of availability objects to set
  * @returns Success or failure status
- */ async function setAvailability(user, newAvailability) {
+ */
+async function setAvailability(user, newAvailability) {
   if (!Array.isArray(newAvailability)) {
     return {
       message: "Availability must be an array",
@@ -143,7 +144,6 @@ async function updateUser(user, payload) {
   }
 
   const userDoc = await users.findById(user._id);
-
   if (!userDoc) {
     return {
       message: "User not found",
@@ -154,22 +154,27 @@ async function updateUser(user, payload) {
 
   const existingAvailability = userDoc.availability || [];
 
-  // Convert to a map for easy merging
+  // Step 1: Map existing availability by date
   const availabilityMap = new Map();
-
-  // Add existing availability to the map
   for (const entry of existingAvailability) {
     const dateKey = new Date(entry.date).toISOString().split("T")[0];
     availabilityMap.set(dateKey, entry.slots);
   }
 
-  // Merge new availability, overriding same-date entries
+  // Step 2: Update or remove based on new availability
   for (const entry of newAvailability) {
     const dateKey = new Date(entry.date).toISOString().split("T")[0];
-    availabilityMap.set(dateKey, entry.slots);
+
+    if (entry.slots && entry.slots.length > 0) {
+      // Set or replace slots for the date
+      availabilityMap.set(dateKey, entry.slots);
+    } else {
+      // Remove the date if slots are empty
+      availabilityMap.delete(dateKey);
+    }
   }
 
-  // Convert map back to array
+  // Step 3: Convert map back to array
   const mergedAvailability = Array.from(availabilityMap.entries()).map(
     ([date, slots]) => ({
       date: new Date(date),
@@ -178,7 +183,6 @@ async function updateUser(user, payload) {
   );
 
   userDoc.availability = mergedAvailability;
-
   await userDoc.save();
 
   return {
