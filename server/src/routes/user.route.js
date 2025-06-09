@@ -22,6 +22,20 @@ router.post(
   userControllers.updateUser
 );
 
+// POST request to /set-availability
+router.post(
+  "/set-availability",
+  authMiddleware.authenticate,
+  userControllers.setAvailability
+);
+
+// GET request to /get-availability
+router.get(
+  "/get-availability",
+  authMiddleware.authenticate,
+  userControllers.getAvailability
+);
+
 /**
  * Export router object
  */

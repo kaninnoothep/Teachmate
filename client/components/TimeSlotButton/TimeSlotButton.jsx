@@ -21,7 +21,7 @@ export const TimeSlotButton = ({ timeSlot, isSelected, onPress, theme }) => (
         fontWeight: isSelected ? "600" : "400",
       }}
     >
-      {timeSlot}
+      {timeSlot.startTime} - {timeSlot.endTime}
     </Text>
   </Pressable>
 );

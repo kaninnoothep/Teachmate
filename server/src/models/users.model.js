@@ -59,6 +59,18 @@ const userSchema = mongoose.Schema(
       type: String,
       required: false,
     },
+    availability: [
+      {
+        date: Date,
+        slots: [
+          {
+            startTime: String,
+            endTime: String,
+            isBooked: { type: Boolean, default: false },
+          },
+        ],
+      },
+    ],
   },
   {
     timestamps: true,

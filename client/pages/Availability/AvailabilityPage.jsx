@@ -2,62 +2,257 @@ import { Button } from "@/components/Button/Button";
 import { DatePicker } from "@/components/DatePicker/DatePicker";
 import { Divider } from "@/components/Divider/Divider";
 import { TimeSlotButton } from "@/components/TimeSlotButton/TimeSlotButton";
-import { useState } from "react";
-import { ScrollView, StyleSheet, View } from "react-native";
+import { useAvailabilityQuery } from "@/services/api/user/useAvailabilityQuery";
+import { useSetAvailabilityMutation } from "@/services/api/user/useSetAvailabilityMutation";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { useEffect, useState } from "react";
+import { Pressable, ScrollView, StyleSheet, View } from "react-native";
 import { Text, useTheme } from "react-native-paper";
+import Toast from "react-native-toast-message";
 
 // Time slots data
 const TIME_SLOTS = [
-  "6:00 - 7:00",
-  "7:00 - 8:00",
-  "8:00 - 9:00",
-  "9:00 - 10:00",
-  "10:00 - 11:00",
-  "11:00 - 12:00",
-  "12:00 - 13:00",
-  "13:00 - 14:00",
-  "14:00 - 15:00",
-  "15:00 - 16:00",
-  "16:00 - 17:00",
-  "17:00 - 18:00",
-  "18:00 - 19:00",
-  "19:00 - 20:00",
-  "20:00 - 21:00",
-  "21:00 - 22:00",
+  { startTime: "06:00", endTime: "07:00" },
+  { startTime: "07:00", endTime: "08:00" },
+  { startTime: "08:00", endTime: "09:00" },
+  { startTime: "09:00", endTime: "10:00" },
+  { startTime: "10:00", endTime: "11:00" },
+  { startTime: "11:00", endTime: "12:00" },
+  { startTime: "12:00", endTime: "13:00" },
+  { startTime: "13:00", endTime: "14:00" },
+  { startTime: "14:00", endTime: "15:00" },
+  { startTime: "15:00", endTime: "16:00" },
+  { startTime: "16:00", endTime: "17:00" },
+  { startTime: "17:00", endTime: "18:00" },
+  { startTime: "18:00", endTime: "19:00" },
+  { startTime: "19:00", endTime: "20:00" },
+  { startTime: "20:00", endTime: "21:00" },
+  { startTime: "21:00", endTime: "22:00" },
 ];
+const isSameSlot = (a, b) =>
+  a.startTime === b.startTime && a.endTime === b.endTime;
 
 export const AvailabilityPage = () => {
+  const { availability, isFetching } = useAvailabilityQuery();
   const theme = useTheme();
+  const styles = useStyles(theme);
   const today = new Date();
+  const [availabilityMap, setAvailabilityMap] = useState({});
   const [selectedDates, setSelectedDates] = useState([]);
   const [selectedTimeSlots, setSelectedTimeSlots] = useState([]);
+  const [showDateWarning, setShowDateWarning] = useState(false);
+  const { mutateAsync: setAvailability } = useSetAvailabilityMutation({});
+
+  // const handleChangeDate = ({ dates }) => {
+  //   // Compare time slots of selected dates
+  //   const commonSlots = dates.reduce((acc, date, index) => {
+  //     const key = date.toISOString().split("T")[0];
+  //     const slots = availabilityMap[key] || [];
+  //     if (index === 0) return new Set(slots);
+  //     return new Set([...acc].filter((slot) => slots.includes(slot)));
+  //   }, new Set());
+
+  //   setSelectedDates(dates);
+  //   setSelectedTimeSlots(Array.from(commonSlots));
+  // };
+
+  // Add this debugging useEffect to see what's in your availability data
+  useEffect(() => {
+    console.log("Raw availability data:", availability);
+    if (availability && availability.length > 0) {
+      const initialMap = {};
+      availability.forEach((item, index) => {
+        console.log(`Processing availability item ${index}:`, item);
+        console.log(`Date from API: "${item.date}"`);
+        console.log(`Slots from API:`, item.slots);
+
+        // Try different date parsing approaches
+        const rawDate = item.date;
+        const dateObj = new Date(rawDate);
+        const dateKey = dateObj.toISOString().split("T")[0];
+
+        console.log(`Converted date key: "${dateKey}"`);
+
+        initialMap[dateKey] = item.slots.map((s) => ({
+          startTime: s.startTime,
+          endTime: s.endTime,
+        }));
+
+        console.log(`Mapped slots for ${dateKey}:`, initialMap[dateKey]);
+      });
+
+      setAvailabilityMap(initialMap);
+      console.log("Final availabilityMap:", initialMap);
+      console.log("Available date keys:", Object.keys(initialMap));
+    } else {
+      console.log("No availability data or empty array");
+    }
+  }, [availability]);
+
+  // Updated handleChangeDate function that uses the most current availabilityMap
+  const handleChangeDate = ({ dates }) => {
+    console.log("=== DATE CHANGE EVENT ===");
+    setSelectedDates(dates);
+    setShowDateWarning(false);
+
+    if (dates.length === 0) {
+      console.log("No dates selected, clearing time slots");
+      setSelectedTimeSlots([]);
+      return;
+    }
+
+    if (dates.length === 1) {
+      const selectedDate = dates[0];
+      const key = selectedDate.toISOString().split("T")[0];
+      console.log(`Single date selected: ${key}`);
+
+      // Use functional update to get the most current availabilityMap
+      setAvailabilityMap((currentAvailabilityMap) => {
+        console.log(
+          "Current availabilityMap in functional update:",
+          currentAvailabilityMap
+        );
+        console.log(
+          "AvailabilityMap keys:",
+          Object.keys(currentAvailabilityMap)
+        );
+
+        const existingSlots = currentAvailabilityMap[key] || [];
+        console.log("Existing slots found:", existingSlots);
+
+        setSelectedTimeSlots(existingSlots);
+
+        // Return the same map (no changes needed)
+        return currentAvailabilityMap;
+      });
+
+      return;
+    }
+
+    // For multiple date selection
+    // console.log("Multiple dates selected, finding common slots");
+    // setAvailabilityMap((currentAvailabilityMap) => {
+    //   const commonSlots = dates.reduce((acc, date, index) => {
+    //     const key = date.toISOString().split("T")[0];
+    //     const slots = currentAvailabilityMap[key] || [];
+    //     console.log(`Date ${key} has slots:`, slots);
+
+    //     if (index === 0) return [...slots];
+
+    //     return acc.filter((slot1) =>
+    //       slots.some((slot2) => isSameSlot(slot1, slot2))
+    //     );
+    //   }, []);
+
+    //   console.log("Common slots:", commonSlots);
+    //   setSelectedTimeSlots(commonSlots);
+
+    //   // Return the same map (no changes needed)
+    //   return currentAvailabilityMap;
+    // });
+
+    console.log("Multiple dates selected, comparing slots across dates");
+    setAvailabilityMap((currentAvailabilityMap) => {
+      const dateKeys = dates.map((date) => date.toISOString().split("T")[0]);
+
+      // Get the time slots for each selected date
+      const slotsByDate = dateKeys.map(
+        (key) => currentAvailabilityMap[key] || []
+      );
+
+      // Function to check if two slot arrays are the same
+      const areSlotsEqual = (a, b) => {
+        if (a.length !== b.length) return false;
+        return a.every((slot1) => b.some((slot2) => isSameSlot(slot1, slot2)));
+      };
+
+      // Check if all selected dates have the same slots
+      const allSame = slotsByDate.every((slots, i, arr) =>
+        areSlotsEqual(slots, arr[0])
+      );
+
+      if (allSame) {
+        console.log(
+          "All dates have the same slots — keeping current selection."
+        );
+        setSelectedTimeSlots(slotsByDate[0]);
+      } else {
+        console.log("Dates have different slots — clearing selection.");
+        setSelectedTimeSlots([]);
+        setShowDateWarning(true);
+      }
+
+      return currentAvailabilityMap;
+    });
+  };
+
+  // Add this debug log right before your return statement in the component
+  console.log("=== RENDER DEBUG ===");
+  console.log("Current selectedTimeSlots:", selectedTimeSlots);
+  console.log(
+    "Current selectedDates:",
+    selectedDates.map((d) => d.toISOString().split("T")[0])
+  );
+  console.log("Current availabilityMap:", availabilityMap);
 
   const handleTimeSlotPress = (timeSlot) => {
     setSelectedTimeSlots((prev) => {
-      if (prev.includes(timeSlot)) {
-        // Remove if already selected
-        return prev.filter((slot) => slot !== timeSlot);
+      const exists = prev.some((slot) => isSameSlot(slot, timeSlot));
+      if (exists) {
+        return prev.filter((slot) => !isSameSlot(slot, timeSlot));
       } else {
-        // Add if not selected
         return [...prev, timeSlot];
       }
     });
   };
 
   const handleSave = () => {
-    console.log("Selected Dates:", selectedDates);
-    console.log("Selected Time Slots:", selectedTimeSlots);
-    // Handle save logic here
-  };
+    if (selectedDates.length === 0 || selectedTimeSlots.length === 0) {
+      Toast.show({ type: "error", text1: "Please select Date and Time slots" });
+      return;
+    }
 
+    const formatDate = (date) => date.toISOString().split("T")[0];
+
+    const payload = {
+      availability: selectedDates.map((date) => {
+        console.log("formatDate(date)", formatDate(date));
+        return {
+          date: formatDate(date),
+          slots: selectedTimeSlots,
+        };
+      }),
+    };
+
+    setAvailability(payload, {
+      onSuccess: (data) => {
+        Toast.show({ type: "success", text1: data.message });
+        // Update local availabilityMap after successful save
+        const updated = { ...availabilityMap };
+        payload.availability.forEach(({ date }) => {
+          updated[date] = selectedTimeSlots;
+        });
+        setAvailabilityMap(updated);
+        setSelectedDates([]);
+        setSelectedTimeSlots([]);
+        setShowDateWarning(false);
+
+        console.log("updated", updated);
+      },
+      onError: (error) => {
+        Toast.show({ type: "error", text1: error.message });
+      },
+    });
+  };
   return (
     <ScrollView contentContainerStyle={styles.scrollContainer}>
-      <View>
+      <Pressable>
         <DatePicker
           mode="multiple"
           dates={selectedDates}
-          onChange={({ dates }) => setSelectedDates(dates)}
+          onChange={handleChangeDate}
           minDate={today}
+          availabilityMap={availabilityMap}
           style={{ padding: 16 }}
         />
 
@@ -68,12 +263,27 @@ export const AvailabilityPage = () => {
             Select Time
           </Text>
 
+          {showDateWarning && (
+            <View style={styles.warningWrapper}>
+              <MaterialCommunityIcons
+                name="alert-circle"
+                size={24}
+                color={theme.colors.warning}
+              />
+              <Text variant="bodySmall">
+                {`Different availabilities. Pick time slots to set.`}
+              </Text>
+            </View>
+          )}
+
           <View style={styles.timeSlotsGrid}>
             {TIME_SLOTS.map((timeSlot) => (
               <TimeSlotButton
-                key={timeSlot}
+                key={`${timeSlot.startTime}-${timeSlot.endTime}`}
                 timeSlot={timeSlot}
-                isSelected={selectedTimeSlots.includes(timeSlot)}
+                isSelected={selectedTimeSlots.some((slot) =>
+                  isSameSlot(slot, timeSlot)
+                )}
                 onPress={handleTimeSlotPress}
                 theme={theme}
               />
@@ -84,26 +294,39 @@ export const AvailabilityPage = () => {
         <View style={styles.container}>
           <Button onPress={handleSave}>Save</Button>
         </View>
-      </View>
+      </Pressable>
     </ScrollView>
   );
 };
 
-const styles = StyleSheet.create({
-  scrollContainer: {
-    paddingBottom: 32,
-  },
-  container: {
-    paddingVertical: 24,
-    paddingHorizontal: 16,
-  },
-  sectionTitle: {
-    marginBottom: 16,
-  },
-  timeSlotsGrid: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    justifyContent: "space-between",
-    gap: 12,
-  },
-});
+const useStyles = (theme) =>
+  StyleSheet.create({
+    scrollContainer: {
+      paddingBottom: 32,
+    },
+    container: {
+      paddingVertical: 24,
+      paddingHorizontal: 16,
+    },
+    warningWrapper: {
+      flexDirection: "row",
+      alignItems: "center",
+      borderWidth: 1,
+      borderColor: theme.colors.warning,
+      backgroundColor: theme.colors.onSurfaceWarning,
+      paddingHorizontal: 14,
+      paddingVertical: 12,
+      borderRadius: 10,
+      gap: 8,
+      marginBottom: 16,
+    },
+    sectionTitle: {
+      marginBottom: 16,
+    },
+    timeSlotsGrid: {
+      flexDirection: "row",
+      flexWrap: "wrap",
+      justifyContent: "space-between",
+      gap: 12,
+    },
+  });

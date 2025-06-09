@@ -127,8 +127,96 @@ async function updateUser(user, payload) {
   };
 }
 
+/**
+ * setAvailability - Set or update availability for a user
+ *
+ * @param {Object} user - Authenticated user object
+ * @param {Array} availability - Array of availability objects to set
+ * @returns Success or failure status
+ */ async function setAvailability(user, newAvailability) {
+  if (!Array.isArray(newAvailability)) {
+    return {
+      message: "Availability must be an array",
+      statusCode: 400,
+      status: "failure",
+    };
+  }
+
+  const userDoc = await users.findById(user._id);
+
+  if (!userDoc) {
+    return {
+      message: "User not found",
+      statusCode: 404,
+      status: "failure",
+    };
+  }
+
+  const existingAvailability = userDoc.availability || [];
+
+  // Convert to a map for easy merging
+  const availabilityMap = new Map();
+
+  // Add existing availability to the map
+  for (const entry of existingAvailability) {
+    const dateKey = new Date(entry.date).toISOString().split("T")[0];
+    availabilityMap.set(dateKey, entry.slots);
+  }
+
+  // Merge new availability, overriding same-date entries
+  for (const entry of newAvailability) {
+    const dateKey = new Date(entry.date).toISOString().split("T")[0];
+    availabilityMap.set(dateKey, entry.slots);
+  }
+
+  // Convert map back to array
+  const mergedAvailability = Array.from(availabilityMap.entries()).map(
+    ([date, slots]) => ({
+      date: new Date(date),
+      slots,
+    })
+  );
+
+  userDoc.availability = mergedAvailability;
+
+  await userDoc.save();
+
+  return {
+    message: "Availability updated successfully",
+    statusCode: 200,
+    status: "success",
+    data: mergedAvailability,
+  };
+}
+
+/**
+ * getAvailability - Get availability for a specific user
+ *
+ * @param {Object} user - Authenticated user object
+ * @returns Success or failure status
+ */
+async function getAvailability(user) {
+  const foundUser = await users.findById(user._id).select("availability");
+  if (!foundUser) {
+    return {
+      message: "User not found",
+      statusCode: 404,
+      status: "failure",
+    };
+  }
+
+  return {
+    message: "Availability fetched successfully",
+    statusCode: 200,
+    status: "success",
+    data: foundUser.availability,
+  };
+}
+
 export default {
   createAccount,
   login,
   updateUser,
+  setAvailability,
+  getAvailability,
 };
