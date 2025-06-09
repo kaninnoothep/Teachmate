@@ -37,6 +37,8 @@ export const ProfilePage = () => {
   // Check if user has any location data
   const hasLocationData = user.city || user.postalCode || user.country?.name;
 
+  const showAboutSection = user.about || user.hourlyRate;
+
   return (
     <ScrollView contentContainerStyle={styles.scrollContainer}>
       <Pressable>
@@ -81,7 +83,13 @@ export const ProfilePage = () => {
         </View>
 
         {/* Contact Info */}
-        <View style={[styles.container, styles.contactContainer]}>
+        <View
+          style={[
+            styles.container,
+            styles.contactContainer,
+            { paddingBottom: 24 },
+          ]}
+        >
           <InfoItem icon="email" value={user.email} />
           {user.phone && <InfoItem icon="phone" value={user.phone} />}
           {hasLocationData && (
@@ -90,60 +98,74 @@ export const ProfilePage = () => {
         </View>
 
         {/* About */}
-        <View style={styles.container}>
-          <Text variant="titleLarge">About {user.firstName}</Text>
-          <Chip value={`$${user.hourlyRate}/hour`} />
-          <Text variant="bodyMedium">{user.about}</Text>
-        </View>
+        {showAboutSection && (
+          <View
+            style={[
+              styles.container,
+              { paddingVertical: 0, paddingBottom: 24 },
+            ]}
+          >
+            <Text variant="titleLarge">About {user.firstName}</Text>
+
+            {user.hourlyRate && <Chip value={`$${user.hourlyRate}/hour`} />}
+            {user.about && <Text variant="bodyMedium">{user.about}</Text>}
+          </View>
+        )}
 
         {/* Availability */}
-        <Divider />
-        <TouchableOpacity onPress={() => router.push("/profile/availability")}>
-          <View style={[styles.container, styles.availability]}>
-            <Text variant="titleLarge">Availability</Text>
-            <MaterialCommunityIcons
-              name="chevron-right"
-              size={24}
-              color={theme.colors.text}
-            />
-          </View>
-        </TouchableOpacity>
-
-        {/* Preferred Location */}
-        <Divider style={styles.divider} />
-        <View style={styles.container}>
-          <View style={styles.titleWrapper}>
-            <Text variant="titleLarge">Preferred Location</Text>
+        {user.role === "tutor" && (
+          <>
+            <Divider />
             <TouchableOpacity
-              onPress={() => router.push("/profile/preferredLocation")}
-              style={{ padding: 4 }}
+              onPress={() => router.push("/profile/availability")}
             >
-              <MaterialCommunityIcons
-                name="pencil"
-                size={20}
-                color={theme.colors.text}
-              />
+              <View style={[styles.container, styles.availability]}>
+                <Text variant="titleLarge">Availability</Text>
+                <MaterialCommunityIcons
+                  name="chevron-right"
+                  size={24}
+                  color={theme.colors.text}
+                />
+              </View>
             </TouchableOpacity>
-          </View>
 
-          <View style={styles.preferredLocation}>
-            <InfoItem
-              icon="map"
-              value="In a Public Place"
-              containerStyles={{ padding: 16 }}
-            />
-            <InfoItem
-              icon="home"
-              value="At Tutor's Place"
-              containerStyles={{ padding: 16 }}
-            />
-            <InfoItem
-              icon="video-outline"
-              value="Online"
-              containerStyles={{ padding: 16 }}
-            />
-          </View>
-        </View>
+            {/* Preferred Location */}
+            <Divider />
+            <View style={styles.container}>
+              <View style={styles.titleWrapper}>
+                <Text variant="titleLarge">Preferred Location</Text>
+                <TouchableOpacity
+                  onPress={() => router.push("/profile/preferredLocation")}
+                  style={{ padding: 4 }}
+                >
+                  <MaterialCommunityIcons
+                    name="pencil"
+                    size={20}
+                    color={theme.colors.text}
+                  />
+                </TouchableOpacity>
+              </View>
+
+              <View style={styles.preferredLocation}>
+                <InfoItem
+                  icon="map"
+                  value="In a Public Place"
+                  containerStyles={{ padding: 16 }}
+                />
+                <InfoItem
+                  icon="home"
+                  value="At Tutor's Place"
+                  containerStyles={{ padding: 16 }}
+                />
+                <InfoItem
+                  icon="video-outline"
+                  value="Online"
+                  containerStyles={{ padding: 16 }}
+                />
+              </View>
+            </View>
+          </>
+        )}
 
         {/* Education */}
         <Divider />
@@ -172,30 +194,34 @@ export const ProfilePage = () => {
         </View>
 
         {/* Experience */}
-        <Divider />
-        <View style={styles.container}>
-          <View style={styles.titleWrapper}>
-            <Text variant="titleLarge">Experience</Text>
-            <TouchableOpacity
-              onPress={() => router.push("/profile/experience")}
-              style={{ padding: 4 }}
-            >
-              <MaterialCommunityIcons
-                name="plus"
-                size={24}
-                color={theme.colors.text}
-              />
-            </TouchableOpacity>
-          </View>
+        {user.role === "tutor" && (
+          <>
+            <Divider />
+            <View style={styles.container}>
+              <View style={styles.titleWrapper}>
+                <Text variant="titleLarge">Experience</Text>
+                <TouchableOpacity
+                  onPress={() => router.push("/profile/experience")}
+                  style={{ padding: 4 }}
+                >
+                  <MaterialCommunityIcons
+                    name="plus"
+                    size={24}
+                    color={theme.colors.text}
+                  />
+                </TouchableOpacity>
+              </View>
 
-          {/* Experience Item */}
-          <BackgroundItem
-            title={"University of Regina"}
-            subtitle={`Master of Science (MS), Mathematics`}
-            durationText={`Jan 2021 - Oct 2023`}
-            onPressEdit={() => router.push("/profile/experience/1234")}
-          />
-        </View>
+              {/* Experience Item */}
+              <BackgroundItem
+                title={"University of Regina"}
+                subtitle={`Master of Science (MS), Mathematics`}
+                durationText={`Jan 2021 - Oct 2023`}
+                onPressEdit={() => router.push("/profile/experience/1234")}
+              />
+            </View>
+          </>
+        )}
       </Pressable>
     </ScrollView>
   );

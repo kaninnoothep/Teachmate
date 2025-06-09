@@ -134,14 +134,16 @@ export const AccountPage = () => {
             About
           </Text>
 
-          <FormTextInput
-            name="hourlyRate"
-            label="Hourly Rate"
-            placeholder="e.g., 25"
-            keyboardType="numeric"
-            fullWidth
-            {...{ control }}
-          />
+          {user.role === "tutor" && (
+            <FormTextInput
+              name="hourlyRate"
+              label="Hourly Rate"
+              placeholder="e.g., 25"
+              keyboardType="numeric"
+              fullWidth
+              {...{ control }}
+            />
+          )}
 
           <FormTextInput
             name="about"

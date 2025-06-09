@@ -30,7 +30,7 @@ export const useEditProfileForm = () => {
       country: user.country?.code
         ? {
             cca2: user.country.code,
-            name: { common: user.country.name },
+            name: user.country.name,
           }
         : null,
       postalCode: user.postalCode || "",
