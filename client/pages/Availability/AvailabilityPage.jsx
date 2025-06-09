@@ -33,7 +33,6 @@ const isSameSlot = (a, b) =>
   a.startTime === b.startTime && a.endTime === b.endTime;
 
 export const AvailabilityPage = () => {
-  const { availability, isFetching } = useAvailabilityQuery();
   const theme = useTheme();
   const styles = useStyles(theme);
   const today = new Date();
@@ -41,20 +40,8 @@ export const AvailabilityPage = () => {
   const [selectedDates, setSelectedDates] = useState([]);
   const [selectedTimeSlots, setSelectedTimeSlots] = useState([]);
   const [showDateWarning, setShowDateWarning] = useState(false);
+  const { availability } = useAvailabilityQuery();
   const { mutateAsync: setAvailability } = useSetAvailabilityMutation({});
-
-  // const handleChangeDate = ({ dates }) => {
-  //   // Compare time slots of selected dates
-  //   const commonSlots = dates.reduce((acc, date, index) => {
-  //     const key = date.toISOString().split("T")[0];
-  //     const slots = availabilityMap[key] || [];
-  //     if (index === 0) return new Set(slots);
-  //     return new Set([...acc].filter((slot) => slots.includes(slot)));
-  //   }, new Set());
-
-  //   setSelectedDates(dates);
-  //   setSelectedTimeSlots(Array.from(commonSlots));
-  // };
 
   // Add this debugging useEffect to see what's in your availability data
   useEffect(() => {
@@ -128,28 +115,6 @@ export const AvailabilityPage = () => {
 
       return;
     }
-
-    // For multiple date selection
-    // console.log("Multiple dates selected, finding common slots");
-    // setAvailabilityMap((currentAvailabilityMap) => {
-    //   const commonSlots = dates.reduce((acc, date, index) => {
-    //     const key = date.toISOString().split("T")[0];
-    //     const slots = currentAvailabilityMap[key] || [];
-    //     console.log(`Date ${key} has slots:`, slots);
-
-    //     if (index === 0) return [...slots];
-
-    //     return acc.filter((slot1) =>
-    //       slots.some((slot2) => isSameSlot(slot1, slot2))
-    //     );
-    //   }, []);
-
-    //   console.log("Common slots:", commonSlots);
-    //   setSelectedTimeSlots(commonSlots);
-
-    //   // Return the same map (no changes needed)
-    //   return currentAvailabilityMap;
-    // });
 
     console.log("Multiple dates selected, comparing slots across dates");
     setAvailabilityMap((currentAvailabilityMap) => {
