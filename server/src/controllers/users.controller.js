@@ -39,6 +39,18 @@ async function login(req, res) {
   }
 }
 
+async function getUser(req, res) {
+  try {
+    const response = await usersServices.getUser(req.params);
+    res.status(response.statusCode).json(response);
+  } catch (error) {
+    res.status(500).json({
+      message: "Unable to get user",
+      status: "failure",
+    });
+  }
+}
+
 async function updateUser(req, res) {
   try {
     const response = await usersServices.updateUser(req.user, req.body);
@@ -96,6 +108,7 @@ async function getAvailability(req, res) {
 export default {
   createAccount,
   login,
+  getUser,
   updateUser,
   setAvailability,
   getAvailability,

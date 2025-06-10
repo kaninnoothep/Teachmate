@@ -71,6 +71,13 @@ const userSchema = mongoose.Schema(
         ],
       },
     ],
+    preferredLocations: {
+      publicPlace: { type: Boolean, default: false },
+      tutorPlace: { type: Boolean, default: false },
+      online: { type: Boolean, default: false },
+    },
+    education: [{ type: mongoose.Schema.Types.ObjectId, ref: "Education" }],
+    experience: [{ type: mongoose.Schema.Types.ObjectId, ref: "Experience" }],
   },
   {
     timestamps: true,

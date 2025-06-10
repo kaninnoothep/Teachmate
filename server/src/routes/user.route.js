@@ -15,6 +15,9 @@ router.post("/create-account", userControllers.createAccount);
 // POST request to /login
 router.post("/login", userControllers.login);
 
+// GET request to /get-user/:userId
+router.get("/get-user/:userId", authMiddleware.authenticate, userControllers.getUser);
+
 // POST request to /update-user
 router.post(
   "/update-user",

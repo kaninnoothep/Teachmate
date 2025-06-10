@@ -4,6 +4,7 @@
 import users from "../models/users.model.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import responses from "../utils/response.js";
 
 /**
  * createAccount - Create new user account
@@ -92,6 +93,20 @@ async function login(payload) {
     status: "success",
     data: foundAccount,
   };
+}
+
+async function getUser(payload) {
+  console.log("payload", payload);
+  const { userId } = payload;
+  console.log("userId", userId);
+  const foundUser = await users.findOne({ _id: userId });
+  console.log('foundUser', foundUser)
+
+  if (!foundUser) {
+    return responses.buildFailureResponse("User does not exist", 400);
+  }
+
+  return responses.buildSuccessResponse("User details found", 200, foundUser);
 }
 
 async function updateUser(user, payload) {
@@ -220,6 +235,7 @@ async function getAvailability(user) {
 export default {
   createAccount,
   login,
+  getUser,
   updateUser,
   setAvailability,
   getAvailability,
