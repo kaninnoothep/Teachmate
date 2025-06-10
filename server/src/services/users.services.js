@@ -5,12 +5,13 @@ import users from "../models/users.model.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import responses from "../utils/response.js";
+import Education from "../models/education.model.js";
+import Experience from "../models/experience.model.js";
+import { sortByEndDate } from "../utils/sortByEndDate.js";
+import { populateUserData } from "../utils/populateUserData.js";
 
 /**
  * createAccount - Create new user account
- *
- * @param {Object} payload - Data to use for creating a new account
- * @returns Success or failure status
  */
 async function createAccount(payload) {
   const { firstName, lastName, email, role } = payload;
@@ -50,14 +51,15 @@ async function createAccount(payload) {
 
 /**
  * login - Login to existing user account
- *
- * @param {Object} payload - Data to use for login to an existing account
- * @returns Success or failure status
  */
 async function login(payload) {
   const { email, password } = payload;
-  // Check if account exists in db using the email
-  const foundAccount = await users.findOne({ email: email }).lean();
+
+  // Find account and populate with sorted data
+  const foundAccount = await populateUserData(
+    users.findOne({ email: email }).lean()
+  );
+
   if (!foundAccount) {
     return {
       message: "Account does not exist",
@@ -75,16 +77,11 @@ async function login(payload) {
       status: "failure",
     };
   }
+
   // Create JWT token
-  const token = jwt.sign(
-    {
-      _id: foundAccount._id,
-    },
-    process.env.JWT_SECRET,
-    {
-      expiresIn: "3d",
-    }
-  );
+  const token = jwt.sign({ _id: foundAccount._id }, process.env.JWT_SECRET, {
+    expiresIn: "3d",
+  });
 
   foundAccount.accessToken = token;
   return {
@@ -97,7 +94,8 @@ async function login(payload) {
 
 async function getUser(payload) {
   const { userId } = payload;
-  const foundUser = await users.findOne({ _id: userId });
+
+  const foundUser = await populateUserData(users.findById(userId));
 
   if (!foundUser) {
     return responses.buildFailureResponse("User does not exist", 400);
@@ -116,10 +114,12 @@ async function updateUser(user, payload) {
     };
   }
 
-  const updatedUser = await users.findByIdAndUpdate(
-    user._id,
-    { $set: payload }, // Update the fields provided in the payload
-    { new: true, useFindAndModify: false }
+  const updatedUser = await populateUserData(
+    users.findByIdAndUpdate(
+      user._id,
+      { $set: payload },
+      { new: true, useFindAndModify: false }
+    )
   );
 
   // Check if the user was found and updated
@@ -141,10 +141,6 @@ async function updateUser(user, payload) {
 
 /**
  * setAvailability - Set or update availability for a user
- *
- * @param {Object} user - Authenticated user object
- * @param {Array} availability - Array of availability objects to set
- * @returns Success or failure status
  */
 async function setAvailability(user, newAvailability) {
   if (!Array.isArray(newAvailability)) {
@@ -166,27 +162,25 @@ async function setAvailability(user, newAvailability) {
 
   const existingAvailability = userDoc.availability || [];
 
-  // Step 1: Map existing availability by date
+  // Map existing availability by date
   const availabilityMap = new Map();
   for (const entry of existingAvailability) {
     const dateKey = new Date(entry.date).toISOString().split("T")[0];
     availabilityMap.set(dateKey, entry.slots);
   }
 
-  // Step 2: Update or remove based on new availability
+  // Update or remove based on new availability
   for (const entry of newAvailability) {
     const dateKey = new Date(entry.date).toISOString().split("T")[0];
 
     if (entry.slots && entry.slots.length > 0) {
-      // Set or replace slots for the date
       availabilityMap.set(dateKey, entry.slots);
     } else {
-      // Remove the date if slots are empty
       availabilityMap.delete(dateKey);
     }
   }
 
-  // Step 3: Convert map back to array
+  // Convert map back to array
   const mergedAvailability = Array.from(availabilityMap.entries()).map(
     ([date, slots]) => ({
       date: new Date(date),
@@ -207,9 +201,6 @@ async function setAvailability(user, newAvailability) {
 
 /**
  * getAvailability - Get availability for a specific user
- *
- * @param {Object} user - Authenticated user object
- * @returns Success or failure status
  */
 async function getAvailability(user) {
   const foundUser = await users.findById(user._id).select("availability");
@@ -231,10 +222,6 @@ async function getAvailability(user) {
 
 /**
  * setPreferredLocation - Update preferred location for the authenticated user
- *
- * @param {object} user - Authenticated user object
- * @param {object} preferredLocations - Object containing preferred location flags
- * @returns {object} - Response with status and message
  */
 async function setPreferredLocation(user, preferredLocations) {
   const userDoc = await users.findById(user._id);
@@ -264,9 +251,6 @@ async function setPreferredLocation(user, preferredLocations) {
 
 /**
  * getPreferredLocation - Retrieve preferred location of the authenticated user
- *
- * @param {object} user - Authenticated user object
- * @returns {object} - Response with status and data
  */
 async function getPreferredLocation(user) {
   const userDoc = await users.findById(user._id).select("preferredLocations");
@@ -286,6 +270,131 @@ async function getPreferredLocation(user) {
   };
 }
 
+/**
+ * Education Services
+ */
+async function addEducation(user, data) {
+  const education = await Education.create({ ...data, userId: user._id });
+  await users.findByIdAndUpdate(user._id, {
+    $push: { education: education._id },
+  });
+  return responses.buildSuccessResponse(
+    "Education added successfully",
+    201,
+    education
+  );
+}
+
+async function getEducations(user) {
+  const educations = await Education.find({ userId: user._id });
+  const sortedEducations = sortByEndDate(educations);
+
+  return responses.buildSuccessResponse(
+    "Education fetched successfully",
+    200,
+    sortedEducations
+  );
+}
+
+async function updateEducation(user, educationId, data) {
+  const updated = await Education.findOneAndUpdate(
+    { _id: educationId, userId: user._id },
+    { $set: data },
+    { new: true }
+  );
+  if (!updated)
+    return responses.buildFailureResponse("Education not found", 404);
+
+  return responses.buildSuccessResponse(
+    "Education updated successfully",
+    200,
+    updated
+  );
+}
+
+async function deleteEducation(user, educationId) {
+  const deleted = await Education.findOneAndDelete({
+    _id: educationId,
+    userId: user._id,
+  });
+
+  if (!deleted)
+    return responses.buildFailureResponse("Education not found", 404);
+
+  // Remove the education ID from user's education array
+  await users.findByIdAndUpdate(user._id, {
+    $pull: { education: educationId },
+  });
+
+  return responses.buildSuccessResponse(
+    "Education deleted successfully",
+    200,
+    deleted
+  );
+}
+
+/**
+ * Experience Services
+ */
+async function addExperience(user, data) {
+  const experience = await Experience.create({ ...data, userId: user._id });
+  await users.findByIdAndUpdate(user._id, {
+    $push: { experience: experience._id },
+  });
+
+  return responses.buildSuccessResponse(
+    "Experience added successfully",
+    201,
+    experience
+  );
+}
+
+async function getExperiences(user) {
+  const experiences = await Experience.find({ userId: user._id });
+  const sortedExperiences = sortByEndDate(experiences);
+
+  return responses.buildSuccessResponse(
+    "Experience fetched successfully",
+    200,
+    sortedExperiences
+  );
+}
+
+async function updateExperience(user, experienceId, data) {
+  const updated = await Experience.findOneAndUpdate(
+    { _id: experienceId, userId: user._id },
+    { $set: data },
+    { new: true }
+  );
+  if (!updated)
+    return responses.buildFailureResponse("Experience not found", 404);
+  return responses.buildSuccessResponse(
+    "Experience updated successfully",
+    200,
+    updated
+  );
+}
+
+async function deleteExperience(user, experienceId) {
+  const deleted = await Experience.findOneAndDelete({
+    _id: experienceId,
+    userId: user._id,
+  });
+  if (!deleted)
+    return responses.buildFailureResponse("Experience not found", 404);
+
+  // Remove the experience ID from user's experience array
+  await users.findByIdAndUpdate(user._id, {
+    $pull: { experience: experienceId },
+  });
+
+  return responses.buildSuccessResponse(
+    "Experience deleted successfully",
+    200,
+    deleted
+  );
+}
+
 export default {
   createAccount,
   login,
@@ -295,4 +404,12 @@ export default {
   getAvailability,
   setPreferredLocation,
   getPreferredLocation,
+  addEducation,
+  getEducations,
+  updateEducation,
+  deleteEducation,
+  addExperience,
+  getExperiences,
+  updateExperience,
+  deleteExperience,
 };

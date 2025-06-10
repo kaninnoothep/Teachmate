@@ -136,6 +136,114 @@ async function getPreferredLocation(req, res) {
 }
 
 /**
+ * Education
+ */
+async function addEducation(req, res) {
+  try {
+    const response = await usersServices.addEducation(req.user, req.body);
+    res.status(response.statusCode).json(response);
+  } catch {
+    res
+      .status(500)
+      .json({ message: "Unable to add education", status: "failure" });
+  }
+}
+
+async function getEducations(req, res) {
+  try {
+    const response = await usersServices.getEducations(req.user);
+    res.status(response.statusCode).json(response);
+  } catch {
+    res
+      .status(500)
+      .json({ message: "Unable to fetch education", status: "failure" });
+  }
+}
+
+async function updateEducation(req, res) {
+  try {
+    const response = await usersServices.updateEducation(
+      req.user,
+      req.params.id,
+      req.body
+    );
+    res.status(response.statusCode).json(response);
+  } catch {
+    res
+      .status(500)
+      .json({ message: "Unable to update education", status: "failure" });
+  }
+}
+
+async function deleteEducation(req, res) {
+  try {
+    const response = await usersServices.deleteEducation(
+      req.user,
+      req.params.id
+    );
+    res.status(response.statusCode).json(response);
+  } catch {
+    res
+      .status(500)
+      .json({ message: "Unable to delete education", status: "failure" });
+  }
+}
+
+/**
+ * Experience
+ */
+async function addExperience(req, res) {
+  try {
+    const response = await usersServices.addExperience(req.user, req.body);
+    res.status(response.statusCode).json(response);
+  } catch {
+    res
+      .status(500)
+      .json({ message: "Unable to add experience", status: "failure" });
+  }
+}
+
+async function getExperiences(req, res) {
+  try {
+    const response = await usersServices.getExperiences(req.user);
+    res.status(response.statusCode).json(response);
+  } catch {
+    res
+      .status(500)
+      .json({ message: "Unable to fetch experience", status: "failure" });
+  }
+}
+
+async function updateExperience(req, res) {
+  try {
+    const response = await usersServices.updateExperience(
+      req.user,
+      req.params.id,
+      req.body
+    );
+    res.status(response.statusCode).json(response);
+  } catch {
+    res
+      .status(500)
+      .json({ message: "Unable to update experience", status: "failure" });
+  }
+}
+
+async function deleteExperience(req, res) {
+  try {
+    const response = await usersServices.deleteExperience(
+      req.user,
+      req.params.id
+    );
+    res.status(response.statusCode).json(response);
+  } catch {
+    res
+      .status(500)
+      .json({ message: "Unable to delete experience", status: "failure" });
+  }
+}
+
+/**
  * Export all fuctions
  */
 export default {
@@ -147,4 +255,12 @@ export default {
   getAvailability,
   setPreferredLocation,
   getPreferredLocation,
+  addEducation,
+  getEducations,
+  updateEducation,
+  deleteEducation,
+  addExperience,
+  getExperiences,
+  updateExperience,
+  deleteExperience,
 };

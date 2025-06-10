@@ -8,12 +8,15 @@ import mongoose from "mongoose";
  */
 const experienceSchema = mongoose.Schema(
   {
-    user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
-    organization: String,
-    position: String,
-    startDate: Date,
-    endDate: Date,
-    description: String,
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
+    title: { type: String, required: true },
+    company: { type: String },
+    startDate: { type: Date },
+    endDate: { type: Date },
   },
   {
     timestamps: true,
@@ -23,4 +26,4 @@ const experienceSchema = mongoose.Schema(
 /**
  * Export education model
  */
-export default mongoose.model("Exerrience", experienceSchema);
+export default mongoose.model("Experience", experienceSchema);
