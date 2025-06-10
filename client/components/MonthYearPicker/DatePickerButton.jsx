@@ -7,10 +7,12 @@ export const DatePickerButton = ({
   value,
   onPress,
   containerStyles,
+  helperText = "",
+  isError = false,
   ...props
 }) => {
   const theme = useTheme();
-  const styles = useStyles(theme);
+  const styles = useStyles(theme, isError);
   const hasValue = !!value;
 
   return (
@@ -30,11 +32,17 @@ export const DatePickerButton = ({
           color={theme.colors.primary}
         />
       </TouchableOpacity>
+
+      {helperText && (
+        <Text variant="bodySmall" style={styles.errorText}>
+          {helperText}
+        </Text>
+      )}
     </View>
   );
 };
 
-const useStyles = (theme) =>
+const useStyles = (theme, isError) =>
   StyleSheet.create({
     container: {
       position: "relative",
@@ -44,8 +52,8 @@ const useStyles = (theme) =>
       alignItems: "center",
       justifyContent: "space-between",
       paddingHorizontal: 16,
-      borderWidth: 1,
-      borderColor: theme.colors.outline,
+      borderWidth: isError ? 2 : 1,
+      borderColor: isError ? theme.colors.error : theme.colors.outline,
       borderRadius: 10,
       backgroundColor: theme.colors.background,
       minHeight: 50,
@@ -56,7 +64,7 @@ const useStyles = (theme) =>
     },
     label: {
       fontSize: 16,
-      color: theme.colors.onSurfaceVariant,
+      color: isError ? theme.colors.error : theme.colors.onSurfaceVariant,
     },
     labelShrunk: {
       position: "absolute",
@@ -70,5 +78,12 @@ const useStyles = (theme) =>
     valueText: {
       fontSize: 16,
       color: theme.colors.onSurface,
+    },
+    errorText: {
+      color: theme.colors.error,
+      marginTop: 5,
+      letterSpacing: 0.2,
+      marginLeft: 12,
+      marginBottom: 16,
     },
   });

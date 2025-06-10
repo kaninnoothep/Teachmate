@@ -4,13 +4,7 @@ import { FormTextInput } from "@/components/Form/FormTextInput/FormTextInput";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useMemo, useState } from "react";
-import {
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  View,
-  TouchableOpacity,
-} from "react-native";
+import { Pressable, ScrollView, StyleSheet, View } from "react-native";
 import { Text, useTheme } from "react-native-paper";
 import { useEducationForm } from "./hooks/useEducationForm";
 import { MonthYearPicker } from "@/components/MonthYearPicker/MonthYearPicker";
@@ -20,23 +14,34 @@ export const EducationPage = () => {
   const { educationId } = useLocalSearchParams();
   const theme = useTheme();
   const router = useRouter();
-  const { control, handleSubmit } = useEducationForm();
+
+  const {
+    control,
+    handleSubmit,
+    watch,
+    setValue,
+    formState: { errors },
+  } = useEducationForm();
 
   const [showStartDatePicker, setShowStartDatePicker] = useState(false);
   const [showEndDatePicker, setShowEndDatePicker] = useState(false);
-  const [startDate, setStartDate] = useState(null);
-  const [endDate, setEndDate] = useState(null);
+
+  // Watch the form values for dates
+  const startDate = watch("startDate");
+  const endDate = watch("endDate");
 
   const isAdd = useMemo(() => !educationId, [educationId]);
 
   const pageTitle = () => (isAdd ? "Add Education" : "Update Education");
 
   const handleStartDateSelect = (dateData) => {
-    setStartDate(dateData);
+    // Set the form value with the dateData object
+    setValue("startDate", dateData);
   };
 
   const handleEndDateSelect = (dateData) => {
-    setEndDate(dateData);
+    // Set the form value with the dateData object
+    setValue("endDate", dateData);
   };
 
   return (
@@ -83,6 +88,8 @@ export const EducationPage = () => {
             value={endDate}
             onPress={() => setShowEndDatePicker(true)}
             containerStyles={{ marginBottom: 28 }}
+            helperText={errors.endDate?.message}
+            isError={errors.endDate?.message}
           />
 
           <Button onPress={handleSubmit}>{pageTitle()}</Button>
@@ -139,32 +146,5 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 24,
     gap: 12,
-  },
-  dateInputContainer: {
-    marginBottom: 12,
-  },
-  dateLabel: {
-    fontSize: 16,
-    fontWeight: "500",
-    marginBottom: 8,
-    color: "#333",
-  },
-  dateButton: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    paddingHorizontal: 16,
-    paddingVertical: 14,
-    borderWidth: 1,
-    borderColor: "#ddd",
-    borderRadius: 8,
-    backgroundColor: "#fff",
-  },
-  dateButtonText: {
-    fontSize: 16,
-    color: "#333",
-  },
-  placeholderText: {
-    color: "#999",
   },
 });

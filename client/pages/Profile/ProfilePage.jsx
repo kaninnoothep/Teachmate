@@ -9,12 +9,13 @@ import { BackgroundItem } from "./units/BackgroundItem";
 import { Divider } from "@/components/Divider/Divider";
 import { useMemo } from "react";
 import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
 
+dayjs.extend(utc);
 export const ProfilePage = ({ user }) => {
   const theme = useTheme();
   const styles = useStyles(theme);
   const router = useRouter();
-
   // Helper function to format location string
   const formatLocation = () => {
     const locationParts = [];
@@ -52,6 +53,20 @@ export const ProfilePage = ({ user }) => {
 
     return publicPlace || tutorPlace || online;
   }, [user.preferredLocations]);
+
+  const getDurationText = (startDate, endDate) => {
+    const formattedStartDate = dayjs.utc(startDate).format("MMM YYYY");
+    const formattedEndDate = endDate
+      ? dayjs.utc(endDate).format("MMM YYYY")
+      : "Present";
+    let dateText = `${formattedStartDate} - ${formattedEndDate}`;
+
+    if (startDate === endDate) {
+      dateText = formattedStartDate;
+    }
+
+    return dateText;
+  };
 
   return (
     <ScrollView contentContainerStyle={styles.scrollContainer}>
@@ -213,10 +228,6 @@ export const ProfilePage = ({ user }) => {
             user.education.map((item) => {
               const { _id, school, degree, fieldOfStudy, startDate, endDate } =
                 item;
-              const formattedStartDate = dayjs(startDate).format("MMM YYYY");
-              const formattedEndDate = endDate
-                ? dayjs(endDate).format("MMM YYYY")
-                : "Present";
 
               const getSubtitle = () => {
                 let subtitle = "";
@@ -235,7 +246,7 @@ export const ProfilePage = ({ user }) => {
                   key={_id}
                   title={school}
                   subtitle={getSubtitle()}
-                  durationText={`${formattedStartDate} - ${formattedEndDate}`}
+                  durationText={getDurationText(startDate, endDate)}
                   onPressEdit={() => router.push(`/profile/education/${_id}`)}
                 />
               );
@@ -266,18 +277,12 @@ export const ProfilePage = ({ user }) => {
                 user.experience.map((item) => {
                   const { _id, title, company, startDate, endDate } = item;
 
-                  const formattedStartDate =
-                    dayjs(startDate).format("MMM YYYY");
-                  const formattedEndDate = endDate
-                    ? dayjs(endDate).format("MMM YYYY")
-                    : "Present";
-
                   return (
                     <BackgroundItem
                       key={_id}
                       title={title}
                       subtitle={company}
-                      durationText={`${formattedStartDate} - ${formattedEndDate}`}
+                      durationText={getDurationText(startDate, endDate)}
                       onPressEdit={() =>
                         router.push(`/profile/experience/${_id}`)
                       }

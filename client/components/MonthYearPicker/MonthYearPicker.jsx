@@ -152,7 +152,6 @@ export const MonthYearPicker = ({
                 style={styles.picker}
                 itemStyle={styles.pickerItem}
               >
-                <Picker.Item label="-" value="" />
                 {getAvailableMonths(selectedYear).map((month) => (
                   <Picker.Item
                     key={month.value}
