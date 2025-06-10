@@ -1,7 +1,10 @@
 /**
  * Import Modules
  */
-import { SET_AVAILABILITY_API_KEY } from "@/services/constants";
+import {
+  GET_AVAILABILITY_API_KEY,
+  SET_AVAILABILITY_API_KEY,
+} from "@/services/constants";
 import { apiRequest } from "@/services/helpers/apiRequest";
 import { useApiSend } from "@/services/hooks/useApiSend";
 
@@ -11,4 +14,4 @@ const setAvailabilityRequest = (payload) =>
 
 // Custom Hook to manage Set Availability request
 export const useSetAvailabilityMutation = (options) =>
-  useApiSend(setAvailabilityRequest, [], options);
+  useApiSend(setAvailabilityRequest, [GET_AVAILABILITY_API_KEY], options);

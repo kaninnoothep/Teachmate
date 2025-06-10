@@ -8,6 +8,7 @@ import { InfoItem } from "./units/InfoItem";
 import { Chip } from "@/components/Chip/Chip";
 import { BackgroundItem } from "./units/BackgroundItem";
 import { Divider } from "@/components/Divider/Divider";
+import { useMemo } from "react";
 
 export const ProfilePage = () => {
   const { user } = useUser();
@@ -35,9 +36,22 @@ export const ProfilePage = () => {
   };
 
   // Check if user has any location data
-  const hasLocationData = user.city || user.postalCode || user.country?.name;
+  const hasLocationData = useMemo(
+    () => user.city || user.postalCode || user.country?.name,
+    [user.city, user.postalCode, user.country?.name]
+  );
 
-  const showAboutSection = user.about || user.hourlyRate;
+  const showAboutSection = useMemo(
+    () => user.about || user.hourlyRate,
+    [user.about, user.hourlyRate]
+  );
+
+  const { publicPlace, tutorPlace, online } = user.preferredLocations;
+
+  const showPreferredLocations = useMemo(
+    () => publicPlace || tutorPlace || online,
+    [publicPlace, tutorPlace, online]
+  );
 
   return (
     <ScrollView contentContainerStyle={styles.scrollContainer}>
@@ -146,23 +160,33 @@ export const ProfilePage = () => {
                 </TouchableOpacity>
               </View>
 
-              <View style={styles.preferredLocation}>
-                <InfoItem
-                  icon="map"
-                  value="In a Public Place"
-                  containerStyles={{ padding: 16 }}
-                />
-                <InfoItem
-                  icon="home"
-                  value="At Tutor's Place"
-                  containerStyles={{ padding: 16 }}
-                />
-                <InfoItem
-                  icon="video-outline"
-                  value="Online"
-                  containerStyles={{ padding: 16 }}
-                />
-              </View>
+              {showPreferredLocations && (
+                <View style={styles.preferredLocation}>
+                  {publicPlace && (
+                    <InfoItem
+                      icon="map"
+                      value="In a Public Place"
+                      containerStyles={{ padding: 16 }}
+                    />
+                  )}
+
+                  {tutorPlace && (
+                    <InfoItem
+                      icon="home"
+                      value="At Tutor's Place"
+                      containerStyles={{ padding: 16 }}
+                    />
+                  )}
+
+                  {online && (
+                    <InfoItem
+                      icon="video-outline"
+                      value="Online"
+                      containerStyles={{ padding: 16 }}
+                    />
+                  )}
+                </View>
+              )}
             </View>
           </>
         )}

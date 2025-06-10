@@ -5,3 +5,5 @@ export const GET_USER_API_KEY = "/user/get-user";
 export const UPDATE_USER_API_KEY = "/user/update-user";
 export const SET_AVAILABILITY_API_KEY = "/user/set-availability";
 export const GET_AVAILABILITY_API_KEY = "/user/get-availability";
+export const SET_PREFERRED_LOCATION_API_KEY = "/user/set-preferred-location";
+export const GET_PREFERRED_LOCATION_API_KEY = "/user/get-preferred-location";

@@ -1,18 +1,40 @@
 import { Button } from "@/components/Button/Button";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Pressable, ScrollView, StyleSheet, View } from "react-native";
 import { Text } from "react-native-paper";
 import { LocationOption } from "./units/LocationOption";
+import { usePreferredLocationQuery } from "@/services/api/user/usePreferredLocationQuery";
+import { useSetPreferredLocationMutation } from "@/services/api/user/useSetPreferredLocationMutation";
+import Toast from "react-native-toast-message";
+import { useRouter } from "expo-router";
+import { useUser } from "@/context/UserProvider/UserProvider";
 
 const LOCATION_OPTIONS = [
-  { value: "public", label: "In a Public Place" },
-  { value: "tutor", label: "At Tutor's Place" },
+  { value: "publicPlace", label: "In a Public Place" },
+  { value: "tutorPlace", label: "At Tutor's Place" },
   { value: "online", label: "Online" },
 ];
 
 export const PreferredLocationPage = () => {
+  const { user, handleSetUser } = useUser();
+  const router = useRouter();
+  const [hasInitialized, setHasInitialized] = useState(false);
   const [selectedLocations, setSelectedLocations] = useState([]);
+  const { preferredLocations } = usePreferredLocationQuery();
+  const { mutateAsync: setPreferredLocations } =
+    useSetPreferredLocationMutation({});
+
+  // Initialize selectedLocations from fetched preferredLocations
+  useEffect(() => {
+    if (preferredLocations) {
+      const selected = Object.entries(preferredLocations)
+        .filter(([, isSelected]) => isSelected)
+        .map(([key]) => key);
+      setSelectedLocations(selected);
+      setHasInitialized(true);
+    }
+  }, [preferredLocations, hasInitialized]);
 
   const handleToggleLocation = (locationValue) => {
     setSelectedLocations((prev) => {
@@ -24,9 +46,23 @@ export const PreferredLocationPage = () => {
     });
   };
 
-  const handleSave = () => {
-    console.log("Selected locations:", selectedLocations);
-    // Handle save logic here
+  const handleSave = async () => {
+    const payload = {
+      publicPlace: selectedLocations.includes("publicPlace"),
+      tutorPlace: selectedLocations.includes("tutorPlace"),
+      online: selectedLocations.includes("online"),
+    };
+
+    await setPreferredLocations(payload, {
+      onSuccess: (data) => {
+        handleSetUser({ data: { ...user, preferredLocations: data.data } });
+        Toast.show({ type: "success", text1: data.message });
+        router.back();
+      },
+      onError: (error) => {
+        Toast.show({ type: "error", text1: error.message });
+      },
+    });
   };
 
   return (
