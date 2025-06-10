@@ -103,6 +103,39 @@ async function getAvailability(req, res) {
 }
 
 /**
+ * setPreferredLocation - Set preferred locations for the authenticated user
+ */
+async function setPreferredLocation(req, res) {
+  try {
+    const response = await usersServices.setPreferredLocation(
+      req.user,
+      req.body
+    );
+    res.status(response.statusCode).json(response);
+  } catch (error) {
+    res.status(500).json({
+      message: "Unable to set preferred location",
+      status: "failure",
+    });
+  }
+}
+
+/**
+ * getPreferredLocation - Get preferred locations for the authenticated user
+ */
+async function getPreferredLocation(req, res) {
+  try {
+    const response = await usersServices.getPreferredLocation(req.user);
+    res.status(response.statusCode).json(response);
+  } catch (error) {
+    res.status(500).json({
+      message: "Unable to fetch preferred location",
+      status: "failure",
+    });
+  }
+}
+
+/**
  * Export all fuctions
  */
 export default {
@@ -112,4 +145,6 @@ export default {
   updateUser,
   setAvailability,
   getAvailability,
+  setPreferredLocation,
+  getPreferredLocation,
 };

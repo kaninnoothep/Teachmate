@@ -16,7 +16,11 @@ router.post("/create-account", userControllers.createAccount);
 router.post("/login", userControllers.login);
 
 // GET request to /get-user/:userId
-router.get("/get-user/:userId", authMiddleware.authenticate, userControllers.getUser);
+router.get(
+  "/get-user/:userId",
+  authMiddleware.authenticate,
+  userControllers.getUser
+);
 
 // POST request to /update-user
 router.post(
@@ -37,6 +41,20 @@ router.get(
   "/get-availability",
   authMiddleware.authenticate,
   userControllers.getAvailability
+);
+
+// POST request to /set-preferred-location
+router.post(
+  "/set-preferred-location",
+  authMiddleware.authenticate,
+  userControllers.setPreferredLocation
+);
+
+// GET request to /get-preferred-location
+router.get(
+  "/get-preferred-location",
+  authMiddleware.authenticate,
+  userControllers.getPreferredLocation
 );
 
 /**

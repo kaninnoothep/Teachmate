@@ -100,7 +100,7 @@ async function getUser(payload) {
   const { userId } = payload;
   console.log("userId", userId);
   const foundUser = await users.findOne({ _id: userId });
-  console.log('foundUser', foundUser)
+  console.log("foundUser", foundUser);
 
   if (!foundUser) {
     return responses.buildFailureResponse("User does not exist", 400);
@@ -232,6 +232,63 @@ async function getAvailability(user) {
   };
 }
 
+/**
+ * setPreferredLocation - Update preferred location for the authenticated user
+ *
+ * @param {object} user - Authenticated user object
+ * @param {object} preferredLocations - Object containing preferred location flags
+ * @returns {object} - Response with status and message
+ */
+async function setPreferredLocation(user, preferredLocations) {
+  const userDoc = await users.findById(user._id);
+  if (!userDoc) {
+    return {
+      message: "User not found",
+      statusCode: 404,
+      status: "failure",
+    };
+  }
+
+  userDoc.preferredLocations = {
+    publicPlace: !!preferredLocations.publicPlace,
+    tutorPlace: !!preferredLocations.tutorPlace,
+    online: !!preferredLocations.online,
+  };
+
+  await userDoc.save();
+
+  return {
+    message: "Preferred location updated successfully",
+    statusCode: 200,
+    status: "success",
+    data: userDoc.preferredLocations,
+  };
+}
+
+/**
+ * getPreferredLocation - Retrieve preferred location of the authenticated user
+ *
+ * @param {object} user - Authenticated user object
+ * @returns {object} - Response with status and data
+ */
+async function getPreferredLocation(user) {
+  const userDoc = await users.findById(user._id).select("preferredLocations");
+  if (!userDoc) {
+    return {
+      message: "User not found",
+      statusCode: 404,
+      status: "failure",
+    };
+  }
+
+  return {
+    message: "Preferred location fetched successfully",
+    statusCode: 200,
+    status: "success",
+    data: userDoc.preferredLocations,
+  };
+}
+
 export default {
   createAccount,
   login,
@@ -239,4 +296,6 @@ export default {
   updateUser,
   setAvailability,
   getAvailability,
+  setPreferredLocation,
+  getPreferredLocation,
 };
