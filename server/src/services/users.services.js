@@ -96,11 +96,8 @@ async function login(payload) {
 }
 
 async function getUser(payload) {
-  console.log("payload", payload);
   const { userId } = payload;
-  console.log("userId", userId);
   const foundUser = await users.findOne({ _id: userId });
-  console.log("foundUser", foundUser);
 
   if (!foundUser) {
     return responses.buildFailureResponse("User does not exist", 400);
