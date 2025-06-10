@@ -45,12 +45,13 @@ export const ProfilePage = ({ user }) => {
     [user.about, user.hourlyRate]
   );
 
-  const { publicPlace, tutorPlace, online } = user.preferredLocations;
+  const showPreferredLocations = useMemo(() => {
+    if (!user.preferredLocations) return;
 
-  const showPreferredLocations = useMemo(
-    () => publicPlace || tutorPlace || online,
-    [publicPlace, tutorPlace, online]
-  );
+    const { publicPlace, tutorPlace, online } = user.preferredLocations;
+
+    return publicPlace || tutorPlace || online;
+  }, [user.preferredLocations]);
 
   return (
     <ScrollView contentContainerStyle={styles.scrollContainer}>
@@ -161,7 +162,7 @@ export const ProfilePage = ({ user }) => {
 
               {showPreferredLocations && (
                 <View style={styles.preferredLocation}>
-                  {publicPlace && (
+                  {user.preferredLocations.publicPlace && (
                     <InfoItem
                       icon="map"
                       value="In a Public Place"
@@ -169,7 +170,7 @@ export const ProfilePage = ({ user }) => {
                     />
                   )}
 
-                  {tutorPlace && (
+                  {user.preferredLocations.tutorPlace && (
                     <InfoItem
                       icon="home"
                       value="At Tutor's Place"
@@ -177,7 +178,7 @@ export const ProfilePage = ({ user }) => {
                     />
                   )}
 
-                  {online && (
+                  {user.preferredLocations.online && (
                     <InfoItem
                       icon="video-outline"
                       value="Online"
@@ -208,7 +209,7 @@ export const ProfilePage = ({ user }) => {
           </View>
 
           {/* Education Item */}
-          {user.education.length > 0 &&
+          {user.education?.length > 0 &&
             user.education.map((item) => {
               const { _id, school, degree, fieldOfStudy, startDate, endDate } =
                 item;
@@ -261,7 +262,7 @@ export const ProfilePage = ({ user }) => {
               </View>
 
               {/* Experience Item */}
-              {user.experience.length > 0 &&
+              {user.experience?.length > 0 &&
                 user.experience.map((item) => {
                   const { _id, title, company, startDate, endDate } = item;
 
