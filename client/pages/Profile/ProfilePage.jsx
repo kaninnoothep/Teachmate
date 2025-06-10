@@ -1,4 +1,3 @@
-import { useUser } from "@/context/UserProvider/UserProvider";
 import { Pressable, ScrollView, TouchableOpacity, View } from "react-native";
 import { Avatar, Text, useTheme } from "react-native-paper";
 import { useStyles } from "./ProfilePage.styles";
@@ -9,9 +8,9 @@ import { Chip } from "@/components/Chip/Chip";
 import { BackgroundItem } from "./units/BackgroundItem";
 import { Divider } from "@/components/Divider/Divider";
 import { useMemo } from "react";
+import dayjs from "dayjs";
 
-export const ProfilePage = () => {
-  const { user } = useUser();
+export const ProfilePage = ({ user }) => {
   const theme = useTheme();
   const styles = useStyles(theme);
   const router = useRouter();
@@ -209,12 +208,37 @@ export const ProfilePage = () => {
           </View>
 
           {/* Education Item */}
-          <BackgroundItem
-            title={"University of Regina"}
-            subtitle={`Master of Science (MS), Mathematics`}
-            durationText={`Jan 2021 - Oct 2023`}
-            onPressEdit={() => router.push("/profile/education/1234")}
-          />
+          {user.education.length > 0 &&
+            user.education.map((item) => {
+              const { _id, school, degree, fieldOfStudy, startDate, endDate } =
+                item;
+              const formattedStartDate = dayjs(startDate).format("MMM YYYY");
+              const formattedEndDate = endDate
+                ? dayjs(endDate).format("MMM YYYY")
+                : "Present";
+
+              const getSubtitle = () => {
+                let subtitle = "";
+
+                if (degree) {
+                  subtitle = degree;
+                }
+                if (fieldOfStudy) {
+                  subtitle += fieldOfStudy;
+                }
+
+                return subtitle;
+              };
+              return (
+                <BackgroundItem
+                  key={_id}
+                  title={school}
+                  subtitle={getSubtitle()}
+                  durationText={`${formattedStartDate} - ${formattedEndDate}`}
+                  onPressEdit={() => router.push(`/profile/education/${_id}`)}
+                />
+              );
+            })}
         </View>
 
         {/* Experience */}
@@ -237,12 +261,28 @@ export const ProfilePage = () => {
               </View>
 
               {/* Experience Item */}
-              <BackgroundItem
-                title={"University of Regina"}
-                subtitle={`Master of Science (MS), Mathematics`}
-                durationText={`Jan 2021 - Oct 2023`}
-                onPressEdit={() => router.push("/profile/experience/1234")}
-              />
+              {user.experience.length > 0 &&
+                user.experience.map((item) => {
+                  const { _id, title, company, startDate, endDate } = item;
+
+                  const formattedStartDate =
+                    dayjs(startDate).format("MMM YYYY");
+                  const formattedEndDate = endDate
+                    ? dayjs(endDate).format("MMM YYYY")
+                    : "Present";
+
+                  return (
+                    <BackgroundItem
+                      key={_id}
+                      title={title}
+                      subtitle={company}
+                      durationText={`${formattedStartDate} - ${formattedEndDate}`}
+                      onPressEdit={() =>
+                        router.push(`/profile/experience/${_id}`)
+                      }
+                    />
+                  );
+                })}
             </View>
           </>
         )}
