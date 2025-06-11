@@ -4,16 +4,37 @@ import { FormTextInput } from "@/components/Form/FormTextInput/FormTextInput";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useMemo, useState } from "react";
-import { Pressable, ScrollView, StyleSheet, View } from "react-native";
+import { Alert, Pressable, ScrollView, StyleSheet, View } from "react-native";
 import { Text, useTheme } from "react-native-paper";
 import { useEducationForm } from "./hooks/useEducationForm";
 import { MonthYearPicker } from "@/components/MonthYearPicker/MonthYearPicker";
 import { DatePickerButton } from "@/components/MonthYearPicker/DatePickerButton";
+import { useDeleteEducationMutation } from "@/services/api/user/useDeleteEducationMutation";
+import Toast from "react-native-toast-message";
+import { useUser } from "@/context/UserProvider/UserProvider";
+import { sortByEndDate } from "@/utils/sortByEndDate";
 
 export const EducationPage = () => {
   const { educationId } = useLocalSearchParams();
+  const { user, handleSetUser } = useUser();
   const theme = useTheme();
   const router = useRouter();
+
+  const { mutateAsync: deleteEducation } = useDeleteEducationMutation({
+    onSuccess: (response) => {
+      let newEducation = user.education?.filter(
+        (item) => item._id !== response.data._id
+      );
+      handleSetUser({
+        data: { ...user, education: sortByEndDate(newEducation) },
+      });
+      Toast.show({ type: "success", text1: response.message });
+      router.back();
+    },
+    onError: (error) => {
+      Toast.show({ type: "error", text1: error.message });
+    },
+  });
 
   const {
     control,
@@ -33,6 +54,17 @@ export const EducationPage = () => {
   const isAdd = useMemo(() => !educationId, [educationId]);
 
   const pageTitle = () => (isAdd ? "Add Education" : "Update Education");
+
+  const handleDeleteEducation = () => {
+    Alert.alert("Are you sure you want to delete this education?", "", [
+      { text: "Cancel", style: "cancel" },
+      {
+        text: "Delete",
+        onPress: () => deleteEducation(educationId),
+        style: "destructive",
+      },
+    ]);
+  };
 
   const handleStartDateSelect = (dateData) => {
     // Set the form value with the dateData object
@@ -101,7 +133,7 @@ export const EducationPage = () => {
 
             <View style={styles.container}>
               <Button
-                onPress={handleSubmit}
+                onPress={handleDeleteEducation}
                 variant="red-outlined"
                 icon={({ color }) => (
                   <MaterialCommunityIcons
