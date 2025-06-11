@@ -5,7 +5,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useMemo, useState } from "react";
 import { Alert, Pressable, ScrollView, StyleSheet, View } from "react-native";
-import { Text, useTheme } from "react-native-paper";
+import { Text } from "react-native-paper";
 import { useEducationForm } from "./hooks/useEducationForm";
 import { MonthYearPicker } from "@/components/MonthYearPicker/MonthYearPicker";
 import { DatePickerButton } from "@/components/MonthYearPicker/DatePickerButton";
@@ -17,7 +17,6 @@ import { sortByEndDate } from "@/utils/sortByEndDate";
 export const EducationPage = () => {
   const { educationId } = useLocalSearchParams();
   const { user, handleSetUser } = useUser();
-  const theme = useTheme();
   const router = useRouter();
 
   const { mutateAsync: deleteEducation } = useDeleteEducationMutation({
