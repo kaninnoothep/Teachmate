@@ -86,11 +86,7 @@ export const ProfilePage = ({ user }) => {
       quality: 1,
     });
 
-    console.log(result);
-
     if (!result.canceled) {
-      // setImage(result.assets[0].uri);
-      console.log("result.assets[0].uri", result.assets[0].uri);
       const uri = result.assets[0].uri;
 
       const formData = new FormData();

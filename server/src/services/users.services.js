@@ -155,10 +155,7 @@ async function uploadImage(user, file) {
     resource_type: "image",
   });
 
-  console.log("imageUpload", imageUpload);
-
   const imageURL = imageUpload.secure_url;
-  console.log("imageURL", imageURL);
 
   currentUser.image = imageURL;
 
