@@ -6,6 +6,7 @@ export const LOGIN_API_KEY = "/user/login";
 // Profile
 export const GET_USER_API_KEY = "/user/get-user";
 export const UPDATE_USER_API_KEY = "/user/update-user";
+export const UPLOAD_IMAGE_API_KEY = "/user/upload-image";
 
 // Availability
 export const SET_AVAILABILITY_API_KEY = "/user/set-availability";

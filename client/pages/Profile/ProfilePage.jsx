@@ -10,12 +10,19 @@ import { Divider } from "@/components/Divider/Divider";
 import { useMemo } from "react";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
+import * as ImagePicker from "expo-image-picker";
+import { useUploadImageMutation } from "@/services/api/user/useUploadImageMutation";
+import Toast from "react-native-toast-message";
+import { useUser } from "@/context/UserProvider/UserProvider";
 
 dayjs.extend(utc);
 export const ProfilePage = ({ user }) => {
+  const { user: userContext, handleSetUser } = useUser();
   const theme = useTheme();
   const styles = useStyles(theme);
   const router = useRouter();
+  const { mutateAsync: uploadImage } = useUploadImageMutation({});
+
   // Helper function to format location string
   const formatLocation = () => {
     const locationParts = [];
@@ -70,6 +77,41 @@ export const ProfilePage = ({ user }) => {
     return dateText;
   };
 
+  const handlePickImage = async () => {
+    // No permissions request is necessary for launching the image library
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: "images",
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    console.log(result);
+
+    if (!result.canceled) {
+      // setImage(result.assets[0].uri);
+      console.log("result.assets[0].uri", result.assets[0].uri);
+      const uri = result.assets[0].uri;
+
+      const formData = new FormData();
+      formData.append("image", {
+        uri,
+        name: "avatar.jpg",
+        type: "image/jpeg",
+      });
+
+      await uploadImage(formData, {
+        onSuccess: (response) => {
+          Toast.show({ type: "success", text1: response.message });
+          handleSetUser({ data: { ...userContext, image: response.data } });
+        },
+        onError: (error) => {
+          Toast.show({ type: "error", text1: error.message });
+        },
+      });
+    }
+  };
+
   return (
     <ScrollView contentContainerStyle={styles.scrollContainer}>
       <Pressable>
@@ -78,14 +120,18 @@ export const ProfilePage = ({ user }) => {
           <View style={styles.listContainer}>
             <View style={styles.leftWrapper}>
               <TouchableOpacity
-                onPress={() => {}}
+                onPress={handlePickImage}
                 style={styles.avatarContainer}
               >
-                <Avatar.Text
-                  size={100}
-                  label={`${user.firstName[0]}${user.lastName[0]}`}
-                  style={{ backgroundColor: theme.colors.primary }}
-                />
+                {user.image ? (
+                  <Avatar.Image size={100} source={{ uri: user.image }} />
+                ) : (
+                  <Avatar.Text
+                    size={100}
+                    label={`${user.firstName[0]}${user.lastName[0]}`}
+                    style={{ backgroundColor: theme.colors.primary }}
+                  />
+                )}
 
                 <MaterialCommunityIcons
                   name="plus-circle"
