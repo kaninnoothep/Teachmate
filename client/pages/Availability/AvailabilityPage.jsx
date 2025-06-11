@@ -5,6 +5,7 @@ import { TimeSlotButton } from "@/components/TimeSlotButton/TimeSlotButton";
 import { useAvailabilityQuery } from "@/services/api/availability/useAvailabilityQuery";
 import { useSetAvailabilityMutation } from "@/services/api/availability/useSetAvailabilityMutation";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import { Pressable, ScrollView, StyleSheet, View } from "react-native";
 import { Text, useTheme } from "react-native-paper";
@@ -33,6 +34,7 @@ const isSameSlot = (a, b) =>
   a.startTime === b.startTime && a.endTime === b.endTime;
 
 export const AvailabilityPage = () => {
+  const router = useRouter();
   const theme = useTheme();
   const styles = useStyles(theme);
   const today = new Date();
@@ -158,6 +160,7 @@ export const AvailabilityPage = () => {
         setSelectedDates([]);
         setSelectedTimeSlots([]);
         setShowDateWarning(false);
+        router.back();
       },
       onError: (error) => {
         Toast.show({ type: "error", text1: error.message });

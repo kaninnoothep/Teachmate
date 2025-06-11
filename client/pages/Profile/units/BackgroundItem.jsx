@@ -5,7 +5,7 @@ import { Text, useTheme } from "react-native-paper";
 export const BackgroundItem = ({
   title,
   subtitle,
-  durationText,
+  durationText = "",
   onPressEdit,
   disabledEdit = false,
 }) => {
