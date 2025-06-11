@@ -18,6 +18,13 @@ export const EducationPage = () => {
   const { educationId } = useLocalSearchParams();
   const { user, handleSetUser } = useUser();
   const router = useRouter();
+  const {
+    control,
+    handleSubmit,
+    watch,
+    setValue,
+    formState: { errors },
+  } = useEducationForm();
 
   const { mutateAsync: deleteEducation } = useDeleteEducationMutation({
     onSuccess: (response) => {
@@ -34,14 +41,6 @@ export const EducationPage = () => {
       Toast.show({ type: "error", text1: error.message });
     },
   });
-
-  const {
-    control,
-    handleSubmit,
-    watch,
-    setValue,
-    formState: { errors },
-  } = useEducationForm();
 
   const [showStartDatePicker, setShowStartDatePicker] = useState(false);
   const [showEndDatePicker, setShowEndDatePicker] = useState(false);
@@ -110,7 +109,9 @@ export const EducationPage = () => {
             label="Start Date"
             value={startDate}
             onPress={() => setShowStartDatePicker(true)}
-            containerStyles={{ marginBottom: 26, marginTop: 6 }}
+            containerStyles={{ marginBottom: 10, marginTop: 6 }}
+            helperText={errors.startDate?.message}
+            isError={errors.startDate?.message}
           />
 
           {/* End Date */}
@@ -118,7 +119,7 @@ export const EducationPage = () => {
             label="End Date"
             value={endDate}
             onPress={() => setShowEndDatePicker(true)}
-            containerStyles={{ marginBottom: 28 }}
+            containerStyles={{ marginBottom: 18 }}
             helperText={errors.endDate?.message}
             isError={errors.endDate?.message}
           />

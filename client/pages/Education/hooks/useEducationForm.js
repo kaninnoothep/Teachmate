@@ -19,6 +19,12 @@ const validationSchema = object({
   function (values) {
     const { startDate, endDate } = values;
 
+    if (!startDate && endDate)
+      return this.createError({
+        path: "startDate",
+        message: "Start date is required",
+      });
+
     // If either date is missing, skip validation
     if (
       !startDate ||

@@ -9,6 +9,7 @@ export const DatePickerButton = ({
   containerStyles,
   helperText = "",
   isError = false,
+  hideHelperTextSpace = false,
   ...props
 }) => {
   const theme = useTheme();
@@ -33,8 +34,11 @@ export const DatePickerButton = ({
         />
       </TouchableOpacity>
 
-      {helperText && (
-        <Text variant="bodySmall" style={styles.errorText}>
+      {!hideHelperTextSpace && (
+        <Text
+          variant="bodySmall"
+          style={[styles.errorText, { opacity: helperText ? 1 : 0 }]}
+        >
           {helperText}
         </Text>
       )}
@@ -84,6 +88,5 @@ const useStyles = (theme, isError) =>
       marginTop: 5,
       letterSpacing: 0.2,
       marginLeft: 12,
-      marginBottom: 16,
     },
   });

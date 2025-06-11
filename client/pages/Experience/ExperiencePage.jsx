@@ -4,33 +4,72 @@ import { FormTextInput } from "@/components/Form/FormTextInput/FormTextInput";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useMemo, useState } from "react";
-import { Pressable, ScrollView, StyleSheet, View } from "react-native";
-import { Text, useTheme } from "react-native-paper";
+import { Alert, Pressable, ScrollView, StyleSheet, View } from "react-native";
+import { Text } from "react-native-paper";
 import { useExperienceForm } from "./hooks/useExperienceForm";
 import { MonthYearPicker } from "@/components/MonthYearPicker/MonthYearPicker";
 import { DatePickerButton } from "@/components/MonthYearPicker/DatePickerButton";
+import { useUser } from "@/context/UserProvider/UserProvider";
+import { useDeleteExperienceMutation } from "@/services/api/experience/useDeleteExperienceMutation";
+import { sortByEndDate } from "@/utils/sortByEndDate";
+import Toast from "react-native-toast-message";
 
 export const ExperiencePage = () => {
   const { experienceId } = useLocalSearchParams();
-  const theme = useTheme();
+  const { user, handleSetUser } = useUser();
   const router = useRouter();
-  const { control, handleSubmit } = useExperienceForm();
+  const {
+    control,
+    handleSubmit,
+    watch,
+    setValue,
+    formState: { errors },
+  } = useExperienceForm();
+
+  const { mutateAsync: deleteExperience } = useDeleteExperienceMutation({
+    onSuccess: (response) => {
+      let newExperience = user.experience?.filter(
+        (item) => item._id !== response.data._id
+      );
+      handleSetUser({
+        data: { ...user, experience: sortByEndDate(newExperience) },
+      });
+      Toast.show({ type: "success", text1: response.message });
+      router.back();
+    },
+    onError: (error) => {
+      Toast.show({ type: "error", text1: error.message });
+    },
+  });
 
   const [showStartDatePicker, setShowStartDatePicker] = useState(false);
   const [showEndDatePicker, setShowEndDatePicker] = useState(false);
-  const [startDate, setStartDate] = useState(null);
-  const [endDate, setEndDate] = useState(null);
+
+  // Watch the form values for dates
+  const startDate = watch("startDate");
+  const endDate = watch("endDate");
 
   const isAdd = useMemo(() => !experienceId, [experienceId]);
 
   const pageTitle = () => (isAdd ? "Add Experience" : "Update Experience");
 
+  const handleDeleteExperience = () => {
+    Alert.alert("Are you sure you want to delete this experience?", "", [
+      { text: "Cancel", style: "cancel" },
+      {
+        text: "Delete",
+        onPress: () => deleteExperience(experienceId),
+        style: "destructive",
+      },
+    ]);
+  };
+
   const handleStartDateSelect = (dateData) => {
-    setStartDate(dateData);
+    setValue("startDate", dateData);
   };
 
   const handleEndDateSelect = (dateData) => {
-    setEndDate(dateData);
+    setValue("endDate", dateData);
   };
 
   return (
@@ -60,7 +99,9 @@ export const ExperiencePage = () => {
             label="Start Date"
             value={startDate}
             onPress={() => setShowStartDatePicker(true)}
-            containerStyles={{ marginBottom: 26, marginTop: 6 }}
+            containerStyles={{ marginBottom: 10, marginTop: 6 }}
+            helperText={errors.startDate?.message}
+            isError={errors.startDate?.message}
           />
 
           {/* End Date */}
@@ -68,7 +109,9 @@ export const ExperiencePage = () => {
             label="End Date"
             value={endDate}
             onPress={() => setShowEndDatePicker(true)}
-            containerStyles={{ marginBottom: 28 }}
+            containerStyles={{ marginBottom: 18 }}
+            helperText={errors.endDate?.message}
+            isError={errors.endDate?.message}
           />
 
           <Button onPress={handleSubmit}>{pageTitle()}</Button>
@@ -80,7 +123,7 @@ export const ExperiencePage = () => {
 
             <View style={styles.container}>
               <Button
-                onPress={handleSubmit}
+                onPress={handleDeleteExperience}
                 variant="red-outlined"
                 icon={({ color }) => (
                   <MaterialCommunityIcons

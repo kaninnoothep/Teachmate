@@ -17,3 +17,6 @@ export const GET_PREFERRED_LOCATION_API_KEY = "/user/get-preferred-location";
 
 // Education
 export const EDUCATION_API_KEY = "/user/education";
+
+// Experience
+export const EXPERIENCE_API_KEY = "/user/experience";

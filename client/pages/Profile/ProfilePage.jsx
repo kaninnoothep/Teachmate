@@ -55,6 +55,8 @@ export const ProfilePage = ({ user }) => {
   }, [user.preferredLocations]);
 
   const getDurationText = (startDate, endDate) => {
+    if (!startDate && !endDate) return "";
+
     const formattedStartDate = dayjs.utc(startDate).format("MMM YYYY");
     const formattedEndDate = endDate
       ? dayjs.utc(endDate).format("MMM YYYY")
@@ -289,7 +291,10 @@ export const ProfilePage = ({ user }) => {
                       subtitle={company}
                       durationText={getDurationText(startDate, endDate)}
                       onPressEdit={() =>
-                        router.push(`/profile/experience/${_id}`)
+                        router.push({
+                          pathname: `/profile/experience/${_id}`,
+                          params: { experience: JSON.stringify(item) },
+                        })
                       }
                     />
                   );
