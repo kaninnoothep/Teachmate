@@ -2,14 +2,12 @@ import { useUser } from "@/context/UserProvider/UserProvider";
 import { useForm } from "@/hooks/useForm";
 import { useAddEducationMutation } from "@/services/api/education/useAddEducationMutation";
 import { useUpdateEducationMutation } from "@/services/api/education/useUpdateEducationMutation";
+import { formatDate } from "@/utils/formatDate";
+import { parseDateToPickerFormat } from "@/utils/parseDateToPickerFormat";
 import { sortByEndDate } from "@/utils/sortByEndDate";
-import dayjs from "dayjs";
-import utc from "dayjs/plugin/utc";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import Toast from "react-native-toast-message";
 import { object, string } from "yup";
-
-dayjs.extend(utc);
 
 const validationSchema = object({
   school: string().required("School is required"),
@@ -53,27 +51,6 @@ const validationSchema = object({
     return true;
   }
 );
-
-// Helper function to convert dateData to ISO date string
-const formatDate = (dateData) => {
-  if (!dateData?.year || !dateData?.month) return null;
-
-  return dayjs.utc(`${dateData.year}-${dateData.month}-01`).toISOString();
-};
-
-const parseDateToPickerFormat = (isoDateString) => {
-  if (!isoDateString) return null;
-
-  const date = dayjs.utc(isoDateString);
-  const year = date.format("YYYY");
-  const month = date.format("MM");
-
-  return {
-    year,
-    month,
-    displayText: `${date.format("MMMM")} ${year}`,
-  };
-};
 
 export const useEducationForm = () => {
   const { user, handleSetUser } = useUser();
