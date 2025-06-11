@@ -30,9 +30,11 @@ export default function TabLayout() {
           ),
         }}
       />
+
       <Tabs.Screen
         name="sessions"
         options={{
+          href: user.role === "student" && null,
           title: "Sessions",
           tabBarIcon: ({ color }) => (
             <MaterialCommunityIcons
@@ -43,6 +45,18 @@ export default function TabLayout() {
           ),
         }}
       />
+
+      <Tabs.Screen
+        name="explore"
+        options={{
+          href: user.role === "tutor" && null,
+          title: "Explore",
+          tabBarIcon: ({ color }) => (
+            <MaterialCommunityIcons name="magnify" size={24} color={color} />
+          ),
+        }}
+      />
+
       <Tabs.Screen
         name="profile"
         options={{
