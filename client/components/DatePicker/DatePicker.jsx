@@ -8,6 +8,14 @@ const DateWithDot = ({ day, availabilityMap }) => {
   const dateKey = date.toISOString().split("T")[0];
   const hasAvailability = availabilityMap[dateKey]?.length > 0;
 
+  const getDotOpacity = () => {
+    if (isDisabled && hasAvailability) return 0.7;
+
+    if (hasAvailability) return 1;
+
+    return 0;
+  };
+
   return (
     <View
       style={{
@@ -36,9 +44,11 @@ const DateWithDot = ({ day, availabilityMap }) => {
           width: 6,
           height: 6,
           borderRadius: 10,
-          backgroundColor: theme.colors.success,
+          backgroundColor: isDisabled
+            ? theme.colors.outline
+            : theme.colors.success,
           marginTop: 2,
-          opacity: hasAvailability ? 1 : 0,
+          opacity: getDotOpacity(),
         }}
       />
     </View>

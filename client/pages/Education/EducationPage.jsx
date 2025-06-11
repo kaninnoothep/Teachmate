@@ -9,7 +9,7 @@ import { Text, useTheme } from "react-native-paper";
 import { useEducationForm } from "./hooks/useEducationForm";
 import { MonthYearPicker } from "@/components/MonthYearPicker/MonthYearPicker";
 import { DatePickerButton } from "@/components/MonthYearPicker/DatePickerButton";
-import { useDeleteEducationMutation } from "@/services/api/user/useDeleteEducationMutation";
+import { useDeleteEducationMutation } from "@/services/api/education/useDeleteEducationMutation";
 import Toast from "react-native-toast-message";
 import { useUser } from "@/context/UserProvider/UserProvider";
 import { sortByEndDate } from "@/utils/sortByEndDate";

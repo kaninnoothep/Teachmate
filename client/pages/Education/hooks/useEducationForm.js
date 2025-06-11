@@ -1,6 +1,6 @@
 import { useUser } from "@/context/UserProvider/UserProvider";
 import { useForm } from "@/hooks/useForm";
-import { useAddEducationMutation } from "@/services/api/user/useAddEducationMutation";
+import { useAddEducationMutation } from "@/services/api/education/useAddEducationMutation";
 import { sortByEndDate } from "@/utils/sortByEndDate";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import Toast from "react-native-toast-message";
