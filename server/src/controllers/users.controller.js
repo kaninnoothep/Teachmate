@@ -63,6 +63,18 @@ async function updateUser(req, res) {
   }
 }
 
+async function uploadImage(req, res) {
+  try {
+    const response = await usersServices.uploadImage(req.user, req.file);
+    res.status(response.statusCode).json(response);
+  } catch (error) {
+    res.status(500).json({
+      message: "Unable to upload image",
+      status: "failure",
+    });
+  }
+}
+
 /**
  * setAvailability - Set availability for the authenticated user
  *
@@ -251,6 +263,7 @@ export default {
   login,
   getUser,
   updateUser,
+  uploadImage,
   setAvailability,
   getAvailability,
   setPreferredLocation,

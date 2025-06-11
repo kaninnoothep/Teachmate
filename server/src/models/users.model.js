@@ -29,6 +29,10 @@ const userSchema = mongoose.Schema(
       enum: ["student", "tutor"],
       required: true,
     },
+    image: {
+      type: String,
+      required: false,
+    },
     phone: {
       type: String,
       required: false,

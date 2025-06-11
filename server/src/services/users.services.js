@@ -9,6 +9,7 @@ import Education from "../models/education.model.js";
 import Experience from "../models/experience.model.js";
 import { sortByEndDate } from "../utils/sortByEndDate.js";
 import { populateUserData } from "../utils/populateUserData.js";
+import { v2 as cloudinary } from "cloudinary";
 
 /**
  * createAccount - Create new user account
@@ -136,6 +137,38 @@ async function updateUser(user, payload) {
     statusCode: 200,
     status: "success",
     data: updatedUser,
+  };
+}
+
+async function uploadImage(user, file) {
+  const currentUser = await users.findById(user._id);
+
+  if (!currentUser) {
+    return {
+      message: "User not found",
+      statusCode: 404,
+      status: "failure",
+    };
+  }
+
+  const imageUpload = await cloudinary.uploader.upload(file.path, {
+    resource_type: "image",
+  });
+
+  console.log("imageUpload", imageUpload);
+
+  const imageURL = imageUpload.secure_url;
+  console.log("imageURL", imageURL);
+
+  currentUser.image = imageURL;
+
+  await currentUser.save();
+
+  return {
+    message: "Image uploaded successfully",
+    statusCode: 200,
+    status: "success",
+    data: currentUser.image,
   };
 }
 
@@ -400,6 +433,7 @@ export default {
   login,
   getUser,
   updateUser,
+  uploadImage,
   setAvailability,
   getAvailability,
   setPreferredLocation,

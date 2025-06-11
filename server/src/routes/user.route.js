@@ -5,6 +5,7 @@ import express from "express";
 import userControllers from "../controllers/users.controller.js";
 import authMiddleware from "../middlewares/auth.js";
 import auth from "../middlewares/auth.js";
+import upload from "../middlewares/multer.js";
 
 // Define Router object for all /user routes
 const router = express.Router();
@@ -28,6 +29,13 @@ router.post(
   "/update-user",
   authMiddleware.authenticate,
   userControllers.updateUser
+);
+
+router.post(
+  "/upload-image",
+  authMiddleware.authenticate,
+  upload.single("image"),
+  userControllers.uploadImage
 );
 
 // AVAILABILITY
