@@ -247,7 +247,12 @@ export const ProfilePage = ({ user }) => {
                   title={school}
                   subtitle={getSubtitle()}
                   durationText={getDurationText(startDate, endDate)}
-                  onPressEdit={() => router.push(`/profile/education/${_id}`)}
+                  onPressEdit={() =>
+                    router.push({
+                      pathname: `/profile/education/${_id}`,
+                      params: { education: JSON.stringify(item) },
+                    })
+                  }
                 />
               );
             })}

@@ -1,10 +1,15 @@
 import { useUser } from "@/context/UserProvider/UserProvider";
 import { useForm } from "@/hooks/useForm";
 import { useAddEducationMutation } from "@/services/api/education/useAddEducationMutation";
+import { useUpdateEducationMutation } from "@/services/api/education/useUpdateEducationMutation";
 import { sortByEndDate } from "@/utils/sortByEndDate";
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import Toast from "react-native-toast-message";
 import { object, string } from "yup";
+
+dayjs.extend(utc);
 
 const validationSchema = object({
   school: string().required("School is required"),
@@ -51,28 +56,56 @@ const validationSchema = object({
 
 // Helper function to convert dateData to ISO date string
 const formatDate = (dateData) => {
-  if (!dateData || !dateData.year || !dateData.month) return null;
+  if (!dateData?.year || !dateData?.month) return null;
 
-  // Create date string in format YYYY-MM-DD (assuming first day of month)
-  const year = dateData.year;
-  const month = dateData.month.padStart(2, "0");
-  return `${year}-${month}-01`;
+  return dayjs.utc(`${dateData.year}-${dateData.month}-01`).toISOString();
+};
+
+const parseDateToPickerFormat = (isoDateString) => {
+  if (!isoDateString) return null;
+
+  const date = dayjs.utc(isoDateString);
+  const year = date.format("YYYY");
+  const month = date.format("MM");
+
+  return {
+    year,
+    month,
+    displayText: `${date.format("MMMM")} ${year}`,
+  };
 };
 
 export const useEducationForm = () => {
   const { user, handleSetUser } = useUser();
   const router = useRouter();
-  const { educationId } = useLocalSearchParams();
+  const { educationId, education } = useLocalSearchParams();
+
+  let defaultValues = {
+    school: "",
+    degree: "",
+    fieldOfStudy: "",
+    startDate: null,
+    endDate: null,
+  };
+
+  if (education) {
+    try {
+      const parsedEducation = JSON.parse(education);
+      defaultValues = {
+        school: parsedEducation?.school || "",
+        degree: parsedEducation?.degree || "",
+        fieldOfStudy: parsedEducation?.fieldOfStudy || "",
+        startDate: parseDateToPickerFormat(parsedEducation?.startDate),
+        endDate: parseDateToPickerFormat(parsedEducation?.endDate),
+      };
+    } catch (err) {
+      console.warn("Failed to parse education:", err);
+    }
+  }
 
   const form = useForm({
     validationSchema,
-    defaultValues: {
-      school: "",
-      degree: "",
-      fieldOfStudy: "",
-      startDate: null,
-      endDate: null,
-    },
+    defaultValues: defaultValues,
   });
 
   // Add education mutation
@@ -92,15 +125,25 @@ export const useEducationForm = () => {
   });
 
   // Update education mutation
-  //   const { mutateAsync: updateEducation } = useUpdateEducationMutation({
-  //     onSuccess: (response) => {
-  //       Toast.show({ type: "success", text1: response.message });
-  //       router.back();
-  //     },
-  //     onError: (error) => {
-  //       Toast.show({ type: "error", text1: error.message });
-  //     },
-  //   });
+  const { mutateAsync: updateEducation } = useUpdateEducationMutation({
+    onSuccess: (response) => {
+      Toast.show({ type: "success", text1: response.message });
+
+      // Replace the updated education entry in user.education
+      const updatedEducationList = user.education.map((item) =>
+        item._id === response.data._id ? response.data : item
+      );
+
+      handleSetUser({
+        data: { ...user, education: sortByEndDate(updatedEducationList) },
+      });
+
+      router.back();
+    },
+    onError: (error) => {
+      Toast.show({ type: "error", text1: error.message });
+    },
+  });
 
   const onSubmit = async (data) => {
     // Transform the form data to match API expectations
@@ -112,11 +155,9 @@ export const useEducationForm = () => {
       endDate: formatDate(data.endDate),
     };
 
-    console.log("education payload", payload);
-
     if (educationId) {
       // update the education
-      // await updateEducation({ id: educationId, ...payload });
+      await updateEducation({ educationId, ...payload });
     } else {
       // add the education
       await addEducation(payload);
