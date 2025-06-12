@@ -38,20 +38,27 @@ const userSchema = mongoose.Schema(
       required: false,
     },
     country: {
-      code: {
-        type: String,
-        required: false,
-      },
-      name: {
-        type: String,
-        required: false,
-      },
+      id: { type: Number },
+      name: { type: String },
+      emoji: { type: String },
+      hasStates: { type: Boolean },
+      latitude: String,
+      longitude: String,
     },
-    postalCode: {
-      type: String,
-      required: false,
+    state: {
+      id: { type: Number },
+      name: { type: String },
+      hasCities: { type: Boolean },
+      latitude: String,
+      longitude: String,
     },
     city: {
+      id: { type: Number },
+      name: { type: String },
+      latitude: String,
+      longitude: String,
+    },
+    postalCode: {
       type: String,
       required: false,
     },

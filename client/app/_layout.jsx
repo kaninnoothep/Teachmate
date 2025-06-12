@@ -1,6 +1,7 @@
 import { LogoHeaderTitle } from "@/components/LogoHeaderTitle/LogoHeaderTitle";
 import { AppProvider } from "@/context/AppProvider/AppProvider";
 import { Stack } from "expo-router";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { useTheme } from "react-native-paper";
 
 function MainLayout() {
@@ -36,8 +37,10 @@ function MainLayout() {
 
 export default function RootLayout() {
   return (
-    <AppProvider>
-      <MainLayout />
-    </AppProvider>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <AppProvider>
+        <MainLayout />
+      </AppProvider>
+    </GestureHandlerRootView>
   );
 }

@@ -28,7 +28,11 @@ export const ProfilePage = ({ user }) => {
     const locationParts = [];
 
     if (user.city) {
-      locationParts.push(user.city);
+      locationParts.push(user.city.name);
+    }
+
+    if (user.state) {
+      locationParts.push(user.state.name);
     }
 
     if (user.postalCode) {

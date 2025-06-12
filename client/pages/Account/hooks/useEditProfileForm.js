@@ -27,14 +27,10 @@ export const useEditProfileForm = () => {
       firstName: user.firstName,
       lastName: user.lastName,
       phone: user.phone || "",
-      country: user.country?.code
-        ? {
-            cca2: user.country.code,
-            name: user.country.name,
-          }
-        : null,
+      country: user.country || null,
+      state: user.state || null,
+      city: user.city || null,
       postalCode: user.postalCode || "",
-      city: user.city || "",
       hourlyRate: user.hourlyRate || "",
       about: user.about || "",
     },
@@ -51,15 +47,14 @@ export const useEditProfileForm = () => {
     },
   });
 
-  const onSubmit = async ({ country, hourlyRate, ...res }) => {
-    const tranformedCountry = {
-      code: country?.cca2 || null,
-      name: country?.name || null,
+  const onSubmit = async ({ country, state, city, hourlyRate, ...rest }) => {
+    const payload = {
+      ...rest,
+      country,
+      state,
+      city,
+      ...(user.role === "tutor" && { hourlyRate }),
     };
-    const payload =
-      user.role === "tutor"
-        ? { country: tranformedCountry, hourlyRate, ...res }
-        : { country: tranformedCountry, ...res };
     console.log("payload", payload);
 
     await updateUser(payload);
