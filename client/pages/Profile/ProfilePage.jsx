@@ -43,7 +43,9 @@ export const ProfilePage = ({ user }) => {
       locationParts.push(user.country.name);
     }
 
-    return locationParts.join(", ");
+    return locationParts.length === 1
+      ? locationParts.join("")
+      : locationParts.join(", ");
   };
 
   // Check if user has any location data
