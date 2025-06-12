@@ -21,3 +21,6 @@ export const EDUCATION_API_KEY = "/user/education";
 
 // Experience
 export const EXPERIENCE_API_KEY = "/user/experience";
+
+// Sessions
+export const GET_SESSIONS_API_KEY = "/user/sessions"

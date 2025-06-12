@@ -28,10 +28,10 @@ export const EmptyList = ({
           <MaterialCommunityIcons
             name={iconName}
             size={iconSize}
-            color={theme.colors.textSecondary}
+            color={theme.colors.onSurfacePrimary2}
           />
         )}
-        <Text variant="titleLarge" style={styles.text}>
+        <Text variant="titleMedium" style={styles.text}>
           {message}
         </Text>
       </>

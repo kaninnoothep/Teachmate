@@ -1,3 +1,4 @@
+import { BackButton } from "@/components/BackButton/BackButton";
 import { LogoHeaderTitle } from "@/components/LogoHeaderTitle/LogoHeaderTitle";
 import { Stack } from "expo-router";
 import { useTheme } from "react-native-paper";
@@ -18,6 +19,24 @@ export default function SessionsLayout() {
         options={{
           title: "Sessions",
           headerTitle: () => <LogoHeaderTitle />,
+        }}
+      />
+
+      <Stack.Screen
+        name="addSession"
+        options={{
+          title: "Session",
+          headerTintColor: theme.colors.inverseText,
+          headerLeft: () => <BackButton />,
+        }}
+      />
+
+      <Stack.Screen
+        name="[sessionId]"
+        options={{
+          title: "Session",
+          headerTintColor: theme.colors.inverseText,
+          headerLeft: () => <BackButton />,
         }}
       />
     </Stack>

@@ -1,10 +1,5 @@
-import { View } from "react-native";
-import { Text } from "react-native-paper";
+import { SessionsPage } from "@/pages/Sessions/SessionsPage";
 
 export default function SessionsScreen() {
-  return (
-    <View>
-      <Text>Sessions page</Text>
-    </View>
-  );
+  return <SessionsPage />;
 }
