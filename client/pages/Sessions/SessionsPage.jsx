@@ -10,19 +10,36 @@ import { useStyles } from "./SessionsPage.styles";
 import { useSessionsQuery } from "@/services/api/sessions/useSessionsQuery";
 import { EmptyList } from "@/components/EmptyList/EmptyList";
 import { SessionItem } from "./components/SessionItem";
+import { useState } from "react";
 
 export const SessionsPage = () => {
   const router = useRouter();
   const theme = useTheme();
   const styles = useStyles(theme);
-  const { sessions, isFetching, refetch, isRefetching } = useSessionsQuery();
+  const [isManualRefreshing, setIsManualRefreshing] = useState(false);
+  const { sessions, isFetching, refetch } = useSessionsQuery();
+
+  const handleRefresh = async () => {
+    setIsManualRefreshing(true);
+    try {
+      await refetch();
+    } finally {
+      setIsManualRefreshing(false);
+    }
+  };
 
   return (
     <>
       <Pressable style={styles.container}>
         <FlatList
           ListHeaderComponent={
-            <Text variant="headlineSmall" style={{ marginBottom: 10 }}>
+            <Text
+              variant="headlineSmall"
+              style={{
+                paddingTop: 20,
+                paddingBottom: 10,
+              }}
+            >
               Sessions {sessions.length > 0 && `(${sessions.length})`}
             </Text>
           }
@@ -30,11 +47,10 @@ export const SessionsPage = () => {
           showsVerticalScrollIndicator={false}
           refreshControl={
             <RefreshControl
-              refreshing={isRefetching}
-              onRefresh={() => refetch()}
+              refreshing={isManualRefreshing}
+              onRefresh={handleRefresh}
             />
           }
-          scrollEnabled
           renderItem={({ item }) => (
             <TouchableOpacity
               onPress={() =>

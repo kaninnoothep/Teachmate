@@ -76,7 +76,9 @@ export const ExperiencePage = () => {
     <ScrollView style={{ paddingBottom: 40 }}>
       <Pressable>
         <View style={styles.container}>
-          <Text variant="headlineSmall">{pageTitle()}</Text>
+          <Text variant="headlineSmall" style={{ marginBottom: 8 }}>
+            {pageTitle()}
+          </Text>
 
           <FormTextInput
             name="title"
@@ -168,32 +170,5 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 24,
     gap: 12,
-  },
-  dateInputContainer: {
-    marginBottom: 12,
-  },
-  dateLabel: {
-    fontSize: 16,
-    fontWeight: "500",
-    marginBottom: 8,
-    color: "#333",
-  },
-  dateButton: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    paddingHorizontal: 16,
-    paddingVertical: 14,
-    borderWidth: 1,
-    borderColor: "#ddd",
-    borderRadius: 8,
-    backgroundColor: "#fff",
-  },
-  dateButtonText: {
-    fontSize: 16,
-    color: "#333",
-  },
-  placeholderText: {
-    color: "#999",
   },
 });

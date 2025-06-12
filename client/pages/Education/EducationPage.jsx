@@ -78,7 +78,9 @@ export const EducationPage = () => {
     <ScrollView style={{ paddingBottom: 40 }}>
       <Pressable>
         <View style={styles.container}>
-          <Text variant="headlineSmall">{pageTitle()}</Text>
+          <Text variant="headlineSmall" style={{ marginBottom: 8 }}>
+            {pageTitle()}
+          </Text>
 
           <FormTextInput
             name="school"

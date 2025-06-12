@@ -7,10 +7,8 @@ export const useStyles = (theme) =>
     },
     listContentContainer: {
       gap: 10,
-      paddingTop: 20,
       paddingHorizontal: 16,
       paddingBottom: 90,
-      // borderWidth: 1,
     },
     fab: {
       width: "auto",
