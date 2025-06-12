@@ -7,6 +7,7 @@ import jwt from "jsonwebtoken";
 import responses from "../utils/response.js";
 import Education from "../models/education.model.js";
 import Experience from "../models/experience.model.js";
+import Session from "../models/session.model.js";
 import { sortByEndDate } from "../utils/sortByEndDate.js";
 import { populateUserData } from "../utils/populateUserData.js";
 import { v2 as cloudinary } from "cloudinary";
@@ -398,6 +399,7 @@ async function updateExperience(user, experienceId, data) {
   );
   if (!updated)
     return responses.buildFailureResponse("Experience not found", 404);
+
   return responses.buildSuccessResponse(
     "Experience updated successfully",
     200,
@@ -425,6 +427,66 @@ async function deleteExperience(user, experienceId) {
   );
 }
 
+/**
+ * Session Services
+ */
+async function addSession(user, data) {
+  const session = await Session.create({ ...data, userId: user._id });
+  await users.findByIdAndUpdate(user._id, {
+    $push: { sessions: session._id },
+  });
+
+  return responses.buildSuccessResponse(
+    "Session added successfully",
+    201,
+    session
+  );
+}
+
+async function getSessions(user) {
+  const sessions = await Session.find({ userId: user._id });
+
+  return responses.buildSuccessResponse(
+    "Sessions fetched successfully",
+    200,
+    sessions
+  );
+}
+
+async function updateSession(user, sessionId, data) {
+  const updated = await Session.findOneAndUpdate(
+    { _id: sessionId, userId: user._id },
+    { $set: data },
+    { new: true }
+  );
+  if (!updated) return responses.buildFailureResponse("Session not found", 404);
+
+  return responses.buildSuccessResponse(
+    "Session updated successfully",
+    200,
+    updated
+  );
+}
+
+async function deleteSession(user, sessionId) {
+  const deleted = await Session.findOneAndDelete({
+    _id: sessionId,
+    userId: user._id,
+  });
+  if (!deleted) return responses.buildFailureResponse("Session not found", 404);
+
+  // Remove the session ID from user's sessions array
+  await users.findByIdAndUpdate(user._id, {
+    $pull: { sessions: sessionId },
+  });
+
+  return responses.buildSuccessResponse(
+    "Session deleted successfully",
+    200,
+    deleted
+  );
+}
+
 export default {
   createAccount,
   login,
@@ -443,4 +505,8 @@ export default {
   getExperiences,
   updateExperience,
   deleteExperience,
+  addSession,
+  getSessions,
+  updateSession,
+  deleteSession,
 };

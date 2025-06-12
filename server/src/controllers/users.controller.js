@@ -256,6 +256,57 @@ async function deleteExperience(req, res) {
 }
 
 /**
+ * Sessions
+ */
+async function addSession(req, res) {
+  try {
+    const response = await usersServices.addSession(req.user, req.body);
+    res.status(response.statusCode).json(response);
+  } catch {
+    res
+      .status(500)
+      .json({ message: "Unable to add sesssion", status: "failure" });
+  }
+}
+
+async function getSessions(req, res) {
+  try {
+    const response = await usersServices.getSessions(req.user);
+    res.status(response.statusCode).json(response);
+  } catch {
+    res
+      .status(500)
+      .json({ message: "Unable to fetch sesssion", status: "failure" });
+  }
+}
+
+async function updateSession(req, res) {
+  try {
+    const response = await usersServices.updateSession(
+      req.user,
+      req.params.id,
+      req.body
+    );
+    res.status(response.statusCode).json(response);
+  } catch {
+    res
+      .status(500)
+      .json({ message: "Unable to update sesssion", status: "failure" });
+  }
+}
+
+async function deleteSession(req, res) {
+  try {
+    const response = await usersServices.deleteSession(req.user, req.params.id);
+    res.status(response.statusCode).json(response);
+  } catch {
+    res
+      .status(500)
+      .json({ message: "Unable to delete sesssion", status: "failure" });
+  }
+}
+
+/**
  * Export all fuctions
  */
 export default {
@@ -276,4 +327,8 @@ export default {
   getExperiences,
   updateExperience,
   deleteExperience,
+  addSession,
+  getSessions,
+  updateSession,
+  deleteSession,
 };

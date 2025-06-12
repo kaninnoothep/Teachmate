@@ -112,6 +112,28 @@ router.delete(
   userControllers.deleteExperience
 );
 
+// SESSIONS
+router.post(
+  "/sessions",
+  authMiddleware.tutorAuthenticate,
+  userControllers.addSession
+);
+router.get(
+  "/sessions",
+  authMiddleware.tutorAuthenticate,
+  userControllers.getSessions
+);
+router.put(
+  "/sessions/:id",
+  authMiddleware.tutorAuthenticate,
+  userControllers.updateSession
+);
+router.delete(
+  "/sessions/:id",
+  authMiddleware.tutorAuthenticate,
+  userControllers.deleteSession
+);
+
 /**
  * Export router object
  */

@@ -7,7 +7,10 @@ import { sortByEndDate } from "./sortByEndDate.js";
  * @returns {Object} - User object with sorted education and experience
  */
 async function populateUserData(query) {
-  const user = await query.populate("education").populate("experience");
+  const user = await query
+    .populate("education")
+    .populate("experience")
+    .populate("sessions");
 
   if (user) {
     if (user.education) {

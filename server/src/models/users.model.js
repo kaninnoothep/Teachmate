@@ -89,6 +89,7 @@ const userSchema = mongoose.Schema(
     },
     education: [{ type: mongoose.Schema.Types.ObjectId, ref: "Education" }],
     experience: [{ type: mongoose.Schema.Types.ObjectId, ref: "Experience" }],
+    sessions: [{ type: mongoose.Schema.Types.ObjectId, ref: "Session" }],
   },
   {
     timestamps: true,
