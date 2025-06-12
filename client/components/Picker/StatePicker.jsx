@@ -7,17 +7,12 @@ import {
   forwardRef,
   useImperativeHandle,
 } from "react";
-import {
-  View,
-  TouchableOpacity,
-  Keyboard,
-  ActivityIndicator,
-} from "react-native";
+import { View, TouchableOpacity, Keyboard } from "react-native";
 import BottomSheet, {
   BottomSheetBackdrop,
   BottomSheetFlatList,
 } from "@gorhom/bottom-sheet";
-import { Text, useTheme } from "react-native-paper";
+import { ActivityIndicator, Text, useTheme } from "react-native-paper";
 import { GetState } from "react-country-state-city";
 import { TextInput } from "../TextInput/TextInput";
 import { useSafeAreaInsets } from "react-native-safe-area-context";

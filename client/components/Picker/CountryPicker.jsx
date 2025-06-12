@@ -8,18 +8,13 @@ import {
   forwardRef,
   useImperativeHandle,
 } from "react";
-import {
-  View,
-  TouchableOpacity,
-  Keyboard,
-  ActivityIndicator,
-} from "react-native";
+import { View, TouchableOpacity, Keyboard } from "react-native";
 import BottomSheet, {
   BottomSheetBackdrop,
   BottomSheetFlatList,
 } from "@gorhom/bottom-sheet";
 import { GetCountries } from "react-country-state-city";
-import { Text, useTheme } from "react-native-paper";
+import { ActivityIndicator, Text, useTheme } from "react-native-paper";
 import { TextInput } from "../TextInput/TextInput";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useStyles } from "./Picker.styles";
