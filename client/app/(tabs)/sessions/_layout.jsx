@@ -12,6 +12,9 @@ export default function SessionsLayout() {
         headerStyle: {
           backgroundColor: theme.colors.primary,
         },
+        headerTitleStyle: {
+          fontWeight: "500",
+        },
       }}
     >
       <Stack.Screen

@@ -23,4 +23,8 @@ export const EDUCATION_API_KEY = "/user/education";
 export const EXPERIENCE_API_KEY = "/user/experience";
 
 // Sessions
-export const SESSIONS_API_KEY = "/user/sessions"
+export const SESSIONS_API_KEY = "/user/sessions";
+
+// Bookings
+export const BOOKING_API_KEY = "/booking";
+export const GET_BOOKINGS_API_KEY = "/booking/me";

@@ -53,6 +53,7 @@ export const Colors = {
     tabBackground: "#FCFCFC",
     white: "#FFF",
     divider: "#ECECEC",
+    infoBackground: "#F5F5F5",
   },
   dark: {
     text: "#FFFFFF",
@@ -109,5 +110,6 @@ export const Colors = {
     tabBackground: "#FCFCFC",
     white: "#FFF",
     divider: "#ECECEC",
+    infoBackground: "#F5F5F5",
   },
 };

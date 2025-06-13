@@ -13,6 +13,9 @@ export default function ProfileLayout() {
         headerStyle: {
           backgroundColor: theme.colors.primary,
         },
+        headerTitleStyle: {
+          fontWeight: "500",
+        },
       }}
     >
       {/* Main Profile Screen */}

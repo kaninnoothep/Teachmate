@@ -1,10 +1,5 @@
-import { View } from "react-native";
-import { Text } from "react-native-paper";
+import { BookingsPage } from "@/pages/Bookings/BookingsPage";
 
 export default function BookingsScreen() {
-  return (
-    <View>
-      <Text>Bookings page</Text>
-    </View>
-  );
+  return <BookingsPage />;
 }

@@ -1,3 +1,4 @@
+import { BackButton } from "@/components/BackButton/BackButton";
 import { LogoHeaderTitle } from "@/components/LogoHeaderTitle/LogoHeaderTitle";
 import { Stack } from "expo-router";
 import { useTheme } from "react-native-paper";
@@ -11,6 +12,9 @@ export default function BookingsLayout() {
         headerStyle: {
           backgroundColor: theme.colors.primary,
         },
+        headerTitleStyle: {
+          fontWeight: "500",
+        },
       }}
     >
       <Stack.Screen
@@ -18,6 +22,15 @@ export default function BookingsLayout() {
         options={{
           title: "Bookings",
           headerTitle: () => <LogoHeaderTitle />,
+        }}
+      />
+
+      <Stack.Screen
+        name="[bookingId]"
+        options={{
+          title: "Booking Details",
+          headerTintColor: theme.colors.inverseText,
+          headerLeft: () => <BackButton />,
         }}
       />
     </Stack>
