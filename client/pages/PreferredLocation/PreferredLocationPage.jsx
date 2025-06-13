@@ -4,11 +4,11 @@ import { useEffect, useState } from "react";
 import { Pressable, ScrollView, StyleSheet, View } from "react-native";
 import { Text } from "react-native-paper";
 import { LocationOption } from "./units/LocationOption";
-import { usePreferredLocationQuery } from "@/services/api/preferredLocation/usePreferredLocationQuery";
 import { useSetPreferredLocationMutation } from "@/services/api/preferredLocation/useSetPreferredLocationMutation";
 import Toast from "react-native-toast-message";
 import { useRouter } from "expo-router";
 import { useUser } from "@/context/UserProvider/UserProvider";
+import { useLocalSearchParams } from "expo-router";
 
 const LOCATION_OPTIONS = [
   { value: "publicPlace", label: "In a Public Place" },
@@ -19,22 +19,25 @@ const LOCATION_OPTIONS = [
 export const PreferredLocationPage = () => {
   const { user, handleSetUser } = useUser();
   const router = useRouter();
-  const [hasInitialized, setHasInitialized] = useState(false);
   const [selectedLocations, setSelectedLocations] = useState([]);
-  const { preferredLocations } = usePreferredLocationQuery();
+  const { preferredLocations } = useLocalSearchParams();
   const { mutateAsync: setPreferredLocations } =
     useSetPreferredLocationMutation({});
 
   // Initialize selectedLocations from fetched preferredLocations
   useEffect(() => {
     if (preferredLocations) {
-      const selected = Object.entries(preferredLocations)
-        .filter(([, isSelected]) => isSelected)
-        .map(([key]) => key);
-      setSelectedLocations(selected);
-      setHasInitialized(true);
+      try {
+        const parsedPreferredLocations = JSON.parse(preferredLocations);
+        const selected = Object.entries(parsedPreferredLocations)
+          .filter(([, isSelected]) => isSelected)
+          .map(([key]) => key);
+        setSelectedLocations(selected);
+      } catch (err) {
+        console.warn("Failed to parse preferred locations:", err);
+      }
     }
-  }, [preferredLocations, hasInitialized]);
+  }, [preferredLocations, setSelectedLocations]);
 
   const handleToggleLocation = (locationValue) => {
     setSelectedLocations((prev) => {

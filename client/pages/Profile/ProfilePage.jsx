@@ -214,7 +214,16 @@ export const ProfilePage = ({ user }) => {
               <View style={styles.titleWrapper}>
                 <Text variant="titleLarge">Preferred Location</Text>
                 <TouchableOpacity
-                  onPress={() => router.push("/profile/preferredLocation")}
+                  onPress={() =>
+                    router.push({
+                      pathname: "/profile/preferredLocation",
+                      params: {
+                        preferredLocations: JSON.stringify(
+                          user.preferredLocations
+                        ),
+                      },
+                    })
+                  }
                   style={{ padding: 4 }}
                 >
                   <MaterialCommunityIcons
