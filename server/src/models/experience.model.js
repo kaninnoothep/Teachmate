@@ -4,7 +4,7 @@
 import mongoose from "mongoose";
 
 /**
- * Define user model for database
+ * Define experience model for database
  */
 const experienceSchema = mongoose.Schema(
   {
@@ -24,6 +24,6 @@ const experienceSchema = mongoose.Schema(
 );
 
 /**
- * Export education model
+ * Export experience model
  */
 export default mongoose.model("Experience", experienceSchema);

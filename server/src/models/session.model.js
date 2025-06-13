@@ -4,7 +4,7 @@
 import mongoose from "mongoose";
 
 /**
- * Define user model for database
+ * Define session model for database
  */
 const sessionSchema = mongoose.Schema(
   {
@@ -23,6 +23,6 @@ const sessionSchema = mongoose.Schema(
 );
 
 /**
- * Export education model
+ * Export session model
  */
 export default mongoose.model("Session", sessionSchema);

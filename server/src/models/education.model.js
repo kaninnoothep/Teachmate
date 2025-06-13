@@ -4,7 +4,7 @@
 import mongoose from "mongoose";
 
 /**
- * Define user model for database
+ * Define education model for database
  */
 const educationSchema = mongoose.Schema(
   {
