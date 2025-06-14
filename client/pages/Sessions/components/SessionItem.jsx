@@ -10,7 +10,7 @@ export const SessionItem = ({ subject, description, estimatedDuration }) => {
       <Text variant="titleMedium" numberOfLines={1} style={styles.title}>
         {subject}
       </Text>
-      <Text variant="bodyMedium" numberOfLines={2}>
+      <Text variant="bodyMedium" numberOfLines={2} style={styles.subtitle}>
         {description}
       </Text>
       <Chip
@@ -39,6 +39,7 @@ const useStyles = (theme) =>
       shadowRadius: 10,
     },
     title: { fontSize: 20 },
+    subtitle: { color: theme.colors.textSecondary },
     descriptionText: {
       color: theme.colors.textSecondary,
     },

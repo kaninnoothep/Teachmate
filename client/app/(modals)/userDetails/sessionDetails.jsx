@@ -1,10 +1,5 @@
-import { View } from "react-native";
-import { Text } from "react-native-paper";
+import { ExternalSessionDetailPage } from "@/pages/ExternalSessionDetail/ExternalSessionDetailPage";
 
 export default function SessionDetailsScreen() {
-  return (
-    <View>
-      <Text>Session Detail Page</Text>
-    </View>
-  );
+  return <ExternalSessionDetailPage />;
 }

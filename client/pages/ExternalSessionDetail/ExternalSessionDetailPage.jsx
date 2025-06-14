@@ -1,0 +1,41 @@
+import { InfoBox } from "@/components/InfoBox/InfoBox";
+import { useLocalSearchParams } from "expo-router";
+import { useState } from "react";
+import { Pressable, ScrollView, StyleSheet, View } from "react-native";
+import { Text } from "react-native-paper";
+
+export const ExternalSessionDetailPage = () => {
+  const { session } = useLocalSearchParams();
+  const [sessionState] = useState(JSON.parse(session));
+
+  return (
+    <ScrollView style={styles.scrollContainer}>
+      <Pressable>
+        <View style={styles.container}>
+          <Text variant="headlineSmall" style={styles.title}>
+            {sessionState.subject}
+          </Text>
+
+          <InfoBox label="Estimated Duration">
+            <Text variant="bodyLarge">{sessionState.estimatedDuration}</Text>
+          </InfoBox>
+
+          <InfoBox label="Description">
+            <Text variant="bodyLarge">{sessionState.description}</Text>
+          </InfoBox>
+        </View>
+      </Pressable>
+    </ScrollView>
+  );
+};
+
+const styles = StyleSheet.create({
+  scrollContainer: {
+    paddingBottom: 40,
+  },
+  container: {
+    paddingHorizontal: 16,
+    paddingVertical: 20,
+    gap: 20,
+  },
+});
