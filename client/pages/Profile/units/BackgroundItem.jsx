@@ -5,8 +5,8 @@ import { Text, useTheme } from "react-native-paper";
 export const BackgroundItem = ({
   title,
   subtitle,
-  durationText = "",
-  onPressEdit,
+  tertiaryText = "",
+  onPressEdit = () => {},
   disabledEdit = false,
 }) => {
   const theme = useTheme();
@@ -16,12 +16,12 @@ export const BackgroundItem = ({
       <View style={styles.leftWrapper}>
         <Text variant="titleMedium">{title}</Text>
         {subtitle && <Text variant="bodySmall">{subtitle}</Text>}
-        {durationText && (
+        {tertiaryText && (
           <Text
             variant="bodySmall"
             style={{ color: theme.colors.textSecondary }}
           >
-            {durationText}
+            {tertiaryText}
           </Text>
         )}
       </View>

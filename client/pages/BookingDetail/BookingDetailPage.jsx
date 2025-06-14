@@ -1,4 +1,4 @@
-import { router, useLocalSearchParams } from "expo-router";
+import { useRouter, useLocalSearchParams } from "expo-router";
 import { useEffect, useMemo } from "react";
 import {
   Alert,
@@ -21,6 +21,7 @@ import { Button } from "@/components/Button/Button";
 export const BookingDetailPage = () => {
   const { user } = useUser();
   const theme = useTheme();
+  const router = useRouter();
   const { bookingId, booking: bookingJSON } = useLocalSearchParams();
 
   const { mutateAsync: cancelBooking } = useCancelBookingMutation({
@@ -125,7 +126,20 @@ export const BookingDetailPage = () => {
           </View>
 
           <InfoBox label={getAuthorLabel()} disabledContentPadding>
-            <TouchableOpacity style={styles.userRow} onPress={() => {}}>
+            <TouchableOpacity
+              style={styles.userRow}
+              onPress={() =>
+                router.push({
+                  pathname: `/(modals)/userDetails/${author._id}`,
+                  params: {
+                    itemName:
+                      author.role === "tutor"
+                        ? "Tutor Details"
+                        : "Student Details",
+                  },
+                })
+              }
+            >
               {author?.image ? (
                 <Avatar.Image size={40} source={{ uri: author.image }} />
               ) : (

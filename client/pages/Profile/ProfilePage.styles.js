@@ -61,4 +61,9 @@ export const useStyles = (theme) =>
       flexWrap: "wrap",
       gap: 10,
     },
+    buttonContainer: {
+      paddingHorizontal: 16,
+      paddingBottom: 40,
+      paddingTop: 11,
+    },
   });

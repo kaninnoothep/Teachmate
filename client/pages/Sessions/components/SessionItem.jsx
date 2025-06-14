@@ -16,6 +16,7 @@ export const SessionItem = ({ subject, description, estimatedDuration }) => {
       <Chip
         icon="clock-time-three-outline"
         iconSize={20}
+        textVariant="bodySmall"
         value={estimatedDuration}
         containerStyle={styles.chip}
       />

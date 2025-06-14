@@ -7,17 +7,22 @@ import {
 } from "react-native";
 import { FAB, Text, useTheme } from "react-native-paper";
 import { useStyles } from "./SessionsPage.styles";
-import { useSessionsQuery } from "@/services/api/sessions/useSessionsQuery";
 import { EmptyList } from "@/components/EmptyList/EmptyList";
 import { SessionItem } from "./components/SessionItem";
 import { useState } from "react";
 
-export const SessionsPage = () => {
+export const SessionsPage = ({
+  sessions,
+  headerTitle = "Sessions",
+  isFetching = false,
+  refetch = () => {},
+  externalView = false,
+  onSessionPress = () => {},
+}) => {
   const router = useRouter();
   const theme = useTheme();
   const styles = useStyles(theme);
   const [isManualRefreshing, setIsManualRefreshing] = useState(false);
-  const { sessions, isFetching, refetch } = useSessionsQuery();
 
   const handleRefresh = async () => {
     setIsManualRefreshing(true);
@@ -40,26 +45,21 @@ export const SessionsPage = () => {
                 paddingBottom: 10,
               }}
             >
-              Sessions {sessions.length > 0 && `(${sessions.length})`}
+              {headerTitle} {sessions.length > 0 && `(${sessions.length})`}
             </Text>
           }
           data={sessions}
           showsVerticalScrollIndicator={false}
           refreshControl={
-            <RefreshControl
-              refreshing={isManualRefreshing}
-              onRefresh={handleRefresh}
-            />
+            !externalView && (
+              <RefreshControl
+                refreshing={isManualRefreshing}
+                onRefresh={handleRefresh}
+              />
+            )
           }
           renderItem={({ item }) => (
-            <TouchableOpacity
-              onPress={() =>
-                router.push({
-                  pathname: `/sessions/${item._id}`,
-                  params: { session: JSON.stringify(item) },
-                })
-              }
-            >
+            <TouchableOpacity onPress={() => onSessionPress(item)}>
               <SessionItem
                 subject={item.subject}
                 description={item.description}
@@ -79,13 +79,15 @@ export const SessionsPage = () => {
           }
         />
       </Pressable>
-      <FAB
-        icon="plus"
-        customSize={56}
-        color={theme.colors.inverseOnSurface}
-        style={styles.fab}
-        onPress={() => router.push("/sessions/addSession")}
-      />
+      {!externalView && (
+        <FAB
+          icon="plus"
+          customSize={56}
+          color={theme.colors.inverseOnSurface}
+          style={styles.fab}
+          onPress={() => router.push("/sessions/addSession")}
+        />
+      )}
     </>
   );
 };

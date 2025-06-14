@@ -83,8 +83,8 @@ export const BookingsPage = () => {
         contentContainerStyle={styles.listContentContainer}
         ListEmptyComponent={
           <EmptyList
-            iconName="book-open-page-variant"
-            message="No bookings Found"
+            iconName="notebook"
+            message="No bookings"
             containerStyle={{ marginTop: 100 }}
             isLoading={isFetching}
           />

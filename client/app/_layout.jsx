@@ -30,6 +30,12 @@ function MainLayout() {
           headerShown: false,
         }}
       />
+      <Stack.Screen
+        name="(modals)"
+        options={{
+          headerShown: false,
+        }}
+      />
       <Stack.Screen name="+not-found" />
     </Stack>
   );
