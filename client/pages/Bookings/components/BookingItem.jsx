@@ -67,10 +67,11 @@ const useStyles = (theme) =>
       shadowOpacity: 0.06,
       shadowRadius: 10,
       justifyContent: "space-between",
-      overflow: "hidden",
     },
     wrapper: {
       padding: 20,
+      borderTopRightRadius: 20,
+      borderBottomRightRadius: 20,
     },
     leftWrapper: {
       flex: 1,
