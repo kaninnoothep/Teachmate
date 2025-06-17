@@ -30,7 +30,7 @@ const TIME_SLOTS = [
   { startTime: "20:00", endTime: "21:00" },
   { startTime: "21:00", endTime: "22:00" },
 ];
-const isSameSlot = (a, b) =>
+export const isSameSlot = (a, b) =>
   a.startTime === b.startTime && a.endTime === b.endTime;
 
 export const AvailabilityPage = () => {
@@ -45,12 +45,10 @@ export const AvailabilityPage = () => {
   const { availability } = useAvailabilityQuery();
   const { mutateAsync: setAvailability } = useSetAvailabilityMutation({});
 
-  // Add this debugging useEffect to see what's in your availability data
   useEffect(() => {
     if (availability && availability.length > 0) {
       const initialMap = {};
       availability.forEach((item) => {
-        // Try different date parsing approaches
         const rawDate = item.date;
         const dateObj = new Date(rawDate);
         const dateKey = dateObj.toISOString().split("T")[0];
@@ -58,6 +56,7 @@ export const AvailabilityPage = () => {
         initialMap[dateKey] = item.slots.map((s) => ({
           startTime: s.startTime,
           endTime: s.endTime,
+          isBooked: s.isBooked,
         }));
       });
 
@@ -65,7 +64,6 @@ export const AvailabilityPage = () => {
     }
   }, [availability]);
 
-  // Updated handleChangeDate function that uses the most current availabilityMap
   const handleChangeDate = ({ dates }) => {
     setSelectedDates(dates);
     setShowDateWarning(false);
@@ -85,7 +83,6 @@ export const AvailabilityPage = () => {
 
         setSelectedTimeSlots(existingSlots);
 
-        // Return the same map (no changes needed)
         return currentAvailabilityMap;
       });
 

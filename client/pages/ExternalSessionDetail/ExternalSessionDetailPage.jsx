@@ -1,7 +1,7 @@
 import { InfoBox } from "@/components/InfoBox/InfoBox";
 import { useLocalSearchParams } from "expo-router";
 import { useState } from "react";
-import { Pressable, ScrollView, StyleSheet, View } from "react-native";
+import { Pressable, ScrollView, StyleSheet } from "react-native";
 import { Text } from "react-native-paper";
 
 export const ExternalSessionDetailPage = () => {
@@ -10,20 +10,18 @@ export const ExternalSessionDetailPage = () => {
 
   return (
     <ScrollView style={styles.scrollContainer}>
-      <Pressable>
-        <View style={styles.container}>
-          <Text variant="headlineSmall" style={styles.title}>
-            {sessionState.subject}
-          </Text>
+      <Pressable style={styles.container}>
+        <Text variant="headlineSmall" style={styles.title}>
+          {sessionState.subject}
+        </Text>
 
-          <InfoBox label="Estimated Duration">
-            <Text variant="bodyLarge">{sessionState.estimatedDuration}</Text>
-          </InfoBox>
+        <InfoBox label="Estimated Duration">
+          <Text variant="bodyLarge">{sessionState.estimatedDuration}</Text>
+        </InfoBox>
 
-          <InfoBox label="Description">
-            <Text variant="bodyLarge">{sessionState.description}</Text>
-          </InfoBox>
-        </View>
+        <InfoBox label="Description">
+          <Text variant="bodyLarge">{sessionState.description}</Text>
+        </InfoBox>
       </Pressable>
     </ScrollView>
   );

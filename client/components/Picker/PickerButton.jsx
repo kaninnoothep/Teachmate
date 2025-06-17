@@ -6,6 +6,7 @@ export const PickerButton = ({
   label,
   value,
   iconName = "unfold-more-horizontal",
+  iconSize = 24,
   iconColor,
   onPress,
   containerStyles,
@@ -37,7 +38,7 @@ export const PickerButton = ({
           <Text
             style={[
               styles.label,
-              hasValue && styles.labelShrunk,
+              hasValue && styles.labelShrink,
               disabled && styles.disabled,
             ]}
           >
@@ -48,7 +49,7 @@ export const PickerButton = ({
 
         <MaterialCommunityIcons
           name={iconName}
-          size={20}
+          size={iconSize}
           color={iconColor || theme.colors.textSecondary}
           style={disabled && styles.disabled}
         />
@@ -90,7 +91,7 @@ const useStyles = (theme, isError) =>
       fontSize: 16,
       color: isError ? theme.colors.error : theme.colors.onSurfaceVariant,
     },
-    labelShrunk: {
+    labelShrink: {
       position: "absolute",
       backgroundColor: theme.colors.background,
       fontSize: 12,

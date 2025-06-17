@@ -361,16 +361,18 @@ export const ProfilePage = ({ user, externalView = false }) => {
                 } = item;
 
                 const getSubtitle = () => {
-                  let subtitle = "";
+                  let subtitle = [];
 
                   if (degree) {
-                    subtitle = degree;
+                    subtitle.push(degree);
                   }
                   if (fieldOfStudy) {
-                    subtitle += fieldOfStudy;
+                    subtitle.push(fieldOfStudy);
                   }
 
-                  return subtitle;
+                  return subtitle.length === 1
+                    ? subtitle.join("")
+                    : subtitle.join(", ");
                 };
                 return (
                   <BackgroundItem

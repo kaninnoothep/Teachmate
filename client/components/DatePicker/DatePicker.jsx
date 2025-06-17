@@ -2,13 +2,26 @@ import { View } from "react-native";
 import { Text, useTheme } from "react-native-paper";
 import DateTimePicker, { useDefaultStyles } from "react-native-ui-datepicker";
 
-const DateWithDot = ({ day, availabilityMap }) => {
+const DateWithDot = ({ day, availabilityMap, hideBookedDot, hideDisabled }) => {
   const theme = useTheme();
   const { date, number, isCurrentMonth, isDisabled, isSelected } = day;
   const dateKey = date.toISOString().split("T")[0];
-  const hasAvailability = availabilityMap[dateKey]?.length > 0;
+
+  const timeSlots = availabilityMap[dateKey];
+  const hasAvailability = timeSlots?.length > 0;
+
+  const availableTimeSlots = timeSlots?.filter(
+    (timeSlot) => !timeSlot.isBooked
+  );
+  const hasAvailibleTimeSlots = availableTimeSlots?.length > 0;
 
   const getDotOpacity = () => {
+    if (
+      (!hasAvailibleTimeSlots && hideBookedDot) ||
+      (hideDisabled && isDisabled)
+    )
+      return 0;
+
     if (isDisabled && hasAvailability) return 0.7;
 
     if (hasAvailability) return 1;
@@ -55,12 +68,25 @@ const DateWithDot = ({ day, availabilityMap }) => {
   );
 };
 
-export const DatePicker = ({ styles, availabilityMap, ...props }) => {
+export const DatePicker = ({
+  styles,
+  availabilityMap = [],
+  hideBookedDot = false,
+  hideDisabled = false,
+  ...props
+}) => {
   const theme = useTheme();
   const defaultStyles = useDefaultStyles("light");
 
   const components = {
-    Day: (day) => <DateWithDot day={day} availabilityMap={availabilityMap} />,
+    Day: (day) => (
+      <DateWithDot
+        day={day}
+        availabilityMap={availabilityMap}
+        hideBookedDot={hideBookedDot}
+        hideDisabled={hideDisabled}
+      />
+    ),
   };
 
   return (
@@ -73,7 +99,7 @@ export const DatePicker = ({ styles, availabilityMap, ...props }) => {
         ...defaultStyles,
         day: { borderRadius: 10 },
         today: {
-          backgroundColor: theme.colors.surfaceVariant,
+          backgroundColor: theme.colors.infoBackground,
         },
         today_label: {
           color: theme.colors.text,

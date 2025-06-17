@@ -1,10 +1,5 @@
-import { View } from "react-native";
-import { Text } from "react-native-paper";
+import { BookTutorPage } from "@/pages/BookTutor/BookTutorPage";
 
 export default function BookTutorScreen() {
-  return (
-    <View>
-      <Text>Book Tutor Page</Text>
-    </View>
-  );
+  return <BookTutorPage />;
 }

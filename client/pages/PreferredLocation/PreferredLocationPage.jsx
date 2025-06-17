@@ -10,7 +10,7 @@ import { useRouter } from "expo-router";
 import { useUser } from "@/context/UserProvider/UserProvider";
 import { useLocalSearchParams } from "expo-router";
 
-const LOCATION_OPTIONS = [
+export const LOCATION_OPTIONS = [
   { value: "publicPlace", label: "In a Public Place" },
   { value: "tutorPlace", label: "At Tutor's Place" },
   { value: "online", label: "Online" },
