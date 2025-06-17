@@ -1,14 +1,17 @@
 import { useForm } from "@/hooks/useForm";
-import { useLocalSearchParams, useRouter } from "expo-router";
+import { useCreateBookingMutation } from "@/services/api/bookings/useCreateBookingMutation";
+import { useNavigation } from "@react-navigation/native";
+import { useLocalSearchParams } from "expo-router";
 import Toast from "react-native-toast-message";
 import { object, string } from "yup";
 
 const validationSchema = object({
   sessionId: string().required("Session is required"),
+  preferredLocation: string().required("Location is required"),
 });
 
 export const useBookTutorForm = () => {
-  const router = useRouter();
+  const navigation = useNavigation();
   const { tutorId } = useLocalSearchParams();
 
   let defaultValues = {
@@ -25,29 +28,34 @@ export const useBookTutorForm = () => {
   });
 
   // Book tutor mutation
-  //   const { mutateAsync: createBooking } = useCreateBookingMutation({
-  //     onSuccess: (response) => {
-  //       Toast.show({ type: "success", text1: response.message });
-  //       let newEducation = [...user.education, response.data];
+  const { mutateAsync: createBooking } = useCreateBookingMutation({
+    onSuccess: (response) => {
+      Toast.show({ type: "success", text1: response.message });
+      navigation.reset({
+        index: 0,
+        routes: [{ name: "(tabs)", state: { routes: [{ name: "bookings" }] } }],
+      });
+    },
+    onError: (error) => {
+      Toast.show({ type: "error", text1: error.message });
+    },
+  });
 
-  //       handleSetUser({
-  //         data: { ...user, education: sortByEndDate(newEducation) },
-  //       });
-  //       router.back();
-  //     },
-  //     onError: (error) => {
-  //       Toast.show({ type: "error", text1: error.message });
-  //     },
-  //   });
+  const onSubmit = async ({ date, timeSlots, ...resData }) => {
+    let formatDate = date.toISOString().split("T")[0];
+    let startTime = timeSlots[0].startTime;
+    let endTime = timeSlots[timeSlots.length - 1].endTime;
 
-  const onSubmit = async (data) => {
-    console.log("data", data);
+    const payload = {
+      tutorId,
+      date: formatDate,
+      startTime,
+      endTime,
+      ...resData,
+    };
 
-    const payload = { tutorId, ...data };
-
-    console.log("payload", payload);
     // book the tutor
-    //   await createBooking(payload);
+    await createBooking(payload);
   };
 
   return {

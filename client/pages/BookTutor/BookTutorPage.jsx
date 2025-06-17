@@ -23,13 +23,17 @@ export const BookTutorPage = () => {
   const theme = useTheme();
   const { tutorId } = useLocalSearchParams();
   const { user, isFetching } = useUserQuery(tutorId);
-  const { control, handleSubmit, setValue, watch } = useBookTutorForm();
+  const {
+    control,
+    handleSubmit,
+    setValue,
+    watch,
+    formState: { errors },
+  } = useBookTutorForm();
   const dateTimePickerRef = useRef(null);
 
   const watchedDate = watch("date");
   const watchedTimeSlots = watch("timeSlots");
-  //   const watchedStartTime = watch("startTime");
-  //   const watchedEndTime = watch("endTime");
 
   const sessions = useMemo(() =>
     user?.sessions.map(
@@ -69,28 +73,13 @@ export const BookTutorPage = () => {
   const handleSelectDateTime = ({ selectedDate, selectedTimeSlots }) => {
     setValue("date", selectedDate);
     setValue("timeSlots", selectedTimeSlots);
-
-    // if (selectedTimeSlots.length > 0) {
-    //   setValue("startTime", selectedTimeSlots[0].startTime);
-    //   setValue(
-    //     "endTime",
-    //     selectedTimeSlots[selectedTimeSlots.length - 1].endTime
-    //   );
-    // }
-
-    console.log("selectedDate", selectedDate);
-    console.log("startTime", selectedTimeSlots[0].startTime);
-    console.log(
-      "endTime",
-      selectedTimeSlots[selectedTimeSlots.length - 1].endTime
-    );
   };
 
   return (
     <>
       <ScrollView>
         <Pressable style={styles.container}>
-          <InfoBox label="Tutor">
+          <InfoBox label="Tutor" containerStyle={{ marginBottom: 22 }}>
             <View style={styles.userRow}>
               {user?.image ? (
                 <Avatar.Image size={40} source={{ uri: user.image }} />
@@ -113,6 +102,8 @@ export const BookTutorPage = () => {
             data={sessions}
             search
             onSelect={({ value }) => setValue("sessionId", value)}
+            helperText={errors.sessionId?.message}
+            isError={errors.sessionId?.message}
           />
 
           <PickerButton
@@ -122,6 +113,8 @@ export const BookTutorPage = () => {
             iconSize={20}
             iconColor={theme.colors.primary}
             onPress={() => dateTimePickerRef.current?.open()}
+            // helperText={errors.sessionId?.message}
+            // isError={errors.sessionId?.message}
           />
 
           <Dropdown
@@ -129,6 +122,8 @@ export const BookTutorPage = () => {
             placeholder="Select location"
             data={locations}
             onSelect={({ value }) => setValue("preferredLocation", value)}
+            helperText={errors.preferredLocation?.message}
+            isError={errors.preferredLocation?.message}
           />
 
           <FormTextInput

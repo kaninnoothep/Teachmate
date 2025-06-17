@@ -10,6 +10,7 @@ import {
 } from "react-native";
 import { Avatar, Text, useTheme } from "react-native-paper";
 import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
 import { Chip } from "@/components/Chip/Chip";
 import { InfoBox } from "@/components/InfoBox/InfoBox";
 import { useUser } from "@/context/UserProvider/UserProvider";
@@ -17,6 +18,8 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import Toast from "react-native-toast-message";
 import { useCancelBookingMutation } from "@/services/api/bookings/useCancelBookingMutation";
 import { Button } from "@/components/Button/Button";
+
+dayjs.extend(utc);
 
 export const BookingDetailPage = () => {
   const { user } = useUser();
@@ -64,7 +67,7 @@ export const BookingDetailPage = () => {
     note,
   } = booking;
 
-  const formattedDate = dayjs(date).format("MMMM D, YYYY");
+  const formattedDate = dayjs.utc(date).format("MMMM D, YYYY");
   const formattedTime = `${dayjs(`2000-01-01T${startTime}`).format(
     "h:mm A"
   )} - ${dayjs(`2000-01-01T${endTime}`).format("h:mm A")}`;

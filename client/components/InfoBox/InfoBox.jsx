@@ -5,12 +5,13 @@ export const InfoBox = ({
   label,
   children,
   disabledContentPadding = false,
+  containerStyle,
 }) => {
   const theme = useTheme();
   const styles = useStyles(theme);
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, containerStyle]}>
       <View style={styles.labelContainer}>
         <Text variant="bodySmall" style={styles.label}>
           {label}

@@ -10,12 +10,15 @@ export const Dropdown = ({
   data,
   search = false,
   onSelect = () => {},
+  helperText = "",
+  isError = false,
+  hideHelperTextSpace = false,
   ...props
 }) => {
   const theme = useTheme();
   const [value, setValue] = useState(null);
   const [isFocus, setIsFocus] = useState(false);
-  const styles = useStyles(theme, isFocus);
+  const styles = useStyles(theme, isFocus, isError);
 
   const renderLabel = () => {
     if (value || isFocus) {
@@ -67,19 +70,32 @@ export const Dropdown = ({
         )}
         {...props}
       />
+
+      {!hideHelperTextSpace && (
+        <Text
+          variant="bodySmall"
+          style={[styles.errorText, { opacity: helperText ? 1 : 0 }]}
+        >
+          {helperText}
+        </Text>
+      )}
     </View>
   );
 };
 
-const useStyles = (theme, isFocus) =>
+const useStyles = (theme, isFocus, isError) =>
   StyleSheet.create({
     container: {
       backgroundColor: theme.colors.background,
     },
     dropdown: {
       height: 50,
-      borderColor: isFocus ? theme.colors.primary : theme.colors.outline,
-      borderWidth: isFocus ? 2 : 1,
+      borderColor: isError
+        ? theme.colors.error
+        : isFocus
+        ? theme.colors.primary
+        : theme.colors.outline,
+      borderWidth: isFocus || isError ? 2 : 1,
       borderRadius: 10,
       paddingHorizontal: 15,
     },
@@ -91,12 +107,18 @@ const useStyles = (theme, isFocus) =>
       zIndex: 999,
       paddingHorizontal: 6,
       fontSize: 12,
-      color: isFocus ? theme.colors.primary : theme.colors.onSurfaceVariant,
+      color: isError
+        ? theme.colors.error
+        : isFocus
+        ? theme.colors.primary
+        : theme.colors.onSurfaceVariant,
     },
     placeholderStyle: {
       fontSize: 16,
       color: isFocus
         ? theme.colors.textSecondary
+        : isError
+        ? theme.colors.error
         : theme.colors.onSurfaceVariant,
     },
     selectedTextStyle: {
@@ -111,5 +133,11 @@ const useStyles = (theme, isFocus) =>
       fontSize: 16,
       color: theme.colors.text,
       borderRadius: 6,
+    },
+    errorText: {
+      color: theme.colors.error,
+      marginTop: 5,
+      letterSpacing: 0.2,
+      marginLeft: 12,
     },
   });

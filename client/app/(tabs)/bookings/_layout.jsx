@@ -5,6 +5,7 @@ import { useTheme } from "react-native-paper";
 
 export default function BookingsLayout() {
   const theme = useTheme();
+
   return (
     <Stack
       screenOptions={{
