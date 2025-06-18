@@ -1,7 +1,7 @@
 import { InfoBox } from "@/components/InfoBox/InfoBox";
 import { useUserQuery } from "@/services/api/user/useUserQuery";
 import { useLocalSearchParams } from "expo-router";
-import { Pressable, ScrollView, StyleSheet, View } from "react-native";
+import { Pressable, StyleSheet, View } from "react-native";
 import {
   ActivityIndicator,
   Avatar,
@@ -18,6 +18,7 @@ import { LOCATION_OPTIONS } from "../PreferredLocation/PreferredLocationPage";
 import { PickerButton } from "@/components/Picker/PickerButton";
 import { DateTimePicker } from "./components/DateTimePicker";
 import dayjs from "dayjs";
+import { SafeKeyboardScrollView } from "@/components/SafeKeyboardScrollView/SafeKeyboardScrollView";
 
 export const BookTutorPage = () => {
   const theme = useTheme();
@@ -77,7 +78,7 @@ export const BookTutorPage = () => {
 
   return (
     <>
-      <ScrollView>
+      <SafeKeyboardScrollView ignoreSafeArea>
         <Pressable style={styles.container}>
           <InfoBox label="Tutor" containerStyle={{ marginBottom: 22 }}>
             <View style={styles.userRow}>
@@ -113,8 +114,8 @@ export const BookTutorPage = () => {
             iconSize={20}
             iconColor={theme.colors.primary}
             onPress={() => dateTimePickerRef.current?.open()}
-            // helperText={errors.sessionId?.message}
-            // isError={errors.sessionId?.message}
+            helperText={errors.date?.message || errors.timeSlots?.message}
+            isError={errors.date || errors.timeSlots}
           />
 
           <Dropdown
@@ -138,7 +139,7 @@ export const BookTutorPage = () => {
 
           <Button onPress={handleSubmit}>Book Tutor</Button>
         </Pressable>
-      </ScrollView>
+      </SafeKeyboardScrollView>
       <Portal>
         <DateTimePicker
           ref={dateTimePickerRef}

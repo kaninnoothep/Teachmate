@@ -33,21 +33,24 @@ export const SessionsPage = ({
     }
   };
 
+  const renderHeaderComponent = () => (
+    <Pressable style={{ paddingVertical: 20 }}>
+      <Text variant="headlineSmall">
+        {headerTitle} {sessions.length > 0 && `(${sessions.length})`}
+      </Text>
+    </Pressable>
+  );
+
+  const renderFooterComponent = () => <Pressable style={{ height: 90 }} />;
+  const renderSeparatorComponent = () => <Pressable style={{ height: 10 }} />;
+
   return (
     <>
       <Pressable style={styles.container}>
         <FlatList
-          ListHeaderComponent={
-            <Text
-              variant="headlineSmall"
-              style={{
-                paddingTop: 20,
-                paddingBottom: 10,
-              }}
-            >
-              {headerTitle} {sessions.length > 0 && `(${sessions.length})`}
-            </Text>
-          }
+          ListHeaderComponent={renderHeaderComponent}
+          ListFooterComponent={renderFooterComponent}
+          ItemSeparatorComponent={renderSeparatorComponent}
           data={sessions}
           showsVerticalScrollIndicator={false}
           refreshControl={
@@ -68,6 +71,7 @@ export const SessionsPage = ({
             </TouchableOpacity>
           )}
           keyExtractor={(item) => item._id}
+          removeClippedSubviews
           contentContainerStyle={styles.listContentContainer}
           ListEmptyComponent={
             <EmptyList

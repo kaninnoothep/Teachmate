@@ -176,7 +176,7 @@ export const BookingDetailPage = () => {
               variant="red-outlined"
               icon={({ color }) => (
                 <MaterialCommunityIcons
-                  name="trash-can-outline"
+                  name="calendar-remove"
                   size={24}
                   color={color}
                 />

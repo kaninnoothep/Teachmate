@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import { View } from "react-native";
+import { Pressable } from "react-native";
 import { ActivityIndicator, Text, useTheme } from "react-native-paper";
 import { useStyles } from "./EmptyList.styles";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
@@ -39,7 +39,9 @@ export const EmptyList = ({
   };
 
   return (
-    <View style={[styles.container, containerStyle]}>{renderContent()}</View>
+    <Pressable style={[styles.container, containerStyle]}>
+      {renderContent()}
+    </Pressable>
   );
 };
 

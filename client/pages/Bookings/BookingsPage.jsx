@@ -4,7 +4,6 @@ import {
   Pressable,
   RefreshControl,
   TouchableOpacity,
-  View,
 } from "react-native";
 import { Text, useTheme } from "react-native-paper";
 import { useStyles } from "./BookingsPage.styles";
@@ -32,7 +31,7 @@ export const BookingsPage = () => {
   };
 
   const renderHeaderComponent = () => (
-    <View style={styles.listHeaderContainer}>
+    <Pressable style={styles.listHeaderContainer}>
       <Text variant="headlineMedium" style={styles.greetingText}>
         Hello,{" "}
         <Text
@@ -46,13 +45,17 @@ export const BookingsPage = () => {
       <Text variant="titleLarge" style={{ fontSize: 20 }}>
         Your bookings {user.role === "tutor" && "from students"}
       </Text>
-    </View>
+    </Pressable>
   );
+  const renderFooterComponent = () => <Pressable style={{ height: 50 }} />;
+  const renderSeparatorComponent = () => <Pressable style={{ height: 10 }} />;
 
   return (
     <Pressable style={styles.container}>
       <FlatList
         ListHeaderComponent={renderHeaderComponent}
+        ListFooterComponent={renderFooterComponent}
+        ItemSeparatorComponent={renderSeparatorComponent}
         data={bookings}
         showsVerticalScrollIndicator={false}
         refreshControl={
@@ -80,6 +83,7 @@ export const BookingsPage = () => {
           </TouchableOpacity>
         )}
         keyExtractor={(item) => item._id}
+        removeClippedSubviews
         contentContainerStyle={styles.listContentContainer}
         ListEmptyComponent={
           <EmptyList

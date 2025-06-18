@@ -6,9 +6,7 @@ export const useStyles = (theme) =>
       height: "100%",
     },
     listContentContainer: {
-      gap: 10,
       paddingHorizontal: 16,
-      paddingBottom: 90,
     },
     fab: {
       width: "auto",

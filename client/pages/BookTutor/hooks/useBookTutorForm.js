@@ -3,10 +3,14 @@ import { useCreateBookingMutation } from "@/services/api/bookings/useCreateBooki
 import { useNavigation } from "@react-navigation/native";
 import { useLocalSearchParams } from "expo-router";
 import Toast from "react-native-toast-message";
-import { object, string } from "yup";
+import { array, date, object, string } from "yup";
 
 const validationSchema = object({
   sessionId: string().required("Session is required"),
+  date: date()
+    .typeError("Date and time are required")
+    .required("Date and time are required"),
+  timeSlots: array().min(1, "Date and time are required"),
   preferredLocation: string().required("Location is required"),
 });
 
