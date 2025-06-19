@@ -33,11 +33,13 @@ export const TutorItem = ({ tutor }) => {
           </Text>
         )}
 
-        <Chip
-          textVariant="bodySmall"
-          value={`$${tutor.hourlyRate}/h`}
-          containerStyle={styles.chip}
-        />
+        {tutor?.hourlyRate && (
+          <Chip
+            textVariant="bodySmall"
+            value={`$${tutor.hourlyRate}/h`}
+            containerStyle={styles.chip}
+          />
+        )}
       </View>
     </View>
   );
