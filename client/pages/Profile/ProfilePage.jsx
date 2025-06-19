@@ -308,7 +308,7 @@ export const ProfilePage = ({ user, externalView = false }) => {
                     />
                   </View>
                 </TouchableOpacity>
-                {user.sessions.slice(0, 3).map((item) => {
+                {user.sessions?.slice(0, 3).map((item) => {
                   const { _id, subject, description, estimatedDuration } = item;
 
                   return (

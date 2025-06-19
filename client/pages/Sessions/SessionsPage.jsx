@@ -76,7 +76,7 @@ export const SessionsPage = ({
           ListEmptyComponent={
             <EmptyList
               iconName="book-open-page-variant"
-              message="No Sessions Found"
+              message="No sessions found"
               containerStyle={{ marginTop: 100 }}
               isLoading={isFetching}
             />

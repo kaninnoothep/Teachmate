@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 import {
   FlatList,
   Pressable,
@@ -12,32 +12,16 @@ import {
   useTheme,
   Portal,
 } from "react-native-paper";
+import { useDebounce } from "use-debounce";
 import { useStyles } from "./ExplorePage.styles";
 import { useRouter } from "expo-router";
 import { TutorItem } from "./components/TutorItem";
 import { EmptyList } from "@/components/EmptyList/EmptyList";
 import { TextInput } from "@/components/TextInput/TextInput";
-
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { LocationFilterModal } from "./components/LocationFilterModal";
+import { useTutorsQuery } from "@/services/api/explore/useTutorsQuery";
 
-const tutors = [
-  {
-    _id: "6842e328b69189b73efab179",
-    image:
-      "https://res.cloudinary.com/dq1gdgetx/image/upload/v1749722055/asl6krflyjyiwvuo1gd8.jpg",
-    firstName: "Tony",
-    lastName: "Ja",
-    about:
-      "Lorem ipsum bibendum pretium tincidunt integer quis adipiscing molestie scelerisque.",
-    preferredLocations: {
-      publicPlace: true,
-      tutorPlace: false,
-      online: true,
-    },
-    hourlyRate: "25",
-  },
-];
 export const ExplorePage = () => {
   const router = useRouter();
   const theme = useTheme();
@@ -46,17 +30,18 @@ export const ExplorePage = () => {
   const [isManualRefreshing, setIsManualRefreshing] = useState(false);
 
   const [searchQuery, setSearchQuery] = useState("");
+  const [searchDebounce] = useDebounce(searchQuery, 600);
   const [country, setCountry] = useState(null);
   const [state, setState] = useState(null);
   const [city, setCity] = useState(null);
 
-  useEffect(() => {
-    // console.log("country", country);
-    console.log("state", state);
-    console.log("stateCode", state?.stateCode);
-    console.log("stateCode isNaN", isNaN(state?.stateCode));
-    // console.log("city", city);
-  }, [country, state, city]);
+  const { tutors, isFetching, refetch } = useTutorsQuery(
+    searchDebounce,
+    country?.name,
+    state?.name,
+    city?.name
+  );
+
   const hasLocationFilter = useMemo(
     () => country || state || city,
     [country, state, city]
@@ -83,7 +68,7 @@ export const ExplorePage = () => {
   const handleRefresh = async () => {
     setIsManualRefreshing(true);
     try {
-      //   await refetch();
+      await refetch();
     } finally {
       setIsManualRefreshing(false);
     }
@@ -160,7 +145,7 @@ export const ExplorePage = () => {
                 router.push({
                   pathname: `/(modals)/userDetails/${item._id}`,
                   params: {
-                    itemName: "tutor Details",
+                    itemName: "Tutor Details",
                   },
                 })
               }
@@ -176,7 +161,7 @@ export const ExplorePage = () => {
               iconName="school"
               message="No tutors found"
               containerStyle={{ marginTop: 100 }}
-              // isLoading={isFetching}
+              isLoading={isFetching}
             />
           }
         />
