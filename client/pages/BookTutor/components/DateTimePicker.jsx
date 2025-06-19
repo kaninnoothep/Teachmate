@@ -23,6 +23,8 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 export const DateTimePicker = forwardRef(
   ({ availability, onPressSelect, initialDate, initialTimeSlots }, ref) => {
     const sheetRef = useRef(null);
+    const initialDateRef = useRef(null);
+    const initialTimeSlotsRef = useRef([]);
     const theme = useTheme();
     const styles = useStyles(theme);
     const today = new Date();
@@ -56,7 +58,9 @@ export const DateTimePicker = forwardRef(
 
     useImperativeHandle(ref, () => ({
       open: () => {
-        // If initial values exist, apply them
+        initialDateRef.current = initialDate;
+        initialTimeSlotsRef.current = initialTimeSlots;
+
         if (initialDate) {
           setSelectedDate(initialDate);
         } else {
@@ -75,6 +79,7 @@ export const DateTimePicker = forwardRef(
       },
       close: () => sheetRef.current?.close(),
     }));
+
     const renderTimeSlots = () => {
       let timeSlots =
         availabilityMap[selectedDate?.toISOString().split("T")[0]];
@@ -133,8 +138,21 @@ export const DateTimePicker = forwardRef(
 
     const handleChangeDate = ({ date }) => {
       setSelectedDate(date);
-      setSelectedTimeSlots([]);
-      setIsInvalidSelection(false);
+
+      const isSameAsInitial = dayjs(date).isSame(
+        dayjs(initialDateRef.current),
+        "day"
+      );
+
+      if (isSameAsInitial && initialTimeSlotsRef.current?.length > 0) {
+        setSelectedTimeSlots(initialTimeSlotsRef.current);
+        setIsInvalidSelection(
+          !areAllSlotsContinuous(initialTimeSlotsRef.current)
+        );
+      } else {
+        setSelectedTimeSlots([]);
+        setIsInvalidSelection(false);
+      }
     };
 
     const handleTimeSlotPress = (timeSlot) => {
