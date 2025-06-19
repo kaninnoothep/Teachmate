@@ -13,6 +13,7 @@ export const PickerButton = ({
   helperText = "",
   isError = false,
   hideHelperTextSpace = false,
+  hideIcon = false,
   disabled = false,
   ...props
 }) => {
@@ -31,7 +32,7 @@ export const PickerButton = ({
           },
         ]}
         onPress={onPress}
-        disabled={disabled}
+        disabled={disabled || !onPress}
         {...props}
       >
         <View style={styles.content}>
@@ -47,12 +48,14 @@ export const PickerButton = ({
           {hasValue && <Text style={styles.valueText}>{value}</Text>}
         </View>
 
-        <MaterialCommunityIcons
-          name={iconName}
-          size={iconSize}
-          color={iconColor || theme.colors.textSecondary}
-          style={disabled && styles.disabled}
-        />
+        {!hideIcon && (
+          <MaterialCommunityIcons
+            name={iconName}
+            size={iconSize}
+            color={iconColor || theme.colors.textSecondary}
+            style={disabled && styles.disabled}
+          />
+        )}
       </TouchableOpacity>
 
       {!hideHelperTextSpace && (

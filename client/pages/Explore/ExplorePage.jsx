@@ -1,5 +1,6 @@
-import { useCallback, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
+  Alert,
   FlatList,
   Pressable,
   RefreshControl,
@@ -21,6 +22,7 @@ import { TextInput } from "@/components/TextInput/TextInput";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { LocationFilterModal } from "./components/LocationFilterModal";
 import { useTutorsQuery } from "@/services/api/explore/useTutorsQuery";
+import * as Location from "expo-location";
 
 export const ExplorePage = () => {
   const router = useRouter();
@@ -34,6 +36,7 @@ export const ExplorePage = () => {
   const [country, setCountry] = useState(null);
   const [state, setState] = useState(null);
   const [city, setCity] = useState(null);
+  const [currentLocationEnabled, setCurrentLocationEnabled] = useState(false);
 
   const { tutors, isFetching, refetch } = useTutorsQuery(
     searchDebounce,
@@ -47,6 +50,63 @@ export const ExplorePage = () => {
     [country, state, city]
   );
 
+  useEffect(() => {
+    checkIfLocationEnabled();
+    getCurrentLocation();
+  }, []);
+
+  //check if location is enable or not
+  const checkIfLocationEnabled = async () => {
+    let enabled = await Location.hasServicesEnabledAsync();
+
+    if (!enabled) {
+      //if not enable
+      Alert.alert("Location not enabled", "Please enable your location", [
+        { text: "OK" },
+      ]);
+      setCurrentLocationEnabled(enabled);
+    } else {
+      setCurrentLocationEnabled(enabled);
+    }
+  };
+
+  //get current location
+  const getCurrentLocation = async () => {
+    let { status } = await Location.requestForegroundPermissionsAsync(); // pop up box asking for permission to use location
+
+    if (status !== "granted") {
+      Alert.alert(
+        "Permission denied",
+        "Please enable your location to use the location services",
+        [
+          {
+            text: "OK",
+          },
+        ]
+      );
+    }
+
+    //get current position lat and long
+    const { coords } = await Location.getCurrentPositionAsync();
+
+    if (coords) {
+      const { latitude, longitude } = coords;
+
+      //provide lat and long to get the the actual address
+      let response = await Location.reverseGeocodeAsync({
+        latitude,
+        longitude,
+      });
+
+      //loop on the response to get the actual result
+      for (let item of response) {
+        setCountry({ name: item.country });
+        setState({ name: item.region });
+        setCity({ name: item.city });
+      }
+    }
+  };
+
   const getFilterLabel = () => {
     const label = [];
 
@@ -55,7 +115,11 @@ export const ExplorePage = () => {
     }
 
     if (state) {
-      label.push(isNaN(state?.stateCode) ? state?.stateCode : state?.name);
+      label.push(
+        isNaN(state?.stateCode) && state?.stateCode
+          ? state?.stateCode
+          : state?.name
+      );
     }
 
     if (!city && country) {
@@ -169,7 +233,18 @@ export const ExplorePage = () => {
       <Portal>
         <LocationFilterModal
           ref={locationFilterRef}
-          {...{ country, setCountry, state, setState, city, setCity }}
+          {...{
+            country,
+            setCountry,
+            state,
+            setState,
+            city,
+            setCity,
+            currentLocationEnabled,
+            setCurrentLocationEnabled,
+            checkIfLocationEnabled,
+            getCurrentLocation,
+          }}
         />
       </Portal>
     </>

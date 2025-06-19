@@ -1,7 +1,10 @@
+import { Button } from "@/components/Button/Button";
 import { CityPicker } from "@/components/Picker/CityPicker";
 import { CountryPicker } from "@/components/Picker/CountryPicker";
 import { PickerButton } from "@/components/Picker/PickerButton";
 import { StatePicker } from "@/components/Picker/StatePicker";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import BottomSheet, {
   BottomSheetBackdrop,
   BottomSheetScrollView,
@@ -13,19 +16,33 @@ import {
   useMemo,
   useRef,
 } from "react";
-import { Keyboard, StyleSheet, TouchableOpacity, View } from "react-native";
+import { Keyboard, StyleSheet, View } from "react-native";
 import { Text, useTheme } from "react-native-paper";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export const LocationFilterModal = forwardRef(
-  ({ country, setCountry, state, setState, city, setCity }, ref) => {
+  (
+    {
+      country,
+      setCountry,
+      state,
+      setState,
+      city,
+      setCity,
+      currentLocationEnabled,
+      setCurrentLocationEnabled,
+      checkIfLocationEnabled,
+      getCurrentLocation,
+    },
+    ref
+  ) => {
     const sheetRef = useRef(null);
     const countryPickerRef = useRef(null);
     const statePickerRef = useRef(null);
     const cityPickerRef = useRef(null);
 
     const theme = useTheme();
-    const styles = useStyles(theme);
+    const styles = useStyles();
     const insets = useSafeAreaInsets();
 
     const snapPoints = useMemo(() => ["60%"], []);
@@ -40,12 +57,6 @@ export const LocationFilterModal = forwardRef(
         return `${country?.emoji || ""} ${country?.name}`;
       }
       return "";
-    };
-
-    const handleClear = () => {
-      setCountry(null);
-      setState(null);
-      setCity(null);
     };
 
     const renderBackdrop = useCallback(
@@ -77,44 +88,75 @@ export const LocationFilterModal = forwardRef(
           onAnimate={() => Keyboard.dismiss()}
         >
           <View style={styles.container}>
-            <View style={styles.headerWrapper}>
-              <Text style={styles.title}>Filters</Text>
-              <TouchableOpacity
-                onPress={handleClear}
-                style={styles.clearButton}
-              >
-                <Text variant="bodyLarge" style={styles.clearButtonText}>
-                  Clear
-                </Text>
-              </TouchableOpacity>
-            </View>
+            <Text style={styles.title}>Filters</Text>
 
             <BottomSheetScrollView
               contentContainerStyle={styles.contentContainer}
             >
-              <PickerButton
-                label="Country"
-                value={getCountryLabel()}
-                onPress={() => countryPickerRef.current?.open()}
-              />
+              {currentLocationEnabled && city && state && country ? (
+                <>
+                  <PickerButton
+                    label="Current Location"
+                    value={`${city?.name}, ${state?.name}, ${country?.name}`}
+                    hideIcon
+                  />
 
-              {country && country?.hasStates && (
-                <PickerButton
-                  label="State"
-                  value={state?.name}
-                  onPress={() => statePickerRef.current?.open()}
-                />
+                  <Button
+                    onPress={() => setCurrentLocationEnabled(false)}
+                    variant="text"
+                    icon={({ color }) => (
+                      <MaterialCommunityIcons
+                        name="map-marker"
+                        size={24}
+                        color={color}
+                      />
+                    )}
+                  >
+                    Select location
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <PickerButton
+                    label="Country"
+                    value={getCountryLabel()}
+                    onPress={() => countryPickerRef.current?.open()}
+                  />
+
+                  {country && country?.hasStates && (
+                    <PickerButton
+                      label="State"
+                      value={state?.name}
+                      onPress={() => statePickerRef.current?.open()}
+                    />
+                  )}
+
+                  {country && state && state?.hasCities && (
+                    <PickerButton
+                      label="City"
+                      value={city?.name}
+                      onPress={() => cityPickerRef.current?.open()}
+                    />
+                  )}
+
+                  <Button
+                    onPress={() => {
+                      checkIfLocationEnabled();
+                      getCurrentLocation();
+                    }}
+                    variant="text"
+                    icon={({ color }) => (
+                      <FontAwesome5
+                        name="location-arrow"
+                        size={16}
+                        color={color}
+                      />
+                    )}
+                  >
+                    Use current location
+                  </Button>
+                </>
               )}
-
-              {country && state && state?.hasCities && (
-                <PickerButton
-                  label="City"
-                  value={city?.name}
-                  onPress={() => cityPickerRef.current?.open()}
-                />
-              )}
-
-              {/* <Button>Apply</Button> */}
             </BottomSheetScrollView>
           </View>
         </BottomSheet>
@@ -159,29 +201,17 @@ export const LocationFilterModal = forwardRef(
 
 LocationFilterModal.displayName = "LocationFilterModal";
 
-const useStyles = (theme) =>
+const useStyles = () =>
   StyleSheet.create({
     container: {
       paddingHorizontal: 16,
       paddingBottom: 60,
-    },
-    headerWrapper: {
-      position: "relative",
     },
     title: {
       fontSize: 18,
       fontWeight: "600",
       textAlign: "center",
       marginVertical: 12,
-    },
-    clearButton: {
-      position: "absolute",
-      alignSelf: "flex-end",
-      right: 0,
-      bottom: 10,
-    },
-    clearButtonText: {
-      color: theme.colors.error,
     },
     contentContainer: {
       paddingTop: 10,

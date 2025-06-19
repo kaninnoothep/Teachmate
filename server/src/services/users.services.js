@@ -494,7 +494,12 @@ async function getTutors(params) {
   let query = { role: "tutor" };
 
   if (country) query["country.name"] = { $regex: new RegExp(country, "i") };
-  if (state) query["state.name"] = { $regex: new RegExp(state, "i") };
+  if (state) {
+    query["$or"] = [
+      { "state.name": { $regex: new RegExp(state, "i") } },
+      { "state.stateCode": { $regex: new RegExp(state, "i") } },
+    ];
+  }
   if (city) query["city.name"] = { $regex: new RegExp(city, "i") };
 
   // Find tutors matching location filters
