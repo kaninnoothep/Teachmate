@@ -1,7 +1,7 @@
 /**
  * Import Modules
  */
-import users from "../models/users.model.js";
+import User from "../models/users.model.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import responses from "../utils/response.js";
@@ -28,7 +28,7 @@ async function createAccount(payload) {
   }
 
   // Check if email exists in database
-  const foundEmail = await users.findOne({ email: email });
+  const foundEmail = await User.findOne({ email: email });
   if (foundEmail) {
     return {
       message: "Account already exists",
@@ -42,7 +42,7 @@ async function createAccount(payload) {
   payload.password = hashedPassword;
 
   // Create new user
-  const newUser = await users.create(payload);
+  const newUser = await User.create(payload);
   return {
     message: "Account created successfully",
     statusCode: 201,
@@ -59,7 +59,7 @@ async function login(payload) {
 
   // Find account and populate with sorted data
   const foundAccount = await populateUserData(
-    users.findOne({ email: email }).lean()
+    User.findOne({ email: email }).lean()
   );
 
   if (!foundAccount) {
@@ -97,7 +97,7 @@ async function login(payload) {
 async function getUser(payload) {
   const { userId } = payload;
 
-  const foundUser = await populateUserData(users.findById(userId));
+  const foundUser = await populateUserData(User.findById(userId));
 
   if (!foundUser) {
     return responses.buildFailureResponse("User does not exist", 400);
@@ -107,7 +107,7 @@ async function getUser(payload) {
 }
 
 async function updateUser(user, payload) {
-  const currentUser = await users.findById(user._id);
+  const currentUser = await User.findById(user._id);
   if (!currentUser) {
     return {
       message: "User not found",
@@ -117,7 +117,7 @@ async function updateUser(user, payload) {
   }
 
   const updatedUser = await populateUserData(
-    users.findByIdAndUpdate(
+    User.findByIdAndUpdate(
       user._id,
       { $set: payload },
       { new: true, useFindAndModify: false }
@@ -142,7 +142,7 @@ async function updateUser(user, payload) {
 }
 
 async function uploadImage(user, file) {
-  const currentUser = await users.findById(user._id);
+  const currentUser = await User.findById(user._id);
 
   if (!currentUser) {
     return {
@@ -182,7 +182,7 @@ async function setAvailability(user, newAvailability) {
     };
   }
 
-  const userDoc = await users.findById(user._id);
+  const userDoc = await User.findById(user._id);
   if (!userDoc) {
     return {
       message: "User not found",
@@ -234,7 +234,7 @@ async function setAvailability(user, newAvailability) {
  * getAvailability - Get availability for a specific user
  */
 async function getAvailability(user) {
-  const foundUser = await users.findById(user._id).select("availability");
+  const foundUser = await User.findById(user._id).select("availability");
   if (!foundUser) {
     return {
       message: "User not found",
@@ -255,7 +255,7 @@ async function getAvailability(user) {
  * setPreferredLocation - Update preferred location for the authenticated user
  */
 async function setPreferredLocation(user, preferredLocations) {
-  const userDoc = await users.findById(user._id);
+  const userDoc = await User.findById(user._id);
   if (!userDoc) {
     return {
       message: "User not found",
@@ -284,7 +284,7 @@ async function setPreferredLocation(user, preferredLocations) {
  * getPreferredLocation - Retrieve preferred location of the authenticated user
  */
 async function getPreferredLocation(user) {
-  const userDoc = await users.findById(user._id).select("preferredLocations");
+  const userDoc = await User.findById(user._id).select("preferredLocations");
   if (!userDoc) {
     return {
       message: "User not found",
@@ -306,7 +306,7 @@ async function getPreferredLocation(user) {
  */
 async function addEducation(user, data) {
   const education = await Education.create({ ...data, userId: user._id });
-  await users.findByIdAndUpdate(user._id, {
+  await User.findByIdAndUpdate(user._id, {
     $push: { education: education._id },
   });
   return responses.buildSuccessResponse(
@@ -353,7 +353,7 @@ async function deleteEducation(user, educationId) {
     return responses.buildFailureResponse("Education not found", 404);
 
   // Remove the education ID from user's education array
-  await users.findByIdAndUpdate(user._id, {
+  await User.findByIdAndUpdate(user._id, {
     $pull: { education: educationId },
   });
 
@@ -369,7 +369,7 @@ async function deleteEducation(user, educationId) {
  */
 async function addExperience(user, data) {
   const experience = await Experience.create({ ...data, userId: user._id });
-  await users.findByIdAndUpdate(user._id, {
+  await User.findByIdAndUpdate(user._id, {
     $push: { experience: experience._id },
   });
 
@@ -416,7 +416,7 @@ async function deleteExperience(user, experienceId) {
     return responses.buildFailureResponse("Experience not found", 404);
 
   // Remove the experience ID from user's experience array
-  await users.findByIdAndUpdate(user._id, {
+  await User.findByIdAndUpdate(user._id, {
     $pull: { experience: experienceId },
   });
 
@@ -432,7 +432,7 @@ async function deleteExperience(user, experienceId) {
  */
 async function addSession(user, data) {
   const session = await Session.create({ ...data, userId: user._id });
-  await users.findByIdAndUpdate(user._id, {
+  await User.findByIdAndUpdate(user._id, {
     $push: { sessions: session._id },
   });
 
@@ -476,7 +476,7 @@ async function deleteSession(user, sessionId) {
   if (!deleted) return responses.buildFailureResponse("Session not found", 404);
 
   // Remove the session ID from user's sessions array
-  await users.findByIdAndUpdate(user._id, {
+  await User.findByIdAndUpdate(user._id, {
     $pull: { sessions: sessionId },
   });
 
@@ -484,6 +484,36 @@ async function deleteSession(user, sessionId) {
     "Session deleted successfully",
     200,
     deleted
+  );
+}
+
+async function getTutors(params) {
+  const { search = "", country, state, city } = params;
+
+  // Base query for tutors
+  let query = { role: "tutor" };
+
+  if (country) query["country.name"] = { $regex: new RegExp(country, "i") };
+  if (state) query["state.name"] = { $regex: new RegExp(state, "i") };
+  if (city) query["city.name"] = { $regex: new RegExp(city, "i") };
+
+  // Find tutors matching location filters
+  let tutors = await User.find(query).populate("sessions").lean();
+
+  // If a search term is provided, filter tutors whose sessions match the subject
+  if (search.trim()) {
+    const lowerSearch = search.trim().toLowerCase();
+    tutors = tutors.filter((tutor) =>
+      tutor.sessions?.some((session) =>
+        session.subject.toLowerCase().includes(lowerSearch)
+      )
+    );
+  }
+
+  return responses.buildSuccessResponse(
+    "Tutors fetched successfully",
+    200,
+    tutors
   );
 }
 
@@ -509,4 +539,5 @@ export default {
   getSessions,
   updateSession,
   deleteSession,
+  getTutors,
 };

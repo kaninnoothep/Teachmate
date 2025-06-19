@@ -306,6 +306,17 @@ async function deleteSession(req, res) {
   }
 }
 
+async function getTutors(req, res) {
+  try {
+    const response = await usersServices.getTutors(req.query);
+    res.status(response.statusCode).json(response);
+  } catch {
+    res
+      .status(500)
+      .json({ message: "Unable to get tutors", status: "failure" });
+  }
+}
+
 /**
  * Export all fuctions
  */
@@ -331,4 +342,5 @@ export default {
   getSessions,
   updateSession,
   deleteSession,
+  getTutors,
 };

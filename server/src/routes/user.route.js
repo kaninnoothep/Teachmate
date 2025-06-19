@@ -4,7 +4,6 @@
 import express from "express";
 import userControllers from "../controllers/users.controller.js";
 import authMiddleware from "../middlewares/auth.js";
-import auth from "../middlewares/auth.js";
 import upload from "../middlewares/multer.js";
 
 // Define Router object for all /user routes
@@ -36,6 +35,12 @@ router.post(
   authMiddleware.authenticate,
   upload.single("image"),
   userControllers.uploadImage
+);
+
+router.get(
+  "/tutors",
+  authMiddleware.studentAuthenticate,
+  userControllers.getTutors
 );
 
 // AVAILABILITY
