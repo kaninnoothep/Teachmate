@@ -330,6 +330,12 @@ export const ProfilePage = ({ user, externalView = false }) => {
                     </TouchableOpacity>
                   );
                 })}
+
+                {user.sessions?.length === 0 && (
+                  <Text style={{ color: theme.colors.textSecondary }}>
+                    No sessions found
+                  </Text>
+                )}
               </View>
             </>
           )}
@@ -395,6 +401,12 @@ export const ProfilePage = ({ user, externalView = false }) => {
                   />
                 );
               })}
+
+            {user.education?.length === 0 && externalView && (
+              <Text style={{ color: theme.colors.textSecondary }}>
+                No education found
+              </Text>
+            )}
           </View>
 
           {/* Experience */}
@@ -439,6 +451,12 @@ export const ProfilePage = ({ user, externalView = false }) => {
                       />
                     );
                   })}
+
+                {user.experience?.length === 0 && externalView && (
+                  <Text style={{ color: theme.colors.textSecondary }}>
+                    No experience found
+                  </Text>
+                )}
               </View>
             </>
           )}
