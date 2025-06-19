@@ -48,6 +48,7 @@ const userSchema = mongoose.Schema(
     state: {
       id: { type: Number },
       name: { type: String },
+      stateCode: { type: String },
       hasCities: { type: Boolean },
       latitude: String,
       longitude: String,

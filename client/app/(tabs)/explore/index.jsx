@@ -1,10 +1,5 @@
-import { View } from "react-native";
-import { Text } from "react-native-paper";
+import { ExplorePage } from "@/pages/Explore/ExplorePage";
 
 export default function ExploreScreen() {
-  return (
-    <View>
-      <Text>Explore page</Text>
-    </View>
-  );
+  return <ExplorePage />;
 }

@@ -27,21 +27,26 @@ export const ProfilePage = ({ user, externalView = false }) => {
   // Helper function to format location string
   const formatLocation = () => {
     const locationParts = [];
+    const { country, state, city, postalCode } = user;
 
-    if (user.city) {
-      locationParts.push(user.city.name);
+    if (city) {
+      locationParts.push(city?.name);
     }
 
-    if (user.state) {
-      locationParts.push(user.state.name);
+    if (state) {
+      locationParts.push(
+        isNaN(state?.stateCode) && state.stateCode
+          ? state?.stateCode
+          : state?.name
+      );
     }
 
-    if (user.postalCode) {
-      locationParts.push(user.postalCode);
+    if (postalCode) {
+      locationParts.push(postalCode);
     }
 
-    if (user.country?.name) {
-      locationParts.push(user.country.name);
+    if (country?.name) {
+      locationParts.push(country?.name);
     }
 
     return locationParts.length === 1

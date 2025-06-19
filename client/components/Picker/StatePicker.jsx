@@ -70,6 +70,7 @@ export const StatePicker = forwardRef(
       onSelect({
         id: state.id,
         name: state.name,
+        stateCode: state.state_code,
         latitude: state.latitude,
         longitude: state.longitude,
         hasCities: state.hasCities,
@@ -154,6 +155,7 @@ export const StatePicker = forwardRef(
         index={-1}
         snapPoints={snapPoints}
         enablePanDownToClose
+        enableDynamicSizing={false}
         backdropComponent={renderBackdrop}
         backgroundStyle={{ backgroundColor: theme.colors.background }}
         handleIndicatorStyle={{ backgroundColor: theme.colors.outlineVariant }}
