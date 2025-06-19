@@ -1,5 +1,6 @@
 import { useRouter } from "expo-router";
 import {
+  Alert,
   FlatList,
   Pressable,
   RefreshControl,
@@ -8,7 +9,7 @@ import {
 import { Text, useTheme } from "react-native-paper";
 import { useStyles } from "./BookingsPage.styles";
 import { EmptyList } from "@/components/EmptyList/EmptyList";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useBookingsQuery } from "@/services/api/bookings/useBookingsQuery";
 import { useUser } from "@/context/UserProvider/UserProvider";
 import { BookingItem } from "./components/BookingItem";
@@ -20,6 +21,22 @@ export const BookingsPage = () => {
   const styles = useStyles();
   const [isManualRefreshing, setIsManualRefreshing] = useState(false);
   const { bookings, isFetching, refetch } = useBookingsQuery("active");
+
+  useEffect(() => {
+    if (!user?.isProfileCompleted) {
+      Alert.alert(
+        "Set up your profile?",
+        "You haven't completed setting up the profile yet",
+        [
+          { text: "Later" },
+          {
+            text: "Go to Profile",
+            onPress: () => router.push("/profile"),
+          },
+        ]
+      );
+    }
+  }, []);
 
   const handleRefresh = async () => {
     setIsManualRefreshing(true);

@@ -11,6 +11,7 @@ import Session from "../models/session.model.js";
 import { sortByEndDate } from "../utils/sortByEndDate.js";
 import { populateUserData } from "../utils/populateUserData.js";
 import { v2 as cloudinary } from "cloudinary";
+import { checkProfileCompletion } from "../utils/checkProfileCompletion.js";
 
 /**
  * createAccount - Create new user account
@@ -119,7 +120,15 @@ async function updateUser(user, payload) {
   const updatedUser = await populateUserData(
     User.findByIdAndUpdate(
       user._id,
-      { $set: payload },
+      {
+        $set: {
+          ...payload,
+          isProfileCompleted: checkProfileCompletion({
+            ...currentUser.toObject(),
+            ...payload,
+          }),
+        },
+      },
       { new: true, useFindAndModify: false }
     )
   );
@@ -159,6 +168,7 @@ async function uploadImage(user, file) {
   const imageURL = imageUpload.secure_url;
 
   currentUser.image = imageURL;
+  currentUser.isProfileCompleted = checkProfileCompletion(currentUser);
 
   await currentUser.save();
 
