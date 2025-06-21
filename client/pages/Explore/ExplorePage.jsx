@@ -36,6 +36,7 @@ export const ExplorePage = () => {
   const [country, setCountry] = useState(null);
   const [state, setState] = useState(null);
   const [city, setCity] = useState(null);
+  const [locationLoading, setLocationLoading] = useState(false);
   const [currentLocationEnabled, setCurrentLocationEnabled] = useState(false);
   const [isUsingCurrentLocation, setIsUsingCurrentLocation] = useState(false);
 
@@ -73,6 +74,7 @@ export const ExplorePage = () => {
 
   //get current location
   const getCurrentLocation = async () => {
+    setLocationLoading(true);
     let { status } = await Location.requestForegroundPermissionsAsync(); // pop up box asking for permission to use location
 
     if (status !== "granted") {
@@ -107,6 +109,7 @@ export const ExplorePage = () => {
         setIsUsingCurrentLocation(true);
       }
     }
+    setLocationLoading(false);
   };
 
   const getFilterLabel = () => {
@@ -227,7 +230,7 @@ export const ExplorePage = () => {
               iconName="school"
               message="No tutors found"
               containerStyle={{ marginTop: 100 }}
-              isLoading={isFetching}
+              isLoading={isFetching || locationLoading}
             />
           }
         />
