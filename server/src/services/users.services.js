@@ -500,30 +500,45 @@ async function deleteSession(user, sessionId) {
 async function getTutors(params) {
   const { search = "", country, state, city } = params;
 
-  // Base query for tutors
-  let query = { role: "tutor" };
+  const locationMatch = {
+    role: "tutor",
+    ...(country && { "country.name": { $regex: new RegExp(country, "i") } }),
+  };
 
-  if (country) query["country.name"] = { $regex: new RegExp(country, "i") };
   if (state) {
-    query["$or"] = [
+    locationMatch["$or"] = [
       { "state.name": { $regex: new RegExp(state, "i") } },
       { "state.stateCode": { $regex: new RegExp(state, "i") } },
     ];
   }
-  if (city) query["city.name"] = { $regex: new RegExp(city, "i") };
 
-  // Find tutors matching location filters
-  let tutors = await User.find(query).populate("sessions").lean();
-
-  // If a search term is provided, filter tutors whose sessions match the subject
-  if (search.trim()) {
-    const lowerSearch = search.trim().toLowerCase();
-    tutors = tutors.filter((tutor) =>
-      tutor.sessions?.some((session) =>
-        session.subject.toLowerCase().includes(lowerSearch)
-      )
-    );
+  if (city) {
+    locationMatch["city.name"] = { $regex: new RegExp(city, "i") };
   }
+
+  const pipeline = [
+    { $match: locationMatch },
+    {
+      $lookup: {
+        from: "sessions",
+        localField: "_id",
+        foreignField: "userId",
+        as: "sessions",
+      },
+    },
+  ];
+
+  if (search.trim()) {
+    pipeline.push({
+      $match: {
+        "sessions.subject": {
+          $regex: new RegExp(search.trim(), "i"),
+        },
+      },
+    });
+  }
+
+  const tutors = await User.aggregate(pipeline);
 
   return responses.buildSuccessResponse(
     "Tutors fetched successfully",
