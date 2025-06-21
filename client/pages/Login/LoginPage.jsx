@@ -44,6 +44,7 @@ export const LoginPage = () => {
           label="Password"
           secureTextEntry
           fullWidth
+          onSubmitEditing={handleSubmit}
           {...{ control }}
         />
 
