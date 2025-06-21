@@ -107,7 +107,6 @@ export const DateTimePicker = forwardRef(
               isSameSlot(slot, timeSlot)
             )}
             onPress={handleTimeSlotPress}
-            theme={theme}
           />
         ));
       }

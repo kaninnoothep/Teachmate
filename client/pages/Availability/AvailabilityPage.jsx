@@ -205,7 +205,7 @@ export const AvailabilityPage = () => {
                   isSameSlot(slot, timeSlot)
                 )}
                 onPress={handleTimeSlotPress}
-                theme={theme}
+                disabled={selectedDates.length === 0}
               />
             ))}
           </View>
