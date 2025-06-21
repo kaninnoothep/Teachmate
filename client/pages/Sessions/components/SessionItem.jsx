@@ -17,7 +17,7 @@ export const SessionItem = ({ subject, description, estimatedDuration }) => {
         icon="clock-time-three-outline"
         iconSize={20}
         textVariant="bodySmall"
-        value={estimatedDuration}
+        value={`${estimatedDuration} hour${+estimatedDuration > 1 ? "s" : ""}`}
         containerStyle={styles.chip}
       />
     </View>

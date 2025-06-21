@@ -9,7 +9,27 @@ import { object, string } from "yup";
 const validationSchema = object({
   subject: string().required("Subject is required"),
   description: string().required("Description is required"),
-  estimatedDuration: string().required("Estimated duration is required"),
+  estimatedDuration: string()
+    .required("Estimated duration is required")
+    .transform((value) => {
+      if (typeof value !== "string") return value;
+
+      // Convert ".5" → "0.5"
+      if (value.startsWith(".")) value = "0" + value;
+
+      // Convert "1." → "1"
+      if (value.endsWith(".")) value = value.slice(0, -1);
+
+      return value;
+    })
+    .test(
+      "is-greater-than-zero",
+      "Estimated duration must be greater than 0",
+      (value) => {
+        const parsed = parseFloat(value);
+        return !isNaN(parsed) && parsed > 0;
+      }
+    ),
 });
 
 export const useSessionForm = () => {

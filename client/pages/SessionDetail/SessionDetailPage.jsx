@@ -77,8 +77,9 @@ export const SessionDetailPage = () => {
 
           <FormTextInput
             name="estimatedDuration"
-            label="Estimated Duration *"
-            placeholder="e.g., 4 hours"
+            label="Estimated Duration (hours) *"
+            placeholder="e.g., 4"
+            keyboardType="numeric"
             fullWidth
             {...{ control }}
           />
