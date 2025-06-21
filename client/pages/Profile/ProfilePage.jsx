@@ -349,7 +349,9 @@ export const ProfilePage = ({ user, externalView = false }) => {
                     >
                       <BackgroundItem
                         title={subject}
-                        subtitle={`Estimated Duration: ${estimatedDuration}`}
+                        subtitle={`Estimated Duration: ${estimatedDuration} hour${
+                          +estimatedDuration > 1 ? "s" : ""
+                        }`}
                         tertiaryText={description}
                         disabledEdit
                       />

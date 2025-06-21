@@ -16,7 +16,10 @@ export const ExternalSessionDetailPage = () => {
         </Text>
 
         <InfoBox label="Estimated Duration">
-          <Text variant="bodyLarge">{sessionState.estimatedDuration}</Text>
+          <Text variant="bodyLarge">
+            {sessionState.estimatedDuration} hour
+            {+sessionState.estimatedDuration > 1 ? "s" : ""}
+          </Text>
         </InfoBox>
 
         <InfoBox label="Description">

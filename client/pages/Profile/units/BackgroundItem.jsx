@@ -20,6 +20,7 @@ export const BackgroundItem = ({
           <Text
             variant="bodySmall"
             style={{ color: theme.colors.textSecondary }}
+            numberOfLines={3}
           >
             {tertiaryText}
           </Text>
