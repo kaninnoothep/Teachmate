@@ -119,6 +119,7 @@ export const ProfilePage = ({ user, externalView = false }) => {
         onSuccess: (response) => {
           Toast.show({ type: "success", text1: response.message });
           handleSetUser({ data: { ...userContext, image: response.data } });
+          setLoadImageError(false);
         },
         onError: (error) => {
           Toast.show({ type: "error", text1: error.message });
