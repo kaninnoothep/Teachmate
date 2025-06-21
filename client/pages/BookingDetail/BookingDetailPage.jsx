@@ -1,5 +1,5 @@
 import { useRouter, useLocalSearchParams } from "expo-router";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   Alert,
   Pressable,
@@ -25,6 +25,7 @@ export const BookingDetailPage = () => {
   const { user } = useUser();
   const theme = useTheme();
   const router = useRouter();
+  const [loadImageError, setLoadImageError] = useState(false);
   const { bookingId, booking: bookingJSON } = useLocalSearchParams();
 
   const { mutateAsync: cancelBooking } = useCancelBookingMutation({
@@ -145,8 +146,12 @@ export const BookingDetailPage = () => {
                 })
               }
             >
-              {author?.image ? (
-                <Avatar.Image size={40} source={{ uri: author.image }} />
+              {author?.image && !loadImageError ? (
+                <Avatar.Image
+                  size={40}
+                  source={{ uri: author.image }}
+                  onError={() => setLoadImageError(true)}
+                />
               ) : (
                 <Avatar.Text
                   size={40}

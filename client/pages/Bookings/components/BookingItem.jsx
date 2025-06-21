@@ -1,5 +1,6 @@
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
+import { useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { Avatar, Text, useTheme } from "react-native-paper";
 
@@ -8,6 +9,8 @@ dayjs.extend(utc);
 export const BookingItem = ({ subject, description, user, date, time }) => {
   const theme = useTheme();
   const styles = useStyles(theme);
+  const [loadImageError, setLoadImageError] = useState(false);
+
   return (
     <View style={styles.container}>
       <View style={[styles.wrapper, styles.leftWrapper]}>
@@ -24,8 +27,12 @@ export const BookingItem = ({ subject, description, user, date, time }) => {
         </Text>
 
         <View style={styles.userContainer}>
-          {user.image ? (
-            <Avatar.Image size={28} source={{ uri: user.image }} />
+          {user.image && !loadImageError ? (
+            <Avatar.Image
+              size={28}
+              source={{ uri: user.image }}
+              onError={() => setLoadImageError(true)}
+            />
           ) : (
             <Avatar.Text
               size={28}

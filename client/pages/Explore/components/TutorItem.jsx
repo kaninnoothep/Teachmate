@@ -1,15 +1,21 @@
 import { Chip } from "@/components/Chip/Chip";
+import { useState } from "react";
 import { Image, StyleSheet, View } from "react-native";
 import { Avatar, Text, useTheme } from "react-native-paper";
 
 export const TutorItem = ({ tutor }) => {
   const theme = useTheme();
   const styles = useStyles(theme);
+  const [loadImageError, setLoadImageError] = useState(false);
 
   return (
     <View style={styles.container}>
-      {tutor.image ? (
-        <Image source={{ uri: tutor.image }} style={styles.avatar} />
+      {tutor.image && !loadImageError ? (
+        <Image
+          source={{ uri: tutor.image }}
+          style={styles.avatar}
+          onError={() => setLoadImageError(true)}
+        />
       ) : (
         <Avatar.Text
           size={96}

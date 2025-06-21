@@ -13,7 +13,7 @@ import { useBookTutorForm } from "./hooks/useBookTutorForm";
 import { FormTextInput } from "@/components/Form/FormTextInput/FormTextInput";
 import { Button } from "@/components/Button/Button";
 import { Dropdown } from "@/components/Dropdown/Dropdown";
-import { useMemo, useRef } from "react";
+import { useMemo, useRef, useState } from "react";
 import { LOCATION_OPTIONS } from "../PreferredLocation/PreferredLocationPage";
 import { PickerButton } from "@/components/Picker/PickerButton";
 import { DateTimePicker } from "./components/DateTimePicker";
@@ -23,6 +23,7 @@ import { SafeKeyboardScrollView } from "@/components/SafeKeyboardScrollView/Safe
 export const BookTutorPage = () => {
   const theme = useTheme();
   const { tutorId } = useLocalSearchParams();
+  const [loadImageError, setLoadImageError] = useState(false);
   const { user, isFetching } = useUserQuery(tutorId);
   const {
     control,
@@ -82,8 +83,12 @@ export const BookTutorPage = () => {
         <Pressable style={styles.container}>
           <InfoBox label="Tutor" containerStyle={{ marginBottom: 22 }}>
             <View style={styles.userRow}>
-              {user?.image ? (
-                <Avatar.Image size={40} source={{ uri: user.image }} />
+              {user?.image && !loadImageError ? (
+                <Avatar.Image
+                  size={40}
+                  source={{ uri: user.image }}
+                  onError={() => setLoadImageError(true)}
+                />
               ) : (
                 <Avatar.Text
                   size={40}

@@ -13,7 +13,7 @@ import { InfoItem } from "./units/InfoItem";
 import { Chip } from "@/components/Chip/Chip";
 import { BackgroundItem } from "./units/BackgroundItem";
 import { Divider } from "@/components/Divider/Divider";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import * as ImagePicker from "expo-image-picker";
@@ -28,6 +28,7 @@ export const ProfilePage = ({ user, externalView = false }) => {
   const theme = useTheme();
   const styles = useStyles(theme);
   const router = useRouter();
+  const [loadImageError, setLoadImageError] = useState(false);
   const { mutateAsync: uploadImage } = useUploadImageMutation({});
 
   // Helper function to format location string
@@ -139,8 +140,12 @@ export const ProfilePage = ({ user, externalView = false }) => {
                   style={styles.avatarContainer}
                   disabled={externalView}
                 >
-                  {user.image ? (
-                    <Avatar.Image size={100} source={{ uri: user.image }} />
+                  {user.image && !loadImageError ? (
+                    <Avatar.Image
+                      size={100}
+                      source={{ uri: user.image }}
+                      onError={() => setLoadImageError(true)}
+                    />
                   ) : (
                     <Avatar.Text
                       size={100}
