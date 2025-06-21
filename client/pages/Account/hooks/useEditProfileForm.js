@@ -55,7 +55,6 @@ export const useEditProfileForm = () => {
       city,
       ...(user.role === "tutor" && { hourlyRate }),
     };
-    console.log("payload", payload);
 
     await updateUser(payload);
   };

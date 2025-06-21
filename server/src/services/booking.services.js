@@ -84,7 +84,6 @@ async function cancelBooking(user, bookingId) {
   const availability = tutor.availability.find((av) =>
     av.date.toISOString().startsWith(booking.date.toISOString().split("T")[0])
   );
-  console.log("availability", availability);
 
   if (availability) {
     const { startTime, endTime } = booking;
