@@ -20,7 +20,7 @@ import { TutorItem } from "./components/TutorItem";
 import { EmptyList } from "@/components/EmptyList/EmptyList";
 import { TextInput } from "@/components/TextInput/TextInput";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { LocationFilterModal } from "./components/LocationFilterModal";
+import { LocationFilterSheet } from "./components/LocationFilterSheet";
 import { useTutorsQuery } from "@/services/api/explore/useTutorsQuery";
 import * as Location from "expo-location";
 
@@ -37,6 +37,7 @@ export const ExplorePage = () => {
   const [state, setState] = useState(null);
   const [city, setCity] = useState(null);
   const [currentLocationEnabled, setCurrentLocationEnabled] = useState(false);
+  const [isUsingCurrentLocation, setIsUsingCurrentLocation] = useState(false);
 
   const { tutors, isFetching, refetch } = useTutorsQuery(
     searchDebounce,
@@ -103,6 +104,7 @@ export const ExplorePage = () => {
         setCountry({ name: item.country });
         setState({ name: item.region });
         setCity({ name: item.city });
+        setIsUsingCurrentLocation(true);
       }
     }
   };
@@ -231,7 +233,7 @@ export const ExplorePage = () => {
         />
       </Pressable>
       <Portal>
-        <LocationFilterModal
+        <LocationFilterSheet
           ref={locationFilterRef}
           {...{
             country,
@@ -244,6 +246,8 @@ export const ExplorePage = () => {
             setCurrentLocationEnabled,
             checkIfLocationEnabled,
             getCurrentLocation,
+            isUsingCurrentLocation,
+            setIsUsingCurrentLocation,
           }}
         />
       </Portal>

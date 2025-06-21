@@ -20,7 +20,7 @@ import { Keyboard, StyleSheet, View } from "react-native";
 import { Text, useTheme } from "react-native-paper";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-export const LocationFilterModal = forwardRef(
+export const LocationFilterSheet = forwardRef(
   (
     {
       country,
@@ -33,6 +33,8 @@ export const LocationFilterModal = forwardRef(
       setCurrentLocationEnabled,
       checkIfLocationEnabled,
       getCurrentLocation,
+      isUsingCurrentLocation,
+      setIsUsingCurrentLocation,
     },
     ref
   ) => {
@@ -86,6 +88,9 @@ export const LocationFilterModal = forwardRef(
           }}
           containerStyle={{ marginTop: insets.top }}
           onAnimate={() => Keyboard.dismiss()}
+          onClose={() =>
+            isUsingCurrentLocation && setCurrentLocationEnabled(true)
+          }
         >
           <View style={styles.container}>
             <Text style={styles.title}>Filters</Text>
@@ -165,6 +170,7 @@ export const LocationFilterModal = forwardRef(
           ref={countryPickerRef}
           onSelect={(val) => {
             setCountry(val);
+            setIsUsingCurrentLocation(false);
 
             if (country?.id !== val.id) {
               setState(null);
@@ -178,6 +184,7 @@ export const LocationFilterModal = forwardRef(
           ref={statePickerRef}
           onSelect={(val) => {
             setState(val);
+            setIsUsingCurrentLocation(false);
 
             if (state?.id !== val.id) {
               setCity(null);
@@ -189,7 +196,10 @@ export const LocationFilterModal = forwardRef(
 
         <CityPicker
           ref={cityPickerRef}
-          onSelect={(val) => setCity(val)}
+          onSelect={(val) => {
+            setCity(val);
+            setIsUsingCurrentLocation(false);
+          }}
           selectedId={city?.id}
           countryId={country?.id}
           stateId={state?.id}
@@ -199,7 +209,7 @@ export const LocationFilterModal = forwardRef(
   }
 );
 
-LocationFilterModal.displayName = "LocationFilterModal";
+LocationFilterSheet.displayName = "LocationFilterSheet";
 
 const useStyles = () =>
   StyleSheet.create({
