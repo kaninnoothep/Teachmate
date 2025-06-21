@@ -101,7 +101,7 @@ export const ProfilePage = ({ user, externalView = false }) => {
       mediaTypes: "images",
       allowsEditing: true,
       aspect: [4, 3],
-      quality: 1,
+      quality: 0,
     });
 
     if (!result.canceled) {
