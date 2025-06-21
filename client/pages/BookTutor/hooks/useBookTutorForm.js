@@ -11,7 +11,7 @@ const validationSchema = object({
     .typeError("Date and time are required")
     .required("Date and time are required"),
   timeSlots: array().min(1, "Date and time are required"),
-  preferredLocation: string().required("Location is required"),
+  preferredLocation: string(),
 });
 
 export const useBookTutorForm = () => {

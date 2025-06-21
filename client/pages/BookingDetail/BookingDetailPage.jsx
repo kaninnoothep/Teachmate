@@ -114,10 +114,12 @@ export const BookingDetailPage = () => {
             {session.subject}
           </Text>
 
-          <Chip
-            icon={getPreferredLocationDisplay().icon}
-            value={getPreferredLocationDisplay().label}
-          />
+          {preferredLocation && (
+            <Chip
+              icon={getPreferredLocationDisplay().icon}
+              value={getPreferredLocationDisplay().label}
+            />
+          )}
 
           <View style={styles.infoRow}>
             <InfoBox label="Date">

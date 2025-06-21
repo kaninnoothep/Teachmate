@@ -19,19 +19,21 @@ export const TutorItem = ({ tutor }) => {
       )}
 
       <View style={styles.rightContainer}>
-        <Text variant="titleMedium" style={styles.title}>
-          {tutor.firstName} {tutor.lastName}
-        </Text>
-
-        {tutor?.about && (
-          <Text
-            variant="bodyMedium"
-            numberOfLines={2}
-            style={styles.descriptionText}
-          >
-            {tutor?.about}
+        <View style={styles.rightTopWrapper}>
+          <Text variant="titleMedium" style={styles.title}>
+            {tutor.firstName} {tutor.lastName}
           </Text>
-        )}
+
+          {tutor?.about && (
+            <Text
+              variant="bodyMedium"
+              numberOfLines={2}
+              style={styles.descriptionText}
+            >
+              {tutor?.about}
+            </Text>
+          )}
+        </View>
 
         {tutor?.hourlyRate && (
           <Chip
@@ -68,7 +70,10 @@ const useStyles = (theme) =>
     },
     rightContainer: {
       flex: 1,
-      justifyContent: "space-between",
+      gap: 6,
+    },
+    rightTopWrapper: {
+      flex: 1,
       gap: 6,
     },
     title: {

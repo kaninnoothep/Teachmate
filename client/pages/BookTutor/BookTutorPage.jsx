@@ -119,12 +119,10 @@ export const BookTutorPage = () => {
           />
 
           <Dropdown
-            label="Location *"
+            label="Location"
             placeholder="Select location"
             data={locations}
             onSelect={({ value }) => setValue("preferredLocation", value)}
-            helperText={errors.preferredLocation?.message}
-            isError={errors.preferredLocation?.message}
           />
 
           <FormTextInput

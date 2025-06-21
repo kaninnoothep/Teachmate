@@ -13,6 +13,7 @@ export const Dropdown = ({
   helperText = "",
   isError = false,
   hideHelperTextSpace = false,
+  emptyOptionText = "No options available",
   ...props
 }) => {
   const theme = useTheme();
@@ -68,6 +69,15 @@ export const Dropdown = ({
             color={theme.colors.textSecondary}
           />
         )}
+        flatListProps={{
+          ListEmptyComponent: () => (
+            <View style={styles.emptyItem}>
+              <Text variant="bodyLarge" style={styles.emptyItemText}>
+                {emptyOptionText}
+              </Text>
+            </View>
+          ),
+        }}
         {...props}
       />
 
@@ -139,5 +149,11 @@ const useStyles = (theme, isFocus, isError) =>
       marginTop: 5,
       letterSpacing: 0.2,
       marginLeft: 12,
+    },
+    emptyItem: {
+      padding: 16,
+    },
+    emptyItemText: {
+      color: theme.colors.textSecondary,
     },
   });

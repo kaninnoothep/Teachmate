@@ -37,8 +37,8 @@ const bookingSchema = mongoose.Schema(
     },
     preferredLocation: {
       type: String,
-      enum: ["publicPlace", "tutorPlace", "online"],
-      required: true,
+      enum: ["publicPlace", "tutorPlace", "online", ""],
+      required: false,
     },
     note: { type: String },
   },

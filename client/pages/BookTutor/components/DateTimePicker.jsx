@@ -84,9 +84,19 @@ export const DateTimePicker = forwardRef(
       let timeSlots =
         availabilityMap[selectedDate?.toISOString().split("T")[0]];
 
-      const availableTimeSlots = timeSlots?.filter(
-        (timeSlot) => !timeSlot.isBooked
-      );
+      const now = dayjs();
+
+      const availableTimeSlots = timeSlots
+        ?.filter((timeSlot) => !timeSlot.isBooked)
+        .filter((timeSlot) => {
+          if (dayjs(selectedDate).isSame(now, "day")) {
+            // Keep slots whose endTime is in the future
+            const endTime = dayjs(`2000-01-01T${timeSlot.endTime}`);
+            const currentTime = dayjs(`2000-01-01T${now.format("HH:mm")}`);
+            return endTime.isAfter(currentTime);
+          }
+          return true; // future dates: show all
+        });
 
       if (availableTimeSlots?.length > 0) {
         return availableTimeSlots.map((timeSlot) => (
@@ -213,17 +223,9 @@ export const DateTimePicker = forwardRef(
           <Divider />
 
           <View style={styles.container}>
-            <View
-              style={{
-                flexDirection: "row",
-                alignItems: "center",
-                justifyContent: "space-between",
-              }}
-            >
-              <Text variant="titleMedium" style={styles.sectionTitle}>
-                Select Time
-              </Text>
-            </View>
+            <Text variant="titleMedium" style={styles.sectionTitle}>
+              Select Time
+            </Text>
 
             <View style={styles.timeSlotsGrid}>{renderTimeSlots()}</View>
           </View>
