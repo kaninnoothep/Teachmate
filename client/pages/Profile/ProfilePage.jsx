@@ -1,4 +1,10 @@
-import { Pressable, ScrollView, TouchableOpacity, View } from "react-native";
+import {
+  Linking,
+  Pressable,
+  ScrollView,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { Avatar, Text, useTheme } from "react-native-paper";
 import { useStyles } from "./ProfilePage.styles";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
@@ -181,8 +187,22 @@ export const ProfilePage = ({ user, externalView = false }) => {
               { paddingBottom: 24 },
             ]}
           >
-            <InfoItem icon="email" value={user.email} />
-            {user.phone && <InfoItem icon="phone" value={user.phone} />}
+            <TouchableOpacity
+              onPress={() => Linking.openURL(`mailto:${user.email}`)}
+              disabled={!externalView}
+            >
+              <InfoItem icon="email" value={user.email} />
+            </TouchableOpacity>
+
+            {user.phone && (
+              <TouchableOpacity
+                onPress={() => Linking.openURL(`tel:${user.phone}`)}
+                disabled={!externalView}
+              >
+                <InfoItem icon="phone" value={user.phone} />
+              </TouchableOpacity>
+            )}
+
             {hasLocationData && (
               <InfoItem icon="map-marker" value={formatLocation()} />
             )}
