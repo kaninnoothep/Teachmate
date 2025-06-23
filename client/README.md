@@ -1,50 +1,65 @@
-# Welcome to your Expo app 👋
+# Teachmate - Client
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+The client of this project was built with React Native working with Expo with some ESLint rules.
 
-## Get started
+## Folder structure
 
-1. Install dependencies
+The following are the folders used to organize this part of the project and what they contain.
 
-   ```bash
-   npm install
-   ```
+`package.json` contains essential information about the project, including commands and dependencies
 
-2. Start the app
+`.env` contains the environment variables
 
-   ```bash
-   npx expo start
-   ```
+`app` contains the main app layout for the project
+
+`assets` contains the project assets
+
+`components` contains the reusable components across the project
+
+`constants` contains the constants defined for the project
+
+`context` contains the Context for global storage across the project
+
+`hooks` contains code to manage custom React hooks
+
+`pages` contains the page components for the project
+
+`services` contains the code that handles communication with APIs and project logic
+
+`utils` contains helper functions and general purpose modules
+
+## How To Run
+
+To start the client, make sure you are in the client directory and run these commands in the shell
+
+```sh
+npm install
+```
+
+```sh
+npm run start
+```
 
 In the output, you'll find options to open the app in a
 
 - [development build](https://docs.expo.dev/develop/development-builds/introduction/)
+
 - [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
+
 - [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
+
 - [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
-
-```bash
-npm run reset-project
-```
-
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
 
 ## Learn more
 
 To learn more about developing your project with Expo, look at the following resources:
 
 - [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
+
 - [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
 
-## Join the community
+<!-- CONTACT -->
 
-Join our community of developers creating universal apps.
+## Author
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+**Kanin Noothep** - [@kaninnoothep](https://github.com/kaninnoothep) - [kaninnoothep@gmail.com](mailto:kaninnoothep@gmail.com)
