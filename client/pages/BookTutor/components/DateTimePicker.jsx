@@ -214,7 +214,7 @@ export const DateTimePicker = forwardRef(
             onChange={handleChangeDate}
             minDate={today}
             availabilityMap={availabilityMap}
-            hideBookedDot
+            onlyShowValidDots
             hideDisabled
             style={{ padding: 16 }}
           />

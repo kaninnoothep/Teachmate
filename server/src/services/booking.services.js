@@ -113,25 +113,31 @@ async function getMyBookings(user, status) {
   }
 
   const now = new Date();
+  const currentTime = now.toISOString().slice(11, 16); // "HH:mm" (UTC-safe)
+
+  const startOfToday = new Date(now);
+  startOfToday.setUTCHours(0, 0, 0, 0);
+
+  const endOfToday = new Date(now);
+  endOfToday.setUTCHours(23, 59, 59, 999);
 
   if (status === "active") {
     query.$or = [
-      { date: { $gt: now } },
+      { date: { $gt: endOfToday } }, // Future days
       {
-        date: { $eq: now.toISOString().split("T")[0] },
-        endTime: { $gt: now.toTimeString().slice(0, 5) }, // HH:mm
+        date: { $gte: startOfToday, $lte: endOfToday },
+        endTime: { $gt: currentTime }, // Today, still running
       },
     ];
   } else if (status === "inactive") {
     query.$or = [
-      { date: { $lt: now } },
+      { date: { $lt: startOfToday } }, // Past days
       {
-        date: { $eq: now.toISOString().split("T")[0] },
-        endTime: { $lte: now.toTimeString().slice(0, 5) },
+        date: { $gte: startOfToday, $lte: endOfToday },
+        endTime: { $lte: currentTime }, // Today, already ended
       },
     ];
   }
-
   const bookings = await Booking.find(query)
     .populate("student", "-password")
     .populate("tutor", "-password")

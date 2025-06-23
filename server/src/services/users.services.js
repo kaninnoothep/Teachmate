@@ -215,19 +215,23 @@ async function setAvailability(user, newAvailability) {
     const dateKey = new Date(entry.date).toISOString().split("T")[0];
 
     if (entry.slots && entry.slots.length > 0) {
-      availabilityMap.set(dateKey, entry.slots);
+      // Sort slots by startTime before setting
+      const sortedSlots = [...entry.slots].sort((a, b) =>
+        a.startTime.localeCompare(b.startTime)
+      );
+      availabilityMap.set(dateKey, sortedSlots);
     } else {
       availabilityMap.delete(dateKey);
     }
   }
 
-  // Convert map back to array
-  const mergedAvailability = Array.from(availabilityMap.entries()).map(
-    ([date, slots]) => ({
+  // Convert map back to array and sort by date
+  const mergedAvailability = Array.from(availabilityMap.entries())
+    .map(([date, slots]) => ({
       date: new Date(date),
       slots,
-    })
-  );
+    }))
+    .sort((a, b) => new Date(a.date) - new Date(b.date));
 
   userDoc.availability = mergedAvailability;
   await userDoc.save();

@@ -1,32 +1,42 @@
 import { View } from "react-native";
 import { Text, useTheme } from "react-native-paper";
 import DateTimePicker, { useDefaultStyles } from "react-native-ui-datepicker";
+import dayjs from "dayjs";
 
-const DateWithDot = ({ day, availabilityMap, hideBookedDot, hideDisabled }) => {
+const DateWithDot = ({
+  day,
+  availabilityMap,
+  hideDisabled,
+  onlyShowValidDots = false,
+}) => {
   const theme = useTheme();
-  const { date, number, isCurrentMonth, isDisabled, isSelected } = day;
-  const dateKey = date.toISOString().split("T")[0];
+  const { date: rawDate, number, isCurrentMonth, isDisabled, isSelected } = day;
+  const date = new Date(rawDate);
+  const dateKey = date.toLocaleDateString("sv-SE");
 
-  const timeSlots = availabilityMap[dateKey];
-  const hasAvailability = timeSlots?.length > 0;
+  const timeSlots = availabilityMap[dateKey] || [];
 
-  const availableTimeSlots = timeSlots?.filter(
-    (timeSlot) => !timeSlot.isBooked
-  );
-  const hasAvailibleTimeSlots = availableTimeSlots?.length > 0;
+  const availableTimeSlots = timeSlots.filter((slot) => {
+    if (slot.isBooked) return false;
+    if (onlyShowValidDots) {
+      const now = dayjs();
+      if (dayjs(date).isSame(now, "day")) {
+        const endTime = dayjs(`2000-01-01T${slot.endTime}`);
+        const currentTime = dayjs(`2000-01-01T${now.format("HH:mm")}`);
+        return endTime.isAfter(currentTime);
+      }
+    }
+    return true;
+  });
+
+  const hasValidSlots = availableTimeSlots.length > 0;
 
   const getDotOpacity = () => {
-    if (
-      (!hasAvailibleTimeSlots && hideBookedDot) ||
-      (hideDisabled && isDisabled)
-    )
+    if ((onlyShowValidDots && !hasValidSlots) || (hideDisabled && isDisabled))
       return 0;
-
-    if (isDisabled && hasAvailability) return 0.7;
-
-    if (hasAvailability) return 1;
-
-    return 0;
+    if (!onlyShowValidDots && timeSlots.length === 0) return 0;
+    if (isDisabled && timeSlots.length > 0) return 0.7;
+    return 1;
   };
 
   return (
@@ -71,8 +81,8 @@ const DateWithDot = ({ day, availabilityMap, hideBookedDot, hideDisabled }) => {
 export const DatePicker = ({
   styles,
   availabilityMap = [],
-  hideBookedDot = false,
   hideDisabled = false,
+  onlyShowValidDots = false,
   ...props
 }) => {
   const theme = useTheme();
@@ -83,8 +93,8 @@ export const DatePicker = ({
       <DateWithDot
         day={day}
         availabilityMap={availabilityMap}
-        hideBookedDot={hideBookedDot}
         hideDisabled={hideDisabled}
+        onlyShowValidDots={onlyShowValidDots}
       />
     ),
   };
