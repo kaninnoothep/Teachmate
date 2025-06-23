@@ -113,31 +113,42 @@ async function getMyBookings(user, status) {
   }
 
   const now = new Date();
-  const currentTime = now.toISOString().slice(11, 16); // "HH:mm" (UTC-safe)
 
-  const startOfToday = new Date(now);
-  startOfToday.setUTCHours(0, 0, 0, 0);
+  // Create matching UTC date boundaries
+  const todayUTC = new Date();
+  todayUTC.setUTCHours(0, 0, 0, 0); // Today at UTC midnight
 
-  const endOfToday = new Date(now);
-  endOfToday.setUTCHours(23, 59, 59, 999);
+  const tomorrowUTC = new Date(todayUTC);
+  tomorrowUTC.setUTCDate(tomorrowUTC.getUTCDate() + 1); // Tomorrow at UTC midnight
+
+  // Current time in HH:MM format (local time for comparison with stored times)
+  const currentTime =
+    now.getHours().toString().padStart(2, "0") +
+    ":" +
+    now.getMinutes().toString().padStart(2, "0");
 
   if (status === "active") {
     query.$or = [
-      { date: { $gt: endOfToday } }, // Future days
+      // Future dates (after today)
+      { date: { $gte: tomorrowUTC } },
+      // Today's bookings where session hasn't ended yet
       {
-        date: { $gte: startOfToday, $lte: endOfToday },
-        endTime: { $gt: currentTime }, // Today, still running
+        date: { $gte: todayUTC, $lt: tomorrowUTC },
+        endTime: { $gt: currentTime },
       },
     ];
   } else if (status === "inactive") {
     query.$or = [
-      { date: { $lt: startOfToday } }, // Past days
+      // Past dates (before today)
+      { date: { $lt: todayUTC } },
+      // Today's bookings where session has ended
       {
-        date: { $gte: startOfToday, $lte: endOfToday },
-        endTime: { $lte: currentTime }, // Today, already ended
+        date: { $gte: todayUTC, $lt: tomorrowUTC },
+        endTime: { $lte: currentTime },
       },
     ];
   }
+
   const bookings = await Booking.find(query)
     .populate("student", "-password")
     .populate("tutor", "-password")

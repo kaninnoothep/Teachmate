@@ -4,7 +4,7 @@
 import mongoose from "mongoose";
 
 /**
- * Define user model for database
+ * Define booking model for database
  */
 const bookingSchema = mongoose.Schema(
   {
@@ -47,6 +47,6 @@ const bookingSchema = mongoose.Schema(
   }
 );
 /**
- * Export user model
+ * Export booking model
  */
 export default mongoose.model("Booking", bookingSchema);
