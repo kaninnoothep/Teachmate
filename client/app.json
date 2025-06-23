@@ -18,7 +18,9 @@
         "backgroundColor": "#307FCF"
       },
       "edgeToEdgeEnabled": true,
-      "permissions": ["android.permission.RECORD_AUDIO"],
+      "permissions": [
+        "android.permission.RECORD_AUDIO"
+      ],
       "package": "com.teachmate.client"
     },
     "web": {
@@ -42,11 +44,14 @@
         {
           "photosPermission": "The app accesses your photos to upload your profile image."
         }
-      ]
+      ],
+      "expo-web-browser"
     ],
     "experiments": {
       "typedRoutes": true
     },
-    "assetBundlePatterns": ["**/*"]
+    "assetBundlePatterns": [
+      "**/*"
+    ]
   }
 }
