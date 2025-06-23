@@ -50,4 +50,4 @@ If this is an error, reach out to the author to grant you access to it.
 
 ## Author
 
-**James Kanin** - [@kaninnoothep](https://github.com/kaninnoothep) - [kaninnoothep@gmail.com](mailto:kaninnoothep@gmail.com)
+**Kanin Noothep** - [@kaninnoothep](https://github.com/kaninnoothep) - [kaninnoothep@gmail.com](mailto:kaninnoothep@gmail.com)
