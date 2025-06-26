@@ -1,3 +1,6 @@
+/**
+ * Import Modules
+ */
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import {
   useEffect,
@@ -19,8 +22,15 @@ import { TextInput } from "../TextInput/TextInput";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useStyles } from "./Picker.styles";
 
+/**
+ * CountryPicker - A bottom sheet component for selecting a country
+ *
+ * @param {*} props
+ * @param {*} ref
+ * @returns JSX Element
+ */
 export const CountryPicker = forwardRef(({ onSelect, selectedId }, ref) => {
-  const sheetRef = useRef(null);
+  const sheetRef = useRef(null); // Ref to control BottomSheet
   const theme = useTheme();
   const styles = useStyles(theme);
   const insets = useSafeAreaInsets();
@@ -29,13 +39,16 @@ export const CountryPicker = forwardRef(({ onSelect, selectedId }, ref) => {
   const [countries, setCountries] = useState([]);
   const [loading, setLoading] = useState(false);
 
+  // Define snap points for BottomSheet
   const snapPoints = useMemo(() => ["100%"], []);
 
+  // Expose methods to open and close the BottomSheet
   useImperativeHandle(ref, () => ({
     open: () => sheetRef.current?.snapToIndex(0),
     close: () => sheetRef.current?.close(),
   }));
 
+  // Fetch countries
   useEffect(() => {
     const fetchCountries = async () => {
       setLoading(true);
@@ -52,6 +65,7 @@ export const CountryPicker = forwardRef(({ onSelect, selectedId }, ref) => {
     fetchCountries();
   }, []);
 
+  // Filter countries by search text
   const filteredCountries = useMemo(
     () =>
       countries.filter((c) =>
@@ -60,6 +74,7 @@ export const CountryPicker = forwardRef(({ onSelect, selectedId }, ref) => {
     [countries, search]
   );
 
+  // Handle country selection
   const handleSelect = (country) => {
     onSelect({
       id: country.id,
@@ -72,6 +87,7 @@ export const CountryPicker = forwardRef(({ onSelect, selectedId }, ref) => {
     sheetRef.current?.close();
   };
 
+  // Render each item in the list
   const renderItem = useCallback(
     ({ item }) => {
       const isSelected = item.id === selectedId;
@@ -100,6 +116,7 @@ export const CountryPicker = forwardRef(({ onSelect, selectedId }, ref) => {
     [selectedId]
   );
 
+  // Render backdrop behind BottomSheet
   const renderBackdrop = useCallback(
     (props) => (
       <BottomSheetBackdrop
@@ -112,6 +129,7 @@ export const CountryPicker = forwardRef(({ onSelect, selectedId }, ref) => {
     []
   );
 
+  // Render content inside BottomSheet
   const renderContent = () => {
     if (loading) {
       return (
@@ -172,4 +190,5 @@ export const CountryPicker = forwardRef(({ onSelect, selectedId }, ref) => {
   );
 });
 
+// Set display name
 CountryPicker.displayName = "CountryPicker";

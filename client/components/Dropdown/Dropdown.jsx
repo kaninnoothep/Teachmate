@@ -1,9 +1,18 @@
+/**
+ * Import Modules
+ */
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { Dropdown as RNDropdown } from "react-native-element-dropdown";
 import { Text, useTheme } from "react-native-paper";
 
+/**
+ * Dropdown - A custom dropdown input with optional search and helper text
+ *
+ * @param {*} props
+ * @returns JSX Element
+ */
 export const Dropdown = ({
   label = "Select",
   placeholder = "",
@@ -21,6 +30,7 @@ export const Dropdown = ({
   const [isFocus, setIsFocus] = useState(false);
   const styles = useStyles(theme, isFocus, isError);
 
+  // Show label only if value exists or field is focused
   const renderLabel = () => {
     if (value || isFocus) {
       return <Text style={styles.label}>{label}</Text>;
@@ -93,6 +103,14 @@ export const Dropdown = ({
   );
 };
 
+/**
+ * useStyles - Specify styles for Dropdown
+ *
+ * @param {*} theme
+ * @param {boolean} isFocus - Indicates if dropdown is in focus state
+ * @param {boolean} isError - Indicates if dropdown is in error state
+ * @returns StyleSheet object
+ */
 const useStyles = (theme, isFocus, isError) =>
   StyleSheet.create({
     container: {

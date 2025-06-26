@@ -1,7 +1,16 @@
+/**
+ * Import Modules
+ */
 import { TouchableOpacity, View, StyleSheet } from "react-native";
 import { Text, useTheme } from "react-native-paper";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
+/**
+ * DatePickerButton - A styled button for triggering a date picker
+ *
+ * @param {*} props
+ * @returns JSX Element
+ */
 export const DatePickerButton = ({
   label,
   value,
@@ -14,19 +23,24 @@ export const DatePickerButton = ({
 }) => {
   const theme = useTheme();
   const styles = useStyles(theme, isError);
-  const hasValue = !!value;
+  const hasValue = !!value; // Check if value exists
 
   return (
     <View style={[styles.container, containerStyles]}>
       <TouchableOpacity style={styles.button} onPress={onPress} {...props}>
         <View style={styles.content}>
+          {/* Display label, shrink if value exists */}
           <Text style={[styles.label, hasValue && styles.labelShrunk]}>
             {label}
           </Text>
+
+          {/* Show selected value if exists */}
           {hasValue && (
             <Text style={styles.valueText}>{value.displayText}</Text>
           )}
         </View>
+
+        {/* Calendar icon on the right */}
         <MaterialCommunityIcons
           name="calendar"
           size={20}
@@ -34,6 +48,7 @@ export const DatePickerButton = ({
         />
       </TouchableOpacity>
 
+      {/* Helper text below the button */}
       {!hideHelperTextSpace && (
         <Text
           variant="bodySmall"
@@ -46,6 +61,13 @@ export const DatePickerButton = ({
   );
 };
 
+/**
+ * useStyles - Specify styles for DatePickerButton
+ *
+ * @param {*} theme
+ * @param {boolean} isError - Indicates if input is in error state
+ * @returns StyleSheet object
+ */
 const useStyles = (theme, isError) =>
   StyleSheet.create({
     container: {

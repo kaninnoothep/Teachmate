@@ -1,3 +1,6 @@
+/**
+ * Import Modules
+ */
 import { useState, useEffect } from "react";
 import {
   View,
@@ -13,6 +16,12 @@ import { useTheme } from "react-native-paper";
 
 const { height: screenHeight } = Dimensions.get("window");
 
+/**
+ * MonthYearPicker - A modal component for picking month and year
+ *
+ * @param {*} props
+ * @returns JSX Element
+ */
 export const MonthYearPicker = ({
   isVisible,
   onClose,
@@ -28,6 +37,7 @@ export const MonthYearPicker = ({
   const [selectedMonth, setSelectedMonth] = useState(initialMonth);
   const [selectedYear, setSelectedYear] = useState(initialYear);
 
+  // List of all months
   const months = [
     { label: "January", value: "01" },
     { label: "February", value: "02" },
@@ -43,12 +53,13 @@ export const MonthYearPicker = ({
     { label: "December", value: "12" },
   ];
 
+  // List of years (past 100 years)
   const years = Array.from(
     { length: 100 },
     (_, i) => currentYear - i
   ).reverse();
 
-  // Function to get available months for a given year
+  // Filter out future months for current year
   const getAvailableMonths = (year) => {
     const yearNum = parseInt(year);
     if (yearNum === currentYear) {
@@ -57,7 +68,7 @@ export const MonthYearPicker = ({
     return months;
   };
 
-  // Helper function to create selection object
+  // Create an object with formatted values for selection
   const createSelection = (month, year) => {
     if (month && year) {
       const monthLabel = months.find((m) => m.value === month)?.label;
@@ -95,11 +106,13 @@ export const MonthYearPicker = ({
     }
   }, [isVisible]);
 
+  // Handle month change
   const handleMonthChange = (itemValue) => {
     setSelectedMonth(itemValue);
     onSelect(createSelection(itemValue, selectedYear));
   };
 
+  // Handle year change and validate month
   const handleYearChange = (itemValue) => {
     setSelectedYear(itemValue);
 
@@ -119,6 +132,7 @@ export const MonthYearPicker = ({
     onSelect(createSelection(finalMonth, itemValue));
   };
 
+  // Clear selection and close modal
   const handleClear = () => {
     setSelectedMonth("");
     setSelectedYear("");
@@ -143,6 +157,7 @@ export const MonthYearPicker = ({
             <Text style={styles.title}>{title}</Text>
           </View>
 
+          {/* Month and Year Pickers */}
           <View style={styles.pickersContainer}>
             <View style={styles.pickerWrapper}>
               <Text style={styles.pickerLabel}>Month</Text>
@@ -199,6 +214,12 @@ export const MonthYearPicker = ({
   );
 };
 
+/**
+ * useStyles - Specify styles for MonthYearPicker
+ *
+ * @param {*} theme
+ * @returns StyleSheet object
+ */
 const useStyles = (theme) =>
   StyleSheet.create({
     overlay: {

@@ -1,3 +1,6 @@
+/**
+ * Import Modules
+ */
 import {
   useEffect,
   useRef,
@@ -19,9 +22,16 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useStyles } from "./Picker.styles";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
+/**
+ * StatePicker - A bottom sheet component for selecting a state
+ *
+ * @param {*} props
+ * @param {*} ref
+ * @returns JSX Element
+ */
 export const StatePicker = forwardRef(
   ({ onSelect, countryId, selectedId }, ref) => {
-    const sheetRef = useRef(null);
+    const sheetRef = useRef(null); // Ref to control BottomSheet
     const theme = useTheme();
     const styles = useStyles(theme);
     const insets = useSafeAreaInsets();
@@ -30,13 +40,16 @@ export const StatePicker = forwardRef(
     const [states, setStates] = useState([]);
     const [loading, setLoading] = useState(false);
 
+    // Define snap points for BottomSheet
     const snapPoints = useMemo(() => ["100%"], []);
 
+    // Expose methods to open and close the BottomSheet
     useImperativeHandle(ref, () => ({
       open: () => sheetRef.current?.snapToIndex(0),
       close: () => sheetRef.current?.close(),
     }));
 
+    // Fetch states when countryId changes
     useEffect(() => {
       const fetchStates = async () => {
         if (countryId) {
@@ -58,6 +71,7 @@ export const StatePicker = forwardRef(
       fetchStates();
     }, [countryId]);
 
+    // Filter states by search text
     const filtered = useMemo(
       () =>
         states.filter((state) =>
@@ -66,6 +80,7 @@ export const StatePicker = forwardRef(
       [states, search]
     );
 
+    // Handle state selection
     const handleSelect = (state) => {
       onSelect({
         id: state.id,
@@ -78,6 +93,7 @@ export const StatePicker = forwardRef(
       sheetRef.current?.close();
     };
 
+    // Render each item in the list
     const renderItem = useCallback(
       ({ item }) => {
         const isSelected = item.id === selectedId;
@@ -106,6 +122,7 @@ export const StatePicker = forwardRef(
       [selectedId]
     );
 
+    // Render backdrop behind BottomSheet
     const renderBackdrop = useCallback(
       (props) => (
         <BottomSheetBackdrop
@@ -118,6 +135,7 @@ export const StatePicker = forwardRef(
       []
     );
 
+    // Render content inside BottomSheet
     const renderContent = () => {
       if (loading) {
         return (
@@ -179,4 +197,5 @@ export const StatePicker = forwardRef(
   }
 );
 
+// Set display name
 StatePicker.displayName = "StatePicker";

@@ -1,5 +1,14 @@
+/**
+ * Import Modules
+ */
 import { Divider as PaperDivider, useTheme } from "react-native-paper";
 
+/**
+ * Divider - A custom divider component
+ *
+ * @param {*} props
+ * @returns JSX Element
+ */
 export const Divider = ({ style }) => {
   const theme = useTheme();
 

@@ -1,7 +1,16 @@
+/**
+ * Import Modules
+ */
 import { StyleSheet, View } from "react-native";
 import { Text, useTheme } from "react-native-paper";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 
+/**
+ * Chip - A small pill-style component for displaying text with an optional icon
+ *
+ * @param {*} props
+ * @returns JSX Element
+ */
 export const Chip = ({
   textVariant = "titleSmall",
   value,
@@ -29,6 +38,12 @@ export const Chip = ({
   );
 };
 
+/**
+ * useStyles - Specify styles for Chip
+ *
+ * @param {*} theme
+ * @returns StyleSheet object
+ */
 const useStyles = (theme) =>
   StyleSheet.create({
     container: {

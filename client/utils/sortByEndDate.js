@@ -23,4 +23,5 @@ function sortByEndDate(records) {
   });
 }
 
+// Export the function
 export { sortByEndDate };

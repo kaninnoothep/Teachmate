@@ -1,7 +1,16 @@
+/**
+ * Import Modules
+ */
 import { KeyboardAvoidingView, Platform, ScrollView } from "react-native";
 import { SafeAreaView } from "../SafeAreaView/SafeAreaView";
 import PropTypes from "prop-types";
 
+/**
+ * SafeKeyboarScrollView - Safe Keyboard Scroll view
+ *
+ * @param {*} props
+ * @returns JSX Element
+ */
 export const SafeKeyboardScrollView = ({
   children,
   showsVerticalScrollIndicator = false,
@@ -33,6 +42,7 @@ export const SafeKeyboardScrollView = ({
   );
 };
 
+// Specify types of props to be received by SafeKeyboardScrollView
 SafeKeyboardScrollView.propTypes = {
   children: PropTypes.node,
   showsVerticalScrollIndicator: PropTypes.bool,

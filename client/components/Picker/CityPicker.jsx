@@ -1,3 +1,6 @@
+/**
+ * Import Modules
+ */
 import {
   useEffect,
   useRef,
@@ -7,11 +10,7 @@ import {
   forwardRef,
   useImperativeHandle,
 } from "react";
-import {
-  View,
-  TouchableOpacity,
-  Keyboard,
-} from "react-native";
+import { View, TouchableOpacity, Keyboard } from "react-native";
 import BottomSheet, {
   BottomSheetBackdrop,
   BottomSheetFlatList,
@@ -23,9 +22,16 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useStyles } from "./Picker.styles";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
+/**
+ * CityPicker - A bottom sheet component for selecting a city
+ *
+ * @param {*} props
+ * @param {*} ref
+ * @returns JSX Element
+ */
 export const CityPicker = forwardRef(
   ({ onSelect, countryId, stateId, selectedId }, ref) => {
-    const sheetRef = useRef(null);
+    const sheetRef = useRef(null); // Ref to control BottomSheet
     const theme = useTheme();
     const styles = useStyles(theme);
     const insets = useSafeAreaInsets();
@@ -34,13 +40,16 @@ export const CityPicker = forwardRef(
     const [cities, setCities] = useState([]);
     const [loading, setLoading] = useState(false);
 
+    // Define snap points for BottomSheet
     const snapPoints = useMemo(() => ["100%"], []);
 
+    // Expose methods to open and close the BottomSheet
     useImperativeHandle(ref, () => ({
       open: () => sheetRef.current?.snapToIndex(0),
       close: () => sheetRef.current?.close(),
     }));
 
+    // Fetch cities when countryId and stateId changes
     useEffect(() => {
       const fetchCities = async () => {
         if (countryId && stateId) {
@@ -62,6 +71,7 @@ export const CityPicker = forwardRef(
       fetchCities();
     }, [countryId, stateId]);
 
+    // Filter cities by search text
     const filtered = useMemo(
       () =>
         cities.filter((city) =>
@@ -70,6 +80,7 @@ export const CityPicker = forwardRef(
       [cities, search]
     );
 
+    // Handle city selection
     const handleSelect = (city) => {
       onSelect({
         id: city.id,
@@ -80,6 +91,7 @@ export const CityPicker = forwardRef(
       sheetRef.current?.close();
     };
 
+    // Render each item in the list
     const renderItem = useCallback(
       ({ item }) => {
         const isSelected = item.id === selectedId;
@@ -108,6 +120,7 @@ export const CityPicker = forwardRef(
       [selectedId]
     );
 
+    // Render backdrop behind BottomSheet
     const renderBackdrop = useCallback(
       (props) => (
         <BottomSheetBackdrop
@@ -120,6 +133,7 @@ export const CityPicker = forwardRef(
       []
     );
 
+    // Render content inside BottomSheet
     const renderContent = () => {
       if (loading) {
         return (
@@ -180,4 +194,6 @@ export const CityPicker = forwardRef(
     );
   }
 );
+
+// Set display name
 CityPicker.displayName = "CityPicker";

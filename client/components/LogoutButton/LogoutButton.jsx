@@ -1,8 +1,16 @@
+/**
+ * Import Modules
+ */
 import { useUser } from "@/context/UserProvider/UserProvider";
 import Feather from "@expo/vector-icons/Feather";
 import { Alert, TouchableOpacity } from "react-native";
 import { useTheme } from "react-native-paper";
 
+/**
+ * LogoutButton - Specify format for logout button
+ *
+ * @returns JSX Element
+ */
 export const LogoutButton = () => {
   const { logout } = useUser();
   const theme = useTheme();

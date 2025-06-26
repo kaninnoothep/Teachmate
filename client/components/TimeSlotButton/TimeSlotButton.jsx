@@ -1,6 +1,15 @@
+/**
+ * Import Modules
+ */
 import { Pressable, StyleSheet } from "react-native";
 import { Text, useTheme } from "react-native-paper";
 
+/**
+ * TimeSlotButton - Specify the format for time slot buttons
+ *
+ * @param {*} props
+ * @returns JSX Element
+ */
 export const TimeSlotButton = ({
   timeSlot,
   isSelected,
@@ -34,6 +43,12 @@ export const TimeSlotButton = ({
   );
 };
 
+/**
+ * useStyles - Specify styles to use
+ *
+ * @param {*} theme
+ * @returns StyleSheet object
+ */
 const useStyles = (theme) =>
   StyleSheet.create({
     timeSlotButton: {

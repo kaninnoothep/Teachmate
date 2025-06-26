@@ -1,5 +1,11 @@
+/**
+ * Import Modules
+ */
 import { StyleSheet } from "react-native";
 
+/**
+ * Export Styles to use for Pickers
+ */
 export const useStyles = (theme) =>
   StyleSheet.create({
     container: {

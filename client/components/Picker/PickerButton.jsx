@@ -1,7 +1,16 @@
+/**
+ * Import Modules
+ */
 import { TouchableOpacity, View, StyleSheet } from "react-native";
 import { Text, useTheme } from "react-native-paper";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
+/**
+ * PickerButton - Specify the format for picker buttons
+ *
+ * @param {*} props
+ * @returns JSX Element
+ */
 export const PickerButton = ({
   label,
   value,
@@ -70,6 +79,13 @@ export const PickerButton = ({
   );
 };
 
+/**
+ * useStyles - Specify styles to use
+ *
+ * @param {*} theme
+ * @param {boolean} isError - Indicates if input is in error state
+ * @returns StyleSheet object
+ */
 const useStyles = (theme, isError) =>
   StyleSheet.create({
     container: {

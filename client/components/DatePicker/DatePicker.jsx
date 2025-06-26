@@ -1,21 +1,34 @@
+/**
+ * Import Modules
+ */
+
 import { View } from "react-native";
 import { Text, useTheme } from "react-native-paper";
 import DateTimePicker, { useDefaultStyles } from "react-native-ui-datepicker";
 import dayjs from "dayjs";
 
-const DateWithDot = ({
+/**
+ * DateWithDot - Custom day cell with a dot indicator for availability
+ *
+ * @param {*} props
+ * @returns JSX Element
+ */ const DateWithDot = ({
   day,
   availabilityMap,
   hideDisabled,
   onlyShowValidDots = false,
 }) => {
   const theme = useTheme();
+
+  // Destructure day object
   const { date: rawDate, number, isCurrentMonth, isDisabled, isSelected } = day;
   const date = new Date(rawDate);
-  const dateKey = date.toLocaleDateString("sv-SE");
+  const dateKey = date.toLocaleDateString("sv-SE"); // Format date for key
 
+  // Get time slots for the date
   const timeSlots = availabilityMap[dateKey] || [];
 
+  // Filter valid time slots
   const availableTimeSlots = timeSlots.filter((slot) => {
     if (slot.isBooked) return false;
     if (onlyShowValidDots) {
@@ -31,6 +44,7 @@ const DateWithDot = ({
 
   const hasValidSlots = availableTimeSlots.length > 0;
 
+  // Determine the opacity of the availability dot
   const getDotOpacity = () => {
     if ((onlyShowValidDots && !hasValidSlots) || (hideDisabled && isDisabled))
       return 0;
@@ -50,6 +64,7 @@ const DateWithDot = ({
         alignItems: "center",
       }}
     >
+      {/* Day number */}
       <Text
         style={{
           color: isSelected
@@ -62,6 +77,8 @@ const DateWithDot = ({
       >
         {number}
       </Text>
+
+      {/* Availability dot */}
       <View
         style={{
           width: 6,
@@ -78,6 +95,12 @@ const DateWithDot = ({
   );
 };
 
+/**
+ * DatePicker - Custom date picker with availability indicators
+ *
+ * @param {*} props
+ * @returns JSX Element
+ */
 export const DatePicker = ({
   styles,
   availabilityMap = [],
@@ -88,6 +111,7 @@ export const DatePicker = ({
   const theme = useTheme();
   const defaultStyles = useDefaultStyles("light");
 
+  // Override default day cell with DateWithDot
   const components = {
     Day: (day) => (
       <DateWithDot

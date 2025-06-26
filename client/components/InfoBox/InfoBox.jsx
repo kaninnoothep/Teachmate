@@ -1,6 +1,15 @@
+/**
+ * Import Modules
+ */
 import { StyleSheet, View } from "react-native";
 import { Text, useTheme } from "react-native-paper";
 
+/**
+ * InfoBox - A container component with a label and content area
+ *
+ * @param {*} props
+ * @returns JSX Element
+ */
 export const InfoBox = ({
   label,
   children,
@@ -25,6 +34,12 @@ export const InfoBox = ({
   );
 };
 
+/**
+ * useStyles - Specify styles for InfoBox
+ *
+ * @param {*} theme - Current theme from react-native-paper
+ * @returns StyleSheet object
+ */
 const useStyles = (theme) =>
   StyleSheet.create({
     container: {

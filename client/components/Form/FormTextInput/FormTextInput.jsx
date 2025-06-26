@@ -1,7 +1,16 @@
+/**
+ * Import Modules
+ */
 import { TextInput } from "@/components/TextInput/TextInput";
 import { Controller } from "react-hook-form";
 import PropTypes from "prop-types";
 
+/**
+ * FormTextInput - Specify format for Form text input
+ *
+ * @param {*} props
+ * @returns JSX Element
+ */
 export const FormTextInput = ({
   control,
   name,
@@ -31,6 +40,7 @@ export const FormTextInput = ({
   );
 };
 
+// Specify types of props to be received by FormTextInput
 FormTextInput.propTypes = {
   control: PropTypes.object,
   name: PropTypes.string,

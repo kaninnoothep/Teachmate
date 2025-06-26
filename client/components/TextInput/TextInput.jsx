@@ -1,3 +1,6 @@
+/**
+ * Import Modules
+ */
 import { useState } from "react";
 import { View } from "react-native";
 import {
@@ -8,6 +11,12 @@ import {
 import { styles } from "./TextInput.styles";
 import PropTypes from "prop-types";
 
+/**
+ * TextInput
+ *
+ * @param {*} props
+ * @returns JSX Element
+ */
 export const TextInput = ({
   mode = "outlined",
   containerStyle,
@@ -59,6 +68,7 @@ export const TextInput = ({
   );
 };
 
+// Specify types of props to be received by TextInput
 TextInput.propTypes = {
   mode: PropTypes.oneOf(["flat", "outlined"]),
   containerStyle: PropTypes.object,

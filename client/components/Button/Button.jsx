@@ -1,7 +1,16 @@
+/**
+ * Import Modules
+ */
 import { Button as PaperButton, useTheme } from "react-native-paper";
 import PropTypes from "prop-types";
 import { getLabelStyle, getMode, getTheme } from "./Button.styles";
 
+/**
+ * Specify the format for Button
+ *
+ * @param {*} props
+ * @returns JSX Element
+ */
 export const Button = ({
   variant = "primary",
   mode = "contained",
@@ -36,6 +45,7 @@ export const Button = ({
   );
 };
 
+// Specify the types of props to be received by Button
 Button.propTypes = {
   variant: PropTypes.oneOf([
     "primary",

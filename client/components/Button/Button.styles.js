@@ -1,3 +1,9 @@
+/**
+ * getMode - Get the mode
+ *
+ * @param {*} variant
+ * @returns mode
+ */
 export const getMode = (variant) => {
   switch (variant) {
     case "primary":
@@ -26,6 +32,12 @@ export const getMode = (variant) => {
   }
 };
 
+/**
+ * getLabelStyle - Get the style of the label
+ *
+ * @param {*} variant
+ * @returns label style
+ */
 export const getLabelStyle = (variant) => {
   switch (variant) {
     case "link":
@@ -36,6 +48,13 @@ export const getLabelStyle = (variant) => {
   }
 };
 
+/**
+ * getTheme - Get current theme
+ *
+ * @param {*} variant
+ * @param {*} theme
+ * @returns Theme colors
+ */
 export const getTheme = (variant, theme) => {
   switch (variant) {
     case "primary":
