@@ -15,6 +15,7 @@ export default function ModalsLayout() {
         headerTitleStyle: {
           fontWeight: "500",
         },
+        headerTitleAlign: "center",
         headerLeft: () => <BackButton />,
       }}
     >

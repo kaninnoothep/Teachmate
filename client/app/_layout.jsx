@@ -12,6 +12,7 @@ function MainLayout() {
         name="login"
         options={{
           headerShown: false,
+          headerTitleAlign: "center",
         }}
       />
       <Stack.Screen

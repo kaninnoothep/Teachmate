@@ -15,6 +15,7 @@ export default function ExploreLayout() {
         headerTitleStyle: {
           fontWeight: "500",
         },
+        headerTitleAlign: "center",
       }}
     >
       <Stack.Screen

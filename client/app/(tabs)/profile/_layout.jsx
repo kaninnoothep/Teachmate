@@ -16,6 +16,7 @@ export default function ProfileLayout() {
         headerTitleStyle: {
           fontWeight: "500",
         },
+        headerTitleAlign: "center",
       }}
     >
       {/* Main Profile Screen */}

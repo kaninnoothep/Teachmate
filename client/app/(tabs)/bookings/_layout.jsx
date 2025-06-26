@@ -16,6 +16,7 @@ export default function BookingsLayout() {
         headerTitleStyle: {
           fontWeight: "500",
         },
+        headerTitleAlign: "center",
       }}
     >
       <Stack.Screen
