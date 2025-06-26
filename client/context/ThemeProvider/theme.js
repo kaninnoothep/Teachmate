@@ -3,7 +3,6 @@
  */
 import { Colors } from "@/constants/Colors";
 import { fontConfig } from "@/constants/fontConfig";
-
 import {
   configureFonts,
   MD3DarkTheme,

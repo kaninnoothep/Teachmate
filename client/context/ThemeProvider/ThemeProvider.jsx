@@ -8,7 +8,6 @@ import {
   ThemeProvider as ReactNativeThemeProvider,
   DefaultTheme as NavigationDefaultTheme,
 } from "@react-navigation/native";
-
 import { createCustomTheme } from "./theme";
 import merge from "deepmerge";
 
