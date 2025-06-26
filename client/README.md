@@ -32,15 +32,23 @@ The following folders are used to organize the project:
 
 `ios` contains the prebuild configuration for iOS platform
 
+---
+
 ## Prerequisites
 
-To run the app locally, make sure the following are installed on your machine:
+To run the app locally, make sure the following are installed:
 
 - [Node.js](https://nodejs.org/en)
 
-- [Expo CLI](https://docs.expo.dev/more/expo-cli/), a command line to download: `npm install expo-cli --global`
+- [Expo CLI](https://docs.expo.dev/more/expo-cli/)
+
+  ```sh
+  npm install expo-cli --global
+  ```
 
 - `.env` file in the root of the `client` directory
+
+---
 
 ## How To Run
 
@@ -70,6 +78,8 @@ Example steps to open the app on iOS platform:
 
 - Scan the QR code with the Expo Go app on an iPhone
 
+---
+
 ## Learn more
 
 To learn more about developing your project with Expo, look at the following resources:
@@ -77,6 +87,8 @@ To learn more about developing your project with Expo, look at the following res
 - [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
 
 - [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+
+---
 
 <!-- CONTACT -->
 
