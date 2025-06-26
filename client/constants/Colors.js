@@ -1,3 +1,6 @@
+/**
+ * Specify color Scheme
+ */
 export const Colors = {
   light: {
     text: "#313131",

@@ -6,6 +6,9 @@ import {
   QueryClientProvider as ReactQueryClientProvider,
 } from "@tanstack/react-query";
 
+/**
+ * Query Client configurations
+ */
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -16,6 +19,9 @@ const queryClient = new QueryClient({
 
 /**
  * Query Client Provider
+ *
+ * @param {*} props
+ * @returns JSX Element
  */
 export const QueryClientProvider = ({ children }) => {
   return (

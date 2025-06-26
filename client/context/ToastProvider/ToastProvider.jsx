@@ -1,9 +1,18 @@
+/**
+ * Import Modules
+ */
 import { StatusBar } from "react-native";
 import Toast, { ErrorToast, SuccessToast } from "react-native-toast-message";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { styles } from "./ToastProvider.styles";
 import { useTheme } from "react-native-paper";
 
+/**
+ * ToastProvider
+ *
+ * @param {*} props
+ * @returns JSX Element
+ */
 export const ToastProvider = ({ children }) => {
   const insets = useSafeAreaInsets();
   const theme = useTheme();
@@ -14,6 +23,7 @@ export const ToastProvider = ({ children }) => {
   ];
   const combinedTextStyle = [styles.text, { color: theme.colors.text }];
 
+  // Toast Configurations
   const toastConfig = {
     success: (props) => (
       <SuccessToast

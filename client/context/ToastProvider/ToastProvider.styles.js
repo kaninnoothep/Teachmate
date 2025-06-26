@@ -1,5 +1,11 @@
+/**
+ * Import Modules
+ */
 import { StyleSheet } from "react-native";
 
+/**
+ * Specify styles to be used
+ */
 export const styles = StyleSheet.create({
   container: {
     borderTopLeftRadius: 8,

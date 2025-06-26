@@ -1,7 +1,6 @@
 /**
  * Import Modules
  */
-
 import { createContext, useState, useContext, useEffect } from "react";
 import { ACCESS_TOKEN_KEY, ACCESS_USER_KEY } from "@/constants/auth";
 import { getData } from "@/utils/getData";
@@ -13,10 +12,14 @@ import { deleteItemAsync, setItemAsync } from "expo-secure-store";
 import Toast from "react-native-toast-message";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
+// Create user context
 const UserContext = createContext();
 
 /**
  * User Provider
+ *
+ * @param {*} props
+ * @returns JSX Element
  */
 export const UserProvider = ({ children }) => {
   const [user, setUser] = useState(null); // Initialize as null

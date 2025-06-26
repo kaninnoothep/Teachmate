@@ -1,3 +1,6 @@
+/**
+ * Import Modules
+ */
 import { Colors } from "@/constants/Colors";
 import { fontConfig } from "@/constants/fontConfig";
 
@@ -7,6 +10,12 @@ import {
   MD3LightTheme,
 } from "react-native-paper";
 
+/**
+ * createCustomTheme
+ *
+ * @param {*} colorScheme
+ * @returns createCustomTheme
+ */
 export const createCustomTheme = (colorScheme) => {
   const isDark = colorScheme === "dark";
   const baseTheme = isDark ? MD3DarkTheme : MD3LightTheme;
