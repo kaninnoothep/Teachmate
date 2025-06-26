@@ -1,3 +1,6 @@
+/**
+ * Import Modules
+ */
 import { StyleSheet, TouchableOpacity, View } from "react-native";
 import { Text, useTheme } from "react-native-paper";
 import { useStyles as useLoginStyles } from "../Login/LoginPage.styles";
@@ -9,15 +12,25 @@ import { useSignUpForm } from "./hooks/useSignUpForm";
 import { ROLES } from "@/constants/role";
 import { useMemo } from "react";
 
+/**
+ * SignUpPage - Displays the sign up form page for creating a student or tutor account
+ *
+ * @returns JSX Element
+ */
 export const SignUpPage = () => {
-  const { control, handleSubmit, watch, setValue } = useSignUpForm();
   const theme = useTheme();
-  const loginStyles = useLoginStyles(theme);
   const styles = useStyles(theme);
+  const loginStyles = useLoginStyles(theme);
 
+  const { control, handleSubmit, watch, setValue } = useSignUpForm(); // Initialize form control and helpers from custom hook
+
+  // Watch the selected role from form state
   const role = watch("role");
+
+  // Check for whether the selected role is "Tutor"
   const isTutor = useMemo(() => role === ROLES.tutor, [role]);
 
+  // Handle role change (Student/Tutor)
   const handleRole = (role) => {
     setValue("role", role);
   };
@@ -29,6 +42,7 @@ export const SignUpPage = () => {
           Create an account for
         </Text>
 
+        {/* Role selection buttons */}
         <View style={styles.roleContainer}>
           <TouchableOpacity
             onPress={() => handleRole(ROLES.student)}
@@ -74,6 +88,7 @@ export const SignUpPage = () => {
           </TouchableOpacity>
         </View>
 
+        {/* First name input */}
         <FormTextInput
           name="firstName"
           label="First Name *"
@@ -82,6 +97,7 @@ export const SignUpPage = () => {
           {...{ control }}
         />
 
+        {/* Last name input */}
         <FormTextInput
           name="lastName"
           label="Last Name *"
@@ -90,6 +106,7 @@ export const SignUpPage = () => {
           {...{ control }}
         />
 
+        {/* Email input */}
         <FormTextInput
           name="email"
           label="Email *"
@@ -100,6 +117,7 @@ export const SignUpPage = () => {
           {...{ control }}
         />
 
+        {/* Password input */}
         <FormTextInput
           name="password"
           label="Password *"
@@ -109,6 +127,7 @@ export const SignUpPage = () => {
           {...{ control }}
         />
 
+        {/* Confirm password input */}
         <FormTextInput
           name="confirmPassword"
           label="Confirm Password *"
@@ -118,7 +137,7 @@ export const SignUpPage = () => {
           {...{ control }}
         />
 
-        {/* Buttons */}
+        {/* Submit and navigation buttons */}
         <View style={loginStyles.buttonWrapper}>
           <Button onPress={handleSubmit} style={loginStyles.button}>
             Sign Up
@@ -138,6 +157,12 @@ export const SignUpPage = () => {
   );
 };
 
+/**
+ * useStyles - Specify styles to use for sign up page
+ *
+ * @param {*} theme
+ * @returns StyleSheet object
+ */
 const useStyles = (theme) =>
   StyleSheet.create({
     title: {

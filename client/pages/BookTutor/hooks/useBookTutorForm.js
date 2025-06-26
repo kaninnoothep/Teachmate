@@ -1,3 +1,6 @@
+/**
+ * Import Modules
+ */
 import { useForm } from "@/hooks/useForm";
 import { useCreateBookingMutation } from "@/services/api/bookings/useCreateBookingMutation";
 import { useNavigation } from "@react-navigation/native";
@@ -5,6 +8,7 @@ import { useLocalSearchParams } from "expo-router";
 import Toast from "react-native-toast-message";
 import { array, date, object, string } from "yup";
 
+// Validation for book tutor form
 const validationSchema = object({
   sessionId: string().required("Session is required"),
   date: date()
@@ -14,6 +18,11 @@ const validationSchema = object({
   preferredLocation: string(),
 });
 
+/**
+ * useBookTutorForm - Custom hook to manage book tutor form
+ *
+ * @returns Form methods and submit handler
+ */
 export const useBookTutorForm = () => {
   const navigation = useNavigation();
   const { tutorId } = useLocalSearchParams();
@@ -45,6 +54,7 @@ export const useBookTutorForm = () => {
     },
   });
 
+  // Submit handler for booking a tutor
   const onSubmit = async ({ date, timeSlots, ...resData }) => {
     let formatDate = date.toISOString().split("T")[0];
     let startTime = timeSlots[0].startTime;
@@ -58,7 +68,7 @@ export const useBookTutorForm = () => {
       ...resData,
     };
 
-    // book the tutor
+    // Book the tutor
     await createBooking(payload);
   };
 

@@ -1,7 +1,16 @@
+/**
+ * Import Modules
+ */
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Pressable, StyleSheet } from "react-native";
 import { Text, useTheme } from "react-native-paper";
 
+/**
+ * LocationOption - Displays a location option component as a checkbox
+ *
+ * @param {object} props
+ * @returns JSX Element
+ */
 export const LocationOption = ({ option, isSelected, onToggle }) => {
   const theme = useTheme();
 
@@ -30,6 +39,9 @@ export const LocationOption = ({ option, isSelected, onToggle }) => {
   );
 };
 
+/**
+ * Specify Styles to use for location option
+ */
 const styles = StyleSheet.create({
   optionContainer: {
     flexDirection: "row",

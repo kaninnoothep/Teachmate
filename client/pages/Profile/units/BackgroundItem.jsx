@@ -1,7 +1,16 @@
+/**
+ * Import Modules
+ */
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
 import { Text, useTheme } from "react-native-paper";
 
+/**
+ * BackgroundItem - Displays a background info block with optional edit action
+ *
+ * @param {object} props
+ * @returns JSX Element
+ */
 export const BackgroundItem = ({
   title,
   subtitle,
@@ -13,6 +22,7 @@ export const BackgroundItem = ({
 
   return (
     <View style={styles.container}>
+      {/* Left side content */}
       <View style={styles.leftWrapper}>
         <Text variant="titleMedium">{title}</Text>
         {subtitle && <Text variant="bodySmall">{subtitle}</Text>}
@@ -27,6 +37,7 @@ export const BackgroundItem = ({
         )}
       </View>
 
+      {/* Edit icon */}
       {!disabledEdit && (
         <TouchableOpacity onPress={onPressEdit} style={{ padding: 4 }}>
           <MaterialCommunityIcons
@@ -40,6 +51,9 @@ export const BackgroundItem = ({
   );
 };
 
+/**
+ * Specify Styles to use for background item
+ */
 const styles = StyleSheet.create({
   container: {
     flexDirection: "row",

@@ -1,3 +1,6 @@
+/**
+ * Import Modules
+ */
 import { Button } from "@/components/Button/Button";
 import { Divider } from "@/components/Divider/Divider";
 import { FormTextInput } from "@/components/Form/FormTextInput/FormTextInput";
@@ -14,10 +17,17 @@ import { useDeleteExperienceMutation } from "@/services/api/experience/useDelete
 import { sortByEndDate } from "@/utils/sortByEndDate";
 import Toast from "react-native-toast-message";
 
+/**
+ * ExperiencePage - Displays the experience form page for adding or updating a user's experience entry.
+ *
+ * @returns JSX Element rendering the experience form
+ */
 export const ExperiencePage = () => {
   const { experienceId } = useLocalSearchParams();
   const { user, handleSetUser } = useUser();
   const router = useRouter();
+
+  // Hook to handle form state and validation
   const {
     control,
     handleSubmit,
@@ -26,8 +36,10 @@ export const ExperiencePage = () => {
     formState: { errors },
   } = useExperienceForm();
 
+  // Delete mutation for experience entry
   const { mutateAsync: deleteExperience } = useDeleteExperienceMutation({
     onSuccess: (response) => {
+      // Remove deleted experience entry from user and update state
       let newExperience = user.experience?.filter(
         (item) => item._id !== response.data._id
       );
@@ -42,17 +54,20 @@ export const ExperiencePage = () => {
     },
   });
 
+  // State for date picker visibility
   const [showStartDatePicker, setShowStartDatePicker] = useState(false);
   const [showEndDatePicker, setShowEndDatePicker] = useState(false);
 
-  // Watch the form values for dates
+  // Watch start and end date values from the form
   const startDate = watch("startDate");
   const endDate = watch("endDate");
 
+  // Check if this is an add or update operation
   const isAdd = useMemo(() => !experienceId, [experienceId]);
 
   const pageTitle = () => (isAdd ? "Add Experience" : "Update Experience");
 
+  // Handle delete experience with alert confirmation
   const handleDeleteExperience = () => {
     Alert.alert("Are you sure you want to delete this experience?", "", [
       { text: "Cancel", style: "cancel" },
@@ -64,10 +79,12 @@ export const ExperiencePage = () => {
     ]);
   };
 
+  // Handle set start date on the form value with the dateData object
   const handleStartDateSelect = (dateData) => {
     setValue("startDate", dateData);
   };
 
+  // Handle set end date on the form value with the dateData object
   const handleEndDateSelect = (dateData) => {
     setValue("endDate", dateData);
   };
@@ -80,6 +97,7 @@ export const ExperiencePage = () => {
             {pageTitle()}
           </Text>
 
+          {/* Title input */}
           <FormTextInput
             name="title"
             label="Title *"
@@ -88,6 +106,7 @@ export const ExperiencePage = () => {
             {...{ control }}
           />
 
+          {/* Company or Organization input */}
           <FormTextInput
             name="company"
             label="Company or Organization"
@@ -96,7 +115,7 @@ export const ExperiencePage = () => {
             {...{ control }}
           />
 
-          {/* Start Date */}
+          {/* Start Date picker */}
           <DatePickerButton
             label="Start Date"
             value={startDate}
@@ -106,7 +125,7 @@ export const ExperiencePage = () => {
             isError={errors.startDate?.message}
           />
 
-          {/* End Date */}
+          {/* End Date picker */}
           <DatePickerButton
             label="End Date"
             value={endDate}
@@ -116,9 +135,11 @@ export const ExperiencePage = () => {
             isError={errors.endDate?.message}
           />
 
+          {/* Submit button */}
           <Button onPress={handleSubmit}>{pageTitle()}</Button>
         </View>
 
+        {/* Show delete button only in update mode */}
         {!isAdd && (
           <>
             <Divider style={{ marginVertical: 20 }} />

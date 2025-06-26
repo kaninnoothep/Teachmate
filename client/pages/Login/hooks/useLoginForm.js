@@ -15,12 +15,15 @@ const validationSchema = object({
 });
 
 /**
- * useLoginForm - Custom hook to manage Login form
+ * useLoginForm - Custom hook to manage login form
+ *
+ * @returns Form methods and submit handler
  */
 export const useLoginForm = () => {
   const { login } = useUser();
   const form = useForm({ validationSchema });
 
+  // Submit handler for logging in
   const onSubmit = async (formValues) => {
     await login(formValues, {
       onError: () => {

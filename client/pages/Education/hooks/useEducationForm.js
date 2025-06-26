@@ -1,3 +1,6 @@
+/**
+ * Import Modules
+ */
 import { useUser } from "@/context/UserProvider/UserProvider";
 import { useForm } from "@/hooks/useForm";
 import { useAddEducationMutation } from "@/services/api/education/useAddEducationMutation";
@@ -9,6 +12,7 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 import Toast from "react-native-toast-message";
 import { object, string } from "yup";
 
+// Validation for education form
 const validationSchema = object({
   school: string().required("School is required"),
   degree: string(),
@@ -19,13 +23,14 @@ const validationSchema = object({
   function (values) {
     const { startDate, endDate } = values;
 
+    // If end date exists but start date is missing
     if (!startDate && endDate)
       return this.createError({
         path: "startDate",
         message: "Start date is required",
       });
 
-    // If either date is missing, skip validation
+    // Skip validation if either date is incomplete
     if (
       !startDate ||
       !endDate ||
@@ -47,6 +52,7 @@ const validationSchema = object({
       "0"
     )}`;
 
+    // Ensure end date is not before start date
     if (endDateComparable < startDateComparable) {
       return this.createError({
         path: "endDate",
@@ -58,11 +64,17 @@ const validationSchema = object({
   }
 );
 
+/**
+ * useEducationForm - Custom hook to manage add/update education form
+ *
+ * @returns Form methods and submit handler
+ */
 export const useEducationForm = () => {
   const { user, handleSetUser } = useUser();
   const router = useRouter();
   const { educationId, education } = useLocalSearchParams();
 
+  // Set default values for the form
   let defaultValues = {
     school: "",
     degree: "",
@@ -71,6 +83,7 @@ export const useEducationForm = () => {
     endDate: null,
   };
 
+  // If editing, prefill the form with existing data
   if (education) {
     try {
       const parsedEducation = JSON.parse(education);
@@ -86,6 +99,7 @@ export const useEducationForm = () => {
     }
   }
 
+  // Initialize the form
   const form = useForm({
     validationSchema,
     defaultValues: defaultValues,
@@ -128,8 +142,8 @@ export const useEducationForm = () => {
     },
   });
 
+  // Submit handler for both add and update cases
   const onSubmit = async (data) => {
-    // Transform the form data to match API expectations
     const payload = {
       school: data.school,
       degree: data.degree,
@@ -139,10 +153,10 @@ export const useEducationForm = () => {
     };
 
     if (educationId) {
-      // update the education
+      // Update the education
       await updateEducation({ educationId, ...payload });
     } else {
-      // add the education
+      // Add the education
       await addEducation(payload);
     }
   };

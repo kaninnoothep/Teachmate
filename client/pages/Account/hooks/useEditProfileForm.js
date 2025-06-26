@@ -16,6 +16,8 @@ const validationSchema = object({
 
 /**
  * useEditProfileForm - Custom hook to manage edit profile form
+ *
+ * @returns Form methods and submit handler
  */
 export const useEditProfileForm = () => {
   const { user, handleSetUser } = useUser();
@@ -36,6 +38,7 @@ export const useEditProfileForm = () => {
     },
   });
 
+  // Update user mutation
   const { mutateAsync: updateUser } = useUpdateUserMutation({
     onSuccess: async (data) => {
       Toast.show({ type: "success", text1: data.message });
@@ -47,6 +50,7 @@ export const useEditProfileForm = () => {
     },
   });
 
+  // Submit handler for editing profile
   const onSubmit = async ({ country, state, city, hourlyRate, ...rest }) => {
     const payload = {
       ...rest,
@@ -56,6 +60,7 @@ export const useEditProfileForm = () => {
       ...(user.role === "tutor" && { hourlyRate }),
     };
 
+    // Update user
     await updateUser(payload);
   };
 

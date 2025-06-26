@@ -1,3 +1,6 @@
+/**
+ * Import Modules
+ */
 import { Button } from "@/components/Button/Button";
 import { Divider } from "@/components/Divider/Divider";
 import { FormTextInput } from "@/components/Form/FormTextInput/FormTextInput";
@@ -14,10 +17,17 @@ import Toast from "react-native-toast-message";
 import { useUser } from "@/context/UserProvider/UserProvider";
 import { sortByEndDate } from "@/utils/sortByEndDate";
 
+/**
+ * EducationPage - Displays the education form page for adding or updating a user's education entry.
+ *
+ * @returns JSX Element rendering the education form
+ */
 export const EducationPage = () => {
   const { educationId } = useLocalSearchParams();
   const { user, handleSetUser } = useUser();
   const router = useRouter();
+
+  // Hook to handle form state and validation
   const {
     control,
     handleSubmit,
@@ -26,8 +36,10 @@ export const EducationPage = () => {
     formState: { errors },
   } = useEducationForm();
 
+  // Delete mutation for education entry
   const { mutateAsync: deleteEducation } = useDeleteEducationMutation({
     onSuccess: (response) => {
+      // Remove deleted education entry from user and update state
       let newEducation = user.education?.filter(
         (item) => item._id !== response.data._id
       );
@@ -42,17 +54,20 @@ export const EducationPage = () => {
     },
   });
 
+  // State for date picker visibility
   const [showStartDatePicker, setShowStartDatePicker] = useState(false);
   const [showEndDatePicker, setShowEndDatePicker] = useState(false);
 
-  // Watch the form values for dates
+  // Watch start and end date values from the form
   const startDate = watch("startDate");
   const endDate = watch("endDate");
 
+  // Check if this is an add or update operation
   const isAdd = useMemo(() => !educationId, [educationId]);
 
   const pageTitle = () => (isAdd ? "Add Education" : "Update Education");
 
+  // Handle delete education with alert confirmation
   const handleDeleteEducation = () => {
     Alert.alert("Are you sure you want to delete this education?", "", [
       { text: "Cancel", style: "cancel" },
@@ -64,13 +79,13 @@ export const EducationPage = () => {
     ]);
   };
 
+  // Handle set start date on the form value with the dateData object
   const handleStartDateSelect = (dateData) => {
-    // Set the form value with the dateData object
     setValue("startDate", dateData);
   };
 
+  // Handle set end date on the form value with the dateData object
   const handleEndDateSelect = (dateData) => {
-    // Set the form value with the dateData object
     setValue("endDate", dateData);
   };
 
@@ -82,6 +97,7 @@ export const EducationPage = () => {
             {pageTitle()}
           </Text>
 
+          {/* School input */}
           <FormTextInput
             name="school"
             label="School *"
@@ -90,6 +106,7 @@ export const EducationPage = () => {
             {...{ control }}
           />
 
+          {/* Degree input */}
           <FormTextInput
             name="degree"
             label="Degree"
@@ -98,6 +115,7 @@ export const EducationPage = () => {
             {...{ control }}
           />
 
+          {/* Field of Study input */}
           <FormTextInput
             name="fieldOfStudy"
             label="Field of Study"
@@ -106,7 +124,7 @@ export const EducationPage = () => {
             {...{ control }}
           />
 
-          {/* Start Date */}
+          {/* Start Date picker */}
           <DatePickerButton
             label="Start Date"
             value={startDate}
@@ -116,7 +134,7 @@ export const EducationPage = () => {
             isError={errors.startDate?.message}
           />
 
-          {/* End Date */}
+          {/* End Date picker */}
           <DatePickerButton
             label="End Date"
             value={endDate}
@@ -126,9 +144,11 @@ export const EducationPage = () => {
             isError={errors.endDate?.message}
           />
 
+          {/* Submit button */}
           <Button onPress={handleSubmit}>{pageTitle()}</Button>
         </View>
 
+        {/* Show delete button only in update mode */}
         {!isAdd && (
           <>
             <Divider style={{ marginVertical: 20 }} />
@@ -175,6 +195,9 @@ export const EducationPage = () => {
   );
 };
 
+/**
+ * Specify Styles to use for education page
+ */
 const styles = StyleSheet.create({
   container: {
     paddingHorizontal: 16,

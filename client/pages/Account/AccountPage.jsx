@@ -1,3 +1,6 @@
+/**
+ * Import Modules
+ */
 import { FormTextInput } from "@/components/Form/FormTextInput/FormTextInput";
 import { useEditProfileForm } from "./hooks/useEditProfileForm";
 import { SafeKeyboardScrollView } from "@/components/SafeKeyboardScrollView/SafeKeyboardScrollView";
@@ -14,6 +17,11 @@ import { StatePicker } from "@/components/Picker/StatePicker";
 import { CityPicker } from "@/components/Picker/CityPicker";
 import { PickerButton } from "@/components/Picker/PickerButton";
 
+/**
+ * AccountPage - Displays the account form page for editing user profile
+ *
+ * @returns JSX Element rendering the account profile form with location pickers
+ */
 export const AccountPage = () => {
   const { user } = useUser();
   const theme = useTheme();

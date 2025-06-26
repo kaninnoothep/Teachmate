@@ -1,3 +1,6 @@
+/**
+ * Import Modules
+ */
 import { useRouter } from "expo-router";
 import {
   FlatList,
@@ -11,6 +14,12 @@ import { EmptyList } from "@/components/EmptyList/EmptyList";
 import { SessionItem } from "./components/SessionItem";
 import { useState } from "react";
 
+/**
+ * SessionsPage - Displays a list of sessions
+ *
+ * @param {object} props
+ * @returns JSX Element
+ */
 export const SessionsPage = ({
   sessions,
   headerTitle = "Sessions",
@@ -24,6 +33,7 @@ export const SessionsPage = ({
   const styles = useStyles(theme);
   const [isManualRefreshing, setIsManualRefreshing] = useState(false);
 
+  // Pull-to-refresh handler
   const handleRefresh = async () => {
     setIsManualRefreshing(true);
     try {
@@ -33,6 +43,7 @@ export const SessionsPage = ({
     }
   };
 
+  // Renders title
   const renderHeaderComponent = () => (
     <Pressable style={{ paddingVertical: 20 }}>
       <Text variant="headlineSmall">
@@ -40,7 +51,6 @@ export const SessionsPage = ({
       </Text>
     </Pressable>
   );
-
   const renderFooterComponent = () => <Pressable style={{ height: 90 }} />;
   const renderSeparatorComponent = () => <Pressable style={{ height: 10 }} />;
 

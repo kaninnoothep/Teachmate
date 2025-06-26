@@ -1,8 +1,17 @@
+/**
+ * Import Modules
+ */
 import { Chip } from "@/components/Chip/Chip";
 import { useState } from "react";
 import { Image, StyleSheet, View } from "react-native";
 import { Avatar, Text, useTheme } from "react-native-paper";
 
+/**
+ * TutorItem - Displays tutor card with brief information
+ *
+ * @param {object} props
+ * @returns JSX Element
+ */
 export const TutorItem = ({ tutor }) => {
   const theme = useTheme();
   const styles = useStyles(theme);
@@ -53,6 +62,12 @@ export const TutorItem = ({ tutor }) => {
   );
 };
 
+/**
+ * useStyles - Specify styles to use for tutor item
+ *
+ * @param {*} theme
+ * @returns StyleSheet object
+ */
 const useStyles = (theme) =>
   StyleSheet.create({
     container: {

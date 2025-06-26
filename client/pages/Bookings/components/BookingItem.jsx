@@ -1,11 +1,20 @@
+/**
+ * Import Modules
+ */
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import { useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { Avatar, Text, useTheme } from "react-native-paper";
 
-dayjs.extend(utc);
+dayjs.extend(utc); // Enable UTC support in dayjs
 
+/**
+ * BookingItem - Displays booking card with brief information
+ *
+ * @param {object} props
+ * @returns JSX Element
+ */
 export const BookingItem = ({ subject, description, user, date, time }) => {
   const theme = useTheme();
   const styles = useStyles(theme);
@@ -61,6 +70,12 @@ export const BookingItem = ({ subject, description, user, date, time }) => {
   );
 };
 
+/**
+ * useStyles - Specify styles to use for booking item
+ *
+ * @param {*} theme
+ * @returns StyleSheet object
+ */
 const useStyles = (theme) =>
   StyleSheet.create({
     container: {

@@ -1,6 +1,8 @@
+/**
+ * Import Modules
+ */
 import { Image, View } from "react-native";
 import { Text, useTheme } from "react-native-paper";
-
 import { Button } from "@/components/Button/Button";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { Link } from "expo-router";
@@ -9,6 +11,11 @@ import { FormTextInput } from "@/components/Form/FormTextInput/FormTextInput";
 import { useLoginForm } from "./hooks/useLoginForm";
 import { useStyles } from "./LoginPage.styles";
 
+/**
+ * LoginPage - Displays the login form page
+ *
+ * @returns JSX Element
+ */
 export const LoginPage = () => {
   const { control, handleSubmit } = useLoginForm();
   const theme = useTheme();

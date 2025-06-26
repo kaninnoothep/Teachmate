@@ -1,7 +1,16 @@
+/**
+ * Import Modules
+ */
 import { Chip } from "@/components/Chip/Chip";
 import { StyleSheet, View } from "react-native";
 import { Text, useTheme } from "react-native-paper";
 
+/**
+ * SessionItem - Displays session card with brief information
+ *
+ * @param {object} props
+ * @returns JSX Element
+ */
 export const SessionItem = ({ subject, description, estimatedDuration }) => {
   const theme = useTheme();
   const styles = useStyles(theme);
@@ -24,6 +33,12 @@ export const SessionItem = ({ subject, description, estimatedDuration }) => {
   );
 };
 
+/**
+ * useStyles - Specify styles to use for session item
+ *
+ * @param {*} theme
+ * @returns StyleSheet object
+ */
 const useStyles = (theme) =>
   StyleSheet.create({
     container: {

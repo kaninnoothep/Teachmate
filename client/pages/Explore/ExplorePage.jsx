@@ -1,3 +1,6 @@
+/**
+ * Import Modules
+ */
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   Alert,
@@ -24,6 +27,11 @@ import { LocationFilterSheet } from "./components/LocationFilterSheet";
 import { useTutorsQuery } from "@/services/api/explore/useTutorsQuery";
 import * as Location from "expo-location";
 
+/**
+ * ExplorePage - Displays a searchable list of tutors with location-based filtering
+ *
+ * @returns JSX Element
+ */
 export const ExplorePage = () => {
   const router = useRouter();
   const theme = useTheme();
@@ -32,7 +40,7 @@ export const ExplorePage = () => {
   const [isManualRefreshing, setIsManualRefreshing] = useState(false);
 
   const [searchQuery, setSearchQuery] = useState("");
-  const [searchDebounce] = useDebounce(searchQuery, 600);
+  const [searchDebounce] = useDebounce(searchQuery, 600); // debounce search input
   const [country, setCountry] = useState(null);
   const [state, setState] = useState(null);
   const [city, setCity] = useState(null);
@@ -40,6 +48,7 @@ export const ExplorePage = () => {
   const [currentLocationEnabled, setCurrentLocationEnabled] = useState(false);
   const [isUsingCurrentLocation, setIsUsingCurrentLocation] = useState(false);
 
+  // Fetch tutors with location and search filters
   const { tutors, isFetching, refetch } = useTutorsQuery(
     searchDebounce,
     country?.name,
@@ -47,17 +56,19 @@ export const ExplorePage = () => {
     city?.name
   );
 
+  // Determine if location filters are applied
   const hasLocationFilter = useMemo(
     () => country || state || city,
     [country, state, city]
   );
 
+  // Check if location services are enabled on component mount
   useEffect(() => {
     checkIfLocationEnabled();
     getCurrentLocation();
   }, []);
 
-  //check if location is enable or not
+  // Check if device location is enabled
   const checkIfLocationEnabled = async () => {
     let enabled = await Location.hasServicesEnabledAsync();
 
@@ -72,9 +83,11 @@ export const ExplorePage = () => {
     }
   };
 
-  //get current location
+  // Get current GPS location and reverse geocode to city/state/country
   const getCurrentLocation = async () => {
     setLocationLoading(true);
+
+    // Ask for permission
     let { status } = await Location.requestForegroundPermissionsAsync(); // pop up box asking for permission to use location
 
     if (status !== "granted") {
@@ -89,19 +102,19 @@ export const ExplorePage = () => {
       );
     }
 
-    //get current position lat and long
+    // Get current coordinates (lat, long)
     const { coords } = await Location.getCurrentPositionAsync();
 
     if (coords) {
       const { latitude, longitude } = coords;
 
-      //provide lat and long to get the the actual address
+      // Provide lat and long to get the the actual address
       let response = await Location.reverseGeocodeAsync({
         latitude,
         longitude,
       });
 
-      //loop on the response to get the actual result
+      // Loop on the response to get the actual result
       for (let item of response) {
         setCountry({ name: item.country });
         setState({ name: item.region });
@@ -112,6 +125,7 @@ export const ExplorePage = () => {
     setLocationLoading(false);
   };
 
+  // Label for the location button
   const getFilterLabel = () => {
     const label = [];
 
@@ -134,6 +148,7 @@ export const ExplorePage = () => {
     return label.length > 0 ? label.join(", ") : "Location";
   };
 
+  // Handle refresh the tutor list
   const handleRefresh = async () => {
     setIsManualRefreshing(true);
     try {
@@ -143,10 +158,12 @@ export const ExplorePage = () => {
     }
   };
 
+  // Handle search input changes
   const handleSearchChange = useCallback((query) => {
     setSearchQuery(query);
   }, []);
 
+  // Render the list header
   const renderHeaderComponent = () => (
     <Pressable style={styles.listHeaderContainer}>
       <Text variant="headlineSmall">
@@ -161,6 +178,7 @@ export const ExplorePage = () => {
     <>
       <Pressable style={styles.container}>
         <View style={styles.filterContainer}>
+          {/* Search box */}
           <TextInput
             style={styles.searchTextInputContainer}
             left={
@@ -174,6 +192,8 @@ export const ExplorePage = () => {
             value={searchQuery}
             onChangeText={handleSearchChange}
           />
+
+          {/* Location filter button */}
           <TouchableOpacity
             style={styles.locationButton}
             onPress={() => locationFilterRef.current?.open()}
@@ -196,6 +216,8 @@ export const ExplorePage = () => {
             </Text>
           </TouchableOpacity>
         </View>
+
+        {/* Tutor List */}
         <FlatList
           ListHeaderComponent={renderHeaderComponent}
           ListFooterComponent={renderFooterComponent}
@@ -235,6 +257,8 @@ export const ExplorePage = () => {
           }
         />
       </Pressable>
+
+      {/* Location filter modal sheet */}
       <Portal>
         <LocationFilterSheet
           ref={locationFilterRef}

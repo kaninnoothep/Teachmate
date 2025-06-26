@@ -1,9 +1,13 @@
+/**
+ * Import Modules
+ */
 import { Button } from "@/components/Button/Button";
 import { DatePicker } from "@/components/DatePicker/DatePicker";
 import { Divider } from "@/components/Divider/Divider";
 import { TimeSlotButton } from "@/components/TimeSlotButton/TimeSlotButton";
 import { useAvailabilityQuery } from "@/services/api/availability/useAvailabilityQuery";
 import { useSetAvailabilityMutation } from "@/services/api/availability/useSetAvailabilityMutation";
+import { isSameSlot } from "@/utils/isSameSlot";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
@@ -30,9 +34,12 @@ const TIME_SLOTS = [
   { startTime: "20:00", endTime: "21:00" },
   { startTime: "21:00", endTime: "22:00" },
 ];
-export const isSameSlot = (a, b) =>
-  a.startTime === b.startTime && a.endTime === b.endTime;
 
+/**
+ * AvailabilityPage - Allows tutors to manage their availability by selecting dates and time slots.
+ *
+ * @returns JSX Element rendering the availability management interface
+ */
 export const AvailabilityPage = () => {
   const router = useRouter();
   const theme = useTheme();
@@ -45,6 +52,7 @@ export const AvailabilityPage = () => {
   const { availability } = useAvailabilityQuery();
   const { mutateAsync: setAvailability } = useSetAvailabilityMutation({});
 
+  // On mount or when availability updates, map it to the correct format
   useEffect(() => {
     if (availability && availability.length > 0) {
       const initialMap = {};
@@ -53,6 +61,7 @@ export const AvailabilityPage = () => {
         const dateObj = new Date(rawDate);
         const dateKey = dateObj.toISOString().split("T")[0];
 
+        // Normalize slots per date
         initialMap[dateKey] = item.slots.map((s) => ({
           startTime: s.startTime,
           endTime: s.endTime,
@@ -64,6 +73,7 @@ export const AvailabilityPage = () => {
     }
   }, [availability]);
 
+  // Handles date selection from the date picker
   const handleChangeDate = ({ dates }) => {
     setSelectedDates(dates);
     setShowDateWarning(false);
@@ -74,6 +84,7 @@ export const AvailabilityPage = () => {
     }
 
     if (dates.length === 1) {
+      // If a single date is selected, load its slots
       const selectedDate = dates[0];
       const key = selectedDate.toISOString().split("T")[0];
 
@@ -89,6 +100,7 @@ export const AvailabilityPage = () => {
       return;
     }
 
+    // For multiple dates, check if all selected dates share the same slots
     setAvailabilityMap((currentAvailabilityMap) => {
       const dateKeys = dates.map((date) => date.toISOString().split("T")[0]);
 
@@ -119,6 +131,7 @@ export const AvailabilityPage = () => {
     });
   };
 
+  // Toggle selection of a time slot
   const handleTimeSlotPress = (timeSlot) => {
     setSelectedTimeSlots((prev) => {
       const exists = prev.some((slot) => isSameSlot(slot, timeSlot));
@@ -130,6 +143,7 @@ export const AvailabilityPage = () => {
     });
   };
 
+  // Handle save selected availability
   const handleSave = () => {
     if (selectedDates.length === 0) {
       Toast.show({ type: "error", text1: "Please select Date" });
@@ -148,12 +162,15 @@ export const AvailabilityPage = () => {
     setAvailability(payload, {
       onSuccess: (data) => {
         Toast.show({ type: "success", text1: data.message });
+
         // Update local availabilityMap after successful save
         const updated = { ...availabilityMap };
         payload.availability.forEach(({ date }) => {
           updated[date] = selectedTimeSlots;
         });
         setAvailabilityMap(updated);
+
+        // Reset state after saving
         setSelectedDates([]);
         setSelectedTimeSlots([]);
         setShowDateWarning(false);
@@ -164,9 +181,11 @@ export const AvailabilityPage = () => {
       },
     });
   };
+
   return (
     <ScrollView contentContainerStyle={styles.scrollContainer}>
       <Pressable>
+        {/* Date Picker with dot indicators */}
         <DatePicker
           mode="multiple"
           dates={selectedDates}
@@ -178,6 +197,7 @@ export const AvailabilityPage = () => {
 
         <Divider />
 
+        {/* Time Slot Selection */}
         <View style={styles.container}>
           <Text variant="titleMedium" style={styles.sectionTitle}>
             Select Time
@@ -211,6 +231,7 @@ export const AvailabilityPage = () => {
           </View>
         </View>
 
+        {/* Save Button */}
         <View style={styles.container}>
           <Button onPress={handleSave} disabled={selectedDates.length === 0}>
             Save
@@ -221,6 +242,12 @@ export const AvailabilityPage = () => {
   );
 };
 
+/**
+ * useStyles - Specify styles to use for availability page
+ *
+ * @param {*} theme
+ * @returns StyleSheet object
+ */
 const useStyles = (theme) =>
   StyleSheet.create({
     scrollContainer: {

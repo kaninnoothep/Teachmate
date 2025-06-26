@@ -1,3 +1,6 @@
+/**
+ * Import Modules
+ */
 import { Button } from "@/components/Button/Button";
 import { CityPicker } from "@/components/Picker/CityPicker";
 import { CountryPicker } from "@/components/Picker/CountryPicker";
@@ -20,6 +23,13 @@ import { Keyboard, StyleSheet, View } from "react-native";
 import { Text, useTheme } from "react-native-paper";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
+/**
+ * LocationFilterSheet - A bottom sheet modal for selecting a location filter.
+ *
+ * @param {*} props
+ * @param {*} ref
+ * @returns JSX Element for the filter sheet
+ */
 export const LocationFilterSheet = forwardRef(
   (
     {
@@ -47,13 +57,16 @@ export const LocationFilterSheet = forwardRef(
     const styles = useStyles();
     const insets = useSafeAreaInsets();
 
+    // Define snap points for BottomSheet
     const snapPoints = useMemo(() => ["60%"], []);
 
+    // Expose methods to open and close the BottomSheet
     useImperativeHandle(ref, () => ({
       open: () => sheetRef.current?.snapToIndex(0),
       close: () => sheetRef.current?.close(),
     }));
 
+    // Format the country label with emoji and name
     const getCountryLabel = () => {
       if (country?.emoji && country?.name) {
         return `${country?.emoji || ""} ${country?.name}`;
@@ -61,6 +74,7 @@ export const LocationFilterSheet = forwardRef(
       return "";
     };
 
+    // Render backdrop behind BottomSheet
     const renderBackdrop = useCallback(
       (props) => (
         <BottomSheetBackdrop
@@ -100,12 +114,14 @@ export const LocationFilterSheet = forwardRef(
             >
               {currentLocationEnabled && city && state && country ? (
                 <>
+                  {/* Show current location */}
                   <PickerButton
                     label="Current Location"
                     value={`${city?.name}, ${state?.name}, ${country?.name}`}
                     hideIcon
                   />
 
+                  {/* Select location button */}
                   <Button
                     onPress={() => setCurrentLocationEnabled(false)}
                     variant="text"
@@ -122,12 +138,13 @@ export const LocationFilterSheet = forwardRef(
                 </>
               ) : (
                 <>
+                  {/* Country Picker */}
                   <PickerButton
                     label="Country"
                     value={getCountryLabel()}
                     onPress={() => countryPickerRef.current?.open()}
                   />
-
+                  {/* State Picker (if country has states) */}
                   {country && country?.hasStates && (
                     <PickerButton
                       label="State"
@@ -135,7 +152,7 @@ export const LocationFilterSheet = forwardRef(
                       onPress={() => statePickerRef.current?.open()}
                     />
                   )}
-
+                  {/* City Picker (if state has cities) */}
                   {country && state && state?.hasCities && (
                     <PickerButton
                       label="City"
@@ -144,6 +161,7 @@ export const LocationFilterSheet = forwardRef(
                     />
                   )}
 
+                  {/* Use current location button */}
                   <Button
                     onPress={() => {
                       checkIfLocationEnabled();
@@ -166,12 +184,14 @@ export const LocationFilterSheet = forwardRef(
           </View>
         </BottomSheet>
 
+        {/* Country Picker Modal */}
         <CountryPicker
           ref={countryPickerRef}
           onSelect={(val) => {
             setCountry(val);
             setIsUsingCurrentLocation(false);
 
+            // Reset dependent fields if country changes
             if (country?.id !== val.id) {
               setState(null);
               setCity(null);
@@ -180,12 +200,14 @@ export const LocationFilterSheet = forwardRef(
           selectedId={country?.id}
         />
 
+        {/* State Picker Modal */}
         <StatePicker
           ref={statePickerRef}
           onSelect={(val) => {
             setState(val);
             setIsUsingCurrentLocation(false);
 
+            // Reset city if state changes
             if (state?.id !== val.id) {
               setCity(null);
             }
@@ -194,6 +216,7 @@ export const LocationFilterSheet = forwardRef(
           countryId={country?.id}
         />
 
+        {/* City Picker Modal */}
         <CityPicker
           ref={cityPickerRef}
           onSelect={(val) => {
@@ -209,8 +232,14 @@ export const LocationFilterSheet = forwardRef(
   }
 );
 
+// Set display name
 LocationFilterSheet.displayName = "LocationFilterSheet";
 
+/**
+ * useStyles - Specify styles to use
+ *
+ * @returns StyleSheet object
+ */
 const useStyles = () =>
   StyleSheet.create({
     container: {

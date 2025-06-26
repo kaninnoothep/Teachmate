@@ -1,3 +1,6 @@
+/**
+ * Import Modules
+ */
 import { useUser } from "@/context/UserProvider/UserProvider";
 import { useForm } from "@/hooks/useForm";
 import { useAddSessionMutation } from "@/services/api/sessions/useAddSessionMutation";
@@ -6,6 +9,7 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 import Toast from "react-native-toast-message";
 import { object, string } from "yup";
 
+// Validation for the form
 const validationSchema = object({
   subject: string().required("Subject is required"),
   description: string().required("Description is required"),
@@ -32,17 +36,24 @@ const validationSchema = object({
     ),
 });
 
+/**
+ * useSessionForm - Custom hook to manage add/update session form
+ *
+ * @returns Form methods and submit handler
+ */
 export const useSessionForm = () => {
   const { user, handleSetUser } = useUser();
   const router = useRouter();
   const { sessionId, session } = useLocalSearchParams();
 
+  // Set default values for the form
   let defaultValues = {
     subject: "",
     description: "",
     estimatedDuration: "",
   };
 
+  // If editing, prefill the form with existing data
   if (session) {
     try {
       const parsedSession = JSON.parse(session);
@@ -56,6 +67,7 @@ export const useSessionForm = () => {
     }
   }
 
+  // Initialize the form
   const form = useForm({
     validationSchema,
     defaultValues,
@@ -98,12 +110,13 @@ export const useSessionForm = () => {
     },
   });
 
+  // Submit handler for both add and update cases
   const onSubmit = async (payload) => {
     if (sessionId) {
-      // update the session
+      // Update the session
       await updateSession({ sessionId, ...payload });
     } else {
-      // add the session
+      // Add the session
       await addSession(payload);
     }
   };

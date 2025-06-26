@@ -1,3 +1,6 @@
+/**
+ * Import Modules
+ */
 import {
   Linking,
   Pressable,
@@ -22,16 +25,23 @@ import Toast from "react-native-toast-message";
 import { useUser } from "@/context/UserProvider/UserProvider";
 import { Button } from "@/components/Button/Button";
 
-dayjs.extend(utc);
+dayjs.extend(utc); // Enable UTC support in dayjs
+
+/**
+ * ProfilePage - Displays the profile information for a user.
+ *
+ * @param {object} props
+ * @returns JSX Element rendering the profile page
+ */
 export const ProfilePage = ({ user, externalView = false }) => {
   const { user: userContext, handleSetUser } = useUser();
   const theme = useTheme();
   const styles = useStyles(theme);
   const router = useRouter();
   const [loadImageError, setLoadImageError] = useState(false);
-  const { mutateAsync: uploadImage } = useUploadImageMutation({});
+  const { mutateAsync: uploadImage } = useUploadImageMutation({}); // Upload image mutation
 
-  // Helper function to format location string
+  // Helper function to format location string from user data
   const formatLocation = () => {
     const locationParts = [];
     const { country, state, city, postalCode } = user;
@@ -67,11 +77,13 @@ export const ProfilePage = ({ user, externalView = false }) => {
     [user.city, user.postalCode, user.country?.name]
   );
 
+  // Show about section only if either about or hourly rate exists
   const showAboutSection = useMemo(
     () => user.about || user.hourlyRate,
     [user.about, user.hourlyRate]
   );
 
+  // Determine if any preferred location is selected
   const showPreferredLocations = useMemo(() => {
     if (!user.preferredLocations) return;
 
@@ -80,6 +92,7 @@ export const ProfilePage = ({ user, externalView = false }) => {
     return publicPlace || tutorPlace || online;
   }, [user.preferredLocations]);
 
+  // Format duration range between start and end date
   const getDurationText = (startDate, endDate) => {
     if (!startDate && !endDate) return "";
 
@@ -96,8 +109,8 @@ export const ProfilePage = ({ user, externalView = false }) => {
     return dateText;
   };
 
+  // Handle image picking and upload to server
   const handlePickImage = async () => {
-    // No permissions request is necessary for launching the image library
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: "images",
       allowsEditing: true,
@@ -115,6 +128,7 @@ export const ProfilePage = ({ user, externalView = false }) => {
         type: "image/jpeg",
       });
 
+      // Upload profile image
       await uploadImage(formData, {
         onSuccess: (response) => {
           Toast.show({ type: "success", text1: response.message });
@@ -132,7 +146,7 @@ export const ProfilePage = ({ user, externalView = false }) => {
     <>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <Pressable>
-          {/* User avatar and Name */}
+          {/* User avatar and Name section */}
           <View style={styles.mainList}>
             <View style={styles.listContainer}>
               <View style={styles.leftWrapper}>
@@ -185,7 +199,7 @@ export const ProfilePage = ({ user, externalView = false }) => {
             </View>
           </View>
 
-          {/* Contact Info */}
+          {/* Contact Info section */}
           <View
             style={[
               styles.container,
@@ -214,7 +228,7 @@ export const ProfilePage = ({ user, externalView = false }) => {
             )}
           </View>
 
-          {/* About */}
+          {/* About section */}
           {showAboutSection && (
             <View
               style={[
@@ -231,7 +245,7 @@ export const ProfilePage = ({ user, externalView = false }) => {
 
           {user.role === "tutor" && !externalView && (
             <>
-              {/* Availability */}
+              {/* Availability section */}
               <Divider />
               <TouchableOpacity
                 onPress={() => router.push("/profile/availability")}
@@ -246,7 +260,7 @@ export const ProfilePage = ({ user, externalView = false }) => {
                 </View>
               </TouchableOpacity>
 
-              {/* Preferred Location */}
+              {/* Preferred Location section */}
               <Divider />
               <View style={styles.container}>
                 <View style={styles.titleWrapper}>
@@ -306,7 +320,7 @@ export const ProfilePage = ({ user, externalView = false }) => {
             </>
           )}
 
-          {/* Offered Sessions */}
+          {/* Offered Sessions section */}
           {user.role === "tutor" && externalView && (
             <>
               <Divider />
@@ -368,7 +382,7 @@ export const ProfilePage = ({ user, externalView = false }) => {
             </>
           )}
 
-          {/* Education */}
+          {/* Education section */}
           <Divider />
           <View style={styles.container}>
             <View style={styles.titleWrapper}>
@@ -437,7 +451,7 @@ export const ProfilePage = ({ user, externalView = false }) => {
             )}
           </View>
 
-          {/* Experience */}
+          {/* Experience section */}
           {user.role === "tutor" && (
             <>
               <Divider />
@@ -490,6 +504,8 @@ export const ProfilePage = ({ user, externalView = false }) => {
           )}
         </Pressable>
       </ScrollView>
+
+      {/* Book Tutor Button */}
       {user.role === "tutor" && externalView && (
         <View style={styles.buttonContainer}>
           <Button

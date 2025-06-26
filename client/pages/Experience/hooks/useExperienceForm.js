@@ -1,3 +1,6 @@
+/**
+ * Import Modules
+ */
 import { useUser } from "@/context/UserProvider/UserProvider";
 import { useForm } from "@/hooks/useForm";
 import { useAddExperienceMutation } from "@/services/api/experience/useAddExperienceMutation";
@@ -9,6 +12,7 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 import Toast from "react-native-toast-message";
 import { object, string } from "yup";
 
+// Validation for experience form
 const validationSchema = object({
   title: string().required("Title is required"),
   company: string(),
@@ -18,13 +22,14 @@ const validationSchema = object({
   function (values) {
     const { startDate, endDate } = values;
 
+    // If end date exists but start date is missing
     if (!startDate && endDate)
       return this.createError({
         path: "startDate",
         message: "Start date is required",
       });
 
-    // If either date is missing, skip validation
+    // Skip validation if either date is incomplete
     if (
       !startDate ||
       !endDate ||
@@ -46,6 +51,7 @@ const validationSchema = object({
       "0"
     )}`;
 
+    // Ensure end date is not before start date
     if (endDateComparable < startDateComparable) {
       return this.createError({
         path: "endDate",
@@ -57,11 +63,17 @@ const validationSchema = object({
   }
 );
 
+/**
+ * useExperienceForm - Custom hook to manage add/update experience form
+ *
+ * @returns Form methods and submit handler
+ */
 export const useExperienceForm = () => {
   const { user, handleSetUser } = useUser();
   const router = useRouter();
   const { experienceId, experience } = useLocalSearchParams();
 
+  // Set default values for the form
   let defaultValues = {
     title: "",
     company: "",
@@ -69,6 +81,7 @@ export const useExperienceForm = () => {
     endDate: null,
   };
 
+  // If editing, prefill the form with existing data
   if (experience) {
     try {
       const parsedExperience = JSON.parse(experience);
@@ -83,6 +96,7 @@ export const useExperienceForm = () => {
     }
   }
 
+  // Initialize the form
   const form = useForm({
     validationSchema,
     defaultValues,
@@ -125,8 +139,8 @@ export const useExperienceForm = () => {
     },
   });
 
+  // Submit handler for both add and update cases
   const onSubmit = async (data) => {
-    // Transform the form data to match API expectations
     const payload = {
       title: data.title,
       company: data.company,
@@ -134,10 +148,10 @@ export const useExperienceForm = () => {
       endDate: formatDate(data.endDate),
     };
     if (experienceId) {
-      // update the experience
+      // Update the experience
       await updateExperience({ experienceId, ...payload });
     } else {
-      // add the experience
+      // Add the experience
       await addExperience(payload);
     }
   };

@@ -1,5 +1,7 @@
+/**
+ * Import Modules
+ */
 import { Button } from "@/components/Button/Button";
-
 import { useEffect, useState } from "react";
 import { Pressable, ScrollView, StyleSheet, View } from "react-native";
 import { Text } from "react-native-paper";
@@ -10,12 +12,18 @@ import { useRouter } from "expo-router";
 import { useUser } from "@/context/UserProvider/UserProvider";
 import { useLocalSearchParams } from "expo-router";
 
+// Location options
 export const LOCATION_OPTIONS = [
   { value: "publicPlace", label: "In a Public Place" },
   { value: "tutorPlace", label: "At Tutor's Place" },
   { value: "online", label: "Online" },
 ];
 
+/**
+ * PreferredLocationPage - Displays selections for tutors to select and save their preferred locations
+ *
+ * @returns JSX Element rendering the preferred lcoation page
+ */
 export const PreferredLocationPage = () => {
   const { user, handleSetUser } = useUser();
   const router = useRouter();
@@ -24,7 +32,7 @@ export const PreferredLocationPage = () => {
   const { mutateAsync: setPreferredLocations } =
     useSetPreferredLocationMutation({});
 
-  // Initialize selectedLocations from fetched preferredLocations
+  // Parse preferredLocations from route params and set selected options
   useEffect(() => {
     if (preferredLocations) {
       try {
@@ -39,6 +47,7 @@ export const PreferredLocationPage = () => {
     }
   }, [preferredLocations, setSelectedLocations]);
 
+  // Handle toggle a location value on/off in the selectedLocations array
   const handleToggleLocation = (locationValue) => {
     setSelectedLocations((prev) => {
       if (prev.includes(locationValue)) {
@@ -49,6 +58,7 @@ export const PreferredLocationPage = () => {
     });
   };
 
+  // Handle save preferred locations
   const handleSave = async () => {
     const payload = {
       publicPlace: selectedLocations.includes("publicPlace"),
@@ -58,6 +68,7 @@ export const PreferredLocationPage = () => {
 
     await setPreferredLocations(payload, {
       onSuccess: (data) => {
+        // Update user context with new preferences
         handleSetUser({ data: { ...user, preferredLocations: data.data } });
         Toast.show({ type: "success", text1: data.message });
         router.back();
@@ -73,6 +84,7 @@ export const PreferredLocationPage = () => {
       <Pressable style={styles.container}>
         <Text variant="headlineSmall">Select your preferred location</Text>
 
+        {/* Location options list */}
         <View style={styles.listContainer}>
           {LOCATION_OPTIONS.map((option) => (
             <LocationOption
@@ -84,6 +96,7 @@ export const PreferredLocationPage = () => {
           ))}
         </View>
 
+        {/* Save button */}
         <Button onPress={handleSave} style={{ marginTop: 16 }}>
           Save
         </Button>
@@ -92,6 +105,9 @@ export const PreferredLocationPage = () => {
   );
 };
 
+/**
+ * Specify Styles to use for preferred location page
+ */
 const styles = StyleSheet.create({
   scrollContainer: {
     paddingTop: 20,

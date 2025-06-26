@@ -1,3 +1,6 @@
+/**
+ * Import Modules
+ */
 import { InfoBox } from "@/components/InfoBox/InfoBox";
 import { useUserQuery } from "@/services/api/user/useUserQuery";
 import { useLocalSearchParams } from "expo-router";
@@ -20,11 +23,16 @@ import { DateTimePicker } from "./components/DateTimePicker";
 import dayjs from "dayjs";
 import { SafeKeyboardScrollView } from "@/components/SafeKeyboardScrollView/SafeKeyboardScrollView";
 
+/**
+ * BookTutorPage - Displays the book tutor form page
+ *
+ * @returns JSX Element rendering the book tutor page
+ */
 export const BookTutorPage = () => {
   const theme = useTheme();
   const { tutorId } = useLocalSearchParams();
   const [loadImageError, setLoadImageError] = useState(false);
-  const { user, isFetching } = useUserQuery(tutorId);
+  const { user, isFetching } = useUserQuery(tutorId); // Fetch tutor's user data based on tutorId
   const {
     control,
     handleSubmit,
@@ -32,11 +40,13 @@ export const BookTutorPage = () => {
     watch,
     formState: { errors },
   } = useBookTutorForm();
-  const dateTimePickerRef = useRef(null);
+  const dateTimePickerRef = useRef(null); // Date/time picker ref
 
+  // Watch selected date and times
   const watchedDate = watch("date");
   const watchedTimeSlots = watch("timeSlots");
 
+  // Create dropdown options from tutor's offered sessions
   const sessions = useMemo(() =>
     user?.sessions.map(
       ({ _id, subject }) => ({ label: subject, value: _id }),
@@ -44,6 +54,7 @@ export const BookTutorPage = () => {
     )
   );
 
+  // Filter tutor's preferred locations from predefined options
   const locations = useMemo(() => {
     if (!user?.preferredLocations) return [];
 
@@ -52,6 +63,7 @@ export const BookTutorPage = () => {
     );
   }, [user]);
 
+  // Show loading indicator while fetching tutor data
   if (isFetching) {
     return (
       <View style={styles.loadingContainer}>
@@ -60,6 +72,7 @@ export const BookTutorPage = () => {
     );
   }
 
+  // Format label for selected date/time
   const getDateTimeLabel = () => {
     if (watchedDate && watchedTimeSlots.length > 0) {
       let startTime = watchedTimeSlots[0].startTime;
@@ -72,6 +85,7 @@ export const BookTutorPage = () => {
     return "";
   };
 
+  // Callback when user selects date & time from the picker
   const handleSelectDateTime = ({ selectedDate, selectedTimeSlots }) => {
     setValue("date", selectedDate);
     setValue("timeSlots", selectedTimeSlots);
@@ -81,6 +95,7 @@ export const BookTutorPage = () => {
     <>
       <SafeKeyboardScrollView ignoreSafeArea>
         <Pressable style={styles.container}>
+          {/* Tutor Info */}
           <InfoBox label="Tutor" containerStyle={{ marginBottom: 22 }}>
             <View style={styles.userRow}>
               {user?.image && !loadImageError ? (
@@ -102,6 +117,7 @@ export const BookTutorPage = () => {
             </View>
           </InfoBox>
 
+          {/* Session Dropdown */}
           <Dropdown
             label="Session *"
             placeholder="Select an offered session"
@@ -112,6 +128,7 @@ export const BookTutorPage = () => {
             isError={errors.sessionId?.message}
           />
 
+          {/* Date & Time Picker Trigger */}
           <PickerButton
             label="Date & Time *"
             value={getDateTimeLabel()}
@@ -123,6 +140,7 @@ export const BookTutorPage = () => {
             isError={errors.date || errors.timeSlots}
           />
 
+          {/* Location Dropdown */}
           <Dropdown
             label="Location"
             placeholder="Select location"
@@ -130,6 +148,7 @@ export const BookTutorPage = () => {
             onSelect={({ value }) => setValue("preferredLocation", value)}
           />
 
+          {/* Booking Note */}
           <FormTextInput
             name="note"
             multiline
@@ -140,9 +159,12 @@ export const BookTutorPage = () => {
             {...{ control }}
           />
 
+          {/* Submit Button */}
           <Button onPress={handleSubmit}>Book Tutor</Button>
         </Pressable>
       </SafeKeyboardScrollView>
+
+      {/* Date & Time Picker Modal */}
       <Portal>
         <DateTimePicker
           ref={dateTimePickerRef}
@@ -156,6 +178,9 @@ export const BookTutorPage = () => {
   );
 };
 
+/**
+ * Specify Styles to use for book tutor page
+ */
 const styles = StyleSheet.create({
   loadingContainer: {
     flex: 1,

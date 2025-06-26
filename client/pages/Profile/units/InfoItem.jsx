@@ -1,7 +1,16 @@
+/**
+ * Import Modules
+ */
 import { StyleSheet, View } from "react-native";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { Text, useTheme } from "react-native-paper";
 
+/**
+ * InfoItem - Displays an icon alongside a single line of text
+ *
+ * @param {object} props
+ * @returns JSX Element
+ */
 export const InfoItem = ({ icon, value, containerStyles }) => {
   const theme = useTheme();
   const styles = useStyles(theme);
@@ -18,6 +27,12 @@ export const InfoItem = ({ icon, value, containerStyles }) => {
   );
 };
 
+/**
+ * useStyles - Specify styles to use for info item
+ *
+ * @param {*} theme
+ * @returns StyleSheet object
+ */
 const useStyles = (theme) =>
   StyleSheet.create({
     container: {

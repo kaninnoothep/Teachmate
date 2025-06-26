@@ -1,9 +1,17 @@
+/**
+ * Import Modules
+ */
 import { InfoBox } from "@/components/InfoBox/InfoBox";
 import { useLocalSearchParams } from "expo-router";
 import { useState } from "react";
 import { Pressable, ScrollView, StyleSheet } from "react-native";
 import { Text } from "react-native-paper";
 
+/**
+ * ExternalSessionDetailPage - Displays an external view for a list of sessions
+ *
+ * @returns JSX Element
+ */
 export const ExternalSessionDetailPage = () => {
   const { session } = useLocalSearchParams();
   const [sessionState] = useState(JSON.parse(session));
@@ -30,6 +38,9 @@ export const ExternalSessionDetailPage = () => {
   );
 };
 
+/**
+ * Specify Styles to use
+ */
 const styles = StyleSheet.create({
   scrollContainer: {
     paddingBottom: 40,

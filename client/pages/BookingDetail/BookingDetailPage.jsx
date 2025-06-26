@@ -1,3 +1,6 @@
+/**
+ * Import Modules
+ */
 import { useRouter, useLocalSearchParams } from "expo-router";
 import { useEffect, useMemo, useState } from "react";
 import {
@@ -19,15 +22,21 @@ import Toast from "react-native-toast-message";
 import { useCancelBookingMutation } from "@/services/api/bookings/useCancelBookingMutation";
 import { Button } from "@/components/Button/Button";
 
-dayjs.extend(utc);
+dayjs.extend(utc); // Enable UTC support in dayjs
 
+/**
+ * BookingDetailPage - Displays details of a specific booking and allows students to cancel it.
+ *
+ * @returns JSX Element rendering the availability management interface
+ */
 export const BookingDetailPage = () => {
   const { user } = useUser();
   const theme = useTheme();
   const router = useRouter();
   const [loadImageError, setLoadImageError] = useState(false);
-  const { bookingId, booking: bookingJSON } = useLocalSearchParams();
+  const { bookingId, booking: bookingJSON } = useLocalSearchParams(); // Get booking data from route parameters
 
+  // Hook to cancel booking
   const { mutateAsync: cancelBooking } = useCancelBookingMutation({
     onSuccess: (response) => {
       Toast.show({ type: "success", text1: response.message });
@@ -38,6 +47,7 @@ export const BookingDetailPage = () => {
     },
   });
 
+  // Parse booking JSON string to object
   const booking = useMemo(() => {
     if (bookingJSON) {
       try {
@@ -49,6 +59,7 @@ export const BookingDetailPage = () => {
     return null;
   }, [bookingJSON]);
 
+  // If no booking found, navigate back
   useEffect(() => {
     if (!booking) {
       router.back();
@@ -57,6 +68,7 @@ export const BookingDetailPage = () => {
 
   if (!booking) return null;
 
+  // Destructure fields from booking object
   const {
     session,
     preferredLocation,
@@ -68,11 +80,13 @@ export const BookingDetailPage = () => {
     note,
   } = booking;
 
+  // Format date and time display
   const formattedDate = dayjs.utc(date).format("MMMM D, YYYY");
   const formattedTime = `${dayjs(`2000-01-01T${startTime}`).format(
     "h:mm A"
   )} - ${dayjs(`2000-01-01T${endTime}`).format("h:mm A")}`;
 
+  // Helper to show readable location info
   const getPreferredLocationDisplay = () => {
     if (preferredLocation === "publicPlace") {
       return { icon: "map", label: "In a Public Place" };
@@ -83,6 +97,7 @@ export const BookingDetailPage = () => {
     }
   };
 
+  // Determine label for user (depends on current user's role)
   const getAuthorLabel = () => {
     if (user.role === "tutor") {
       return "Booked by";
@@ -91,11 +106,13 @@ export const BookingDetailPage = () => {
     }
   };
 
+  // Get the opposite party (either tutor or student)
   const author = useMemo(
     () => (user.role === "tutor" ? student : tutor),
     [user, booking]
   );
 
+  // Confirm and cancel booking
   const handleDelete = () => {
     Alert.alert("Are you sure you want to cancel this booking?", "", [
       { text: "Later", style: "cancel" },
@@ -111,10 +128,12 @@ export const BookingDetailPage = () => {
     <ScrollView style={styles.scrollContainer}>
       <Pressable>
         <View style={styles.container}>
+          {/* Subject Title */}
           <Text variant="headlineSmall" style={styles.title}>
             {session.subject}
           </Text>
 
+          {/* Preferred Location Chip */}
           {preferredLocation && (
             <Chip
               icon={getPreferredLocationDisplay().icon}
@@ -122,6 +141,7 @@ export const BookingDetailPage = () => {
             />
           )}
 
+          {/* Date & Time Info */}
           <View style={styles.infoRow}>
             <InfoBox label="Date">
               <Text variant="bodyLarge">{formattedDate}</Text>
@@ -131,6 +151,7 @@ export const BookingDetailPage = () => {
             </InfoBox>
           </View>
 
+          {/* Author Info (tutor or student) */}
           <InfoBox label={getAuthorLabel()} disabledContentPadding>
             <TouchableOpacity
               style={styles.userRow}
@@ -171,12 +192,14 @@ export const BookingDetailPage = () => {
             </TouchableOpacity>
           </InfoBox>
 
+          {/* Note */}
           {note && (
             <InfoBox label="Note">
               <Text variant="bodyLarge">{note}</Text>
             </InfoBox>
           )}
 
+          {/* Cancel Booking for students*/}
           {user.role === "student" && (
             <Button
               onPress={handleDelete}
@@ -199,6 +222,9 @@ export const BookingDetailPage = () => {
   );
 };
 
+/**
+ * Specify styles to use for booking detail page
+ */
 const styles = StyleSheet.create({
   scrollContainer: {
     paddingBottom: 40,

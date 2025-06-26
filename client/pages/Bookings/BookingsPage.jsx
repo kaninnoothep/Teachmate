@@ -1,3 +1,6 @@
+/**
+ * Import Modules
+ */
 import { useRouter } from "expo-router";
 import {
   Alert,
@@ -14,6 +17,11 @@ import { useBookingsQuery } from "@/services/api/bookings/useBookingsQuery";
 import { useUser } from "@/context/UserProvider/UserProvider";
 import { BookingItem } from "./components/BookingItem";
 
+/**
+ * BookingsPage - Displays a list of active bookings for the current user
+ *
+ * @returns JSX Element
+ */
 export const BookingsPage = () => {
   const { user } = useUser();
   const router = useRouter();
@@ -22,6 +30,7 @@ export const BookingsPage = () => {
   const [isManualRefreshing, setIsManualRefreshing] = useState(false);
   const { bookings, isFetching, refetch } = useBookingsQuery("active");
 
+  // Show alert if user hasn't completed their profile
   useEffect(() => {
     if (!user?.isProfileCompleted) {
       Alert.alert(
@@ -38,6 +47,7 @@ export const BookingsPage = () => {
     }
   }, []);
 
+  // Pull-to-refresh handler
   const handleRefresh = async () => {
     setIsManualRefreshing(true);
     try {
@@ -47,6 +57,7 @@ export const BookingsPage = () => {
     }
   };
 
+  // Renders greeting and title
   const renderHeaderComponent = () => (
     <Pressable style={styles.listHeaderContainer}>
       <Text variant="headlineMedium" style={styles.greetingText}>

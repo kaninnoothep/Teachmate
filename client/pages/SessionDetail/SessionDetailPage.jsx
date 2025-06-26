@@ -1,3 +1,6 @@
+/**
+ * Import Modules
+ */
 import { Button } from "@/components/Button/Button";
 import { FormTextInput } from "@/components/Form/FormTextInput/FormTextInput";
 import { useRouter } from "expo-router";
@@ -12,12 +15,20 @@ import { useUser } from "@/context/UserProvider/UserProvider";
 import Toast from "react-native-toast-message";
 import { useDeleteSessionMutation } from "@/services/api/sessions/useDeleteSessionMutation";
 
+/**
+ * SessionDetailPage - Displays the session form page for adding or updating a tutor's session entry.
+ *
+ * @returns JSX Element rendering the session form
+ */
 export const SessionDetailPage = () => {
   const { sessionId } = useLocalSearchParams();
   const { user, handleSetUser } = useUser();
   const router = useRouter();
+
+  // Hook to handle form state and validation
   const { control, handleSubmit } = useSessionForm();
 
+  // Delete mutation for education entry
   const { mutateAsync: deleteSession } = useDeleteSessionMutation({
     onSuccess: (response) => {
       let newSessions = user.sessions?.filter(
@@ -34,10 +45,12 @@ export const SessionDetailPage = () => {
     },
   });
 
+  // Check if this is an add or update operation
   const isAdd = useMemo(() => !sessionId, [sessionId]);
 
   const pageTitle = () => (isAdd ? "Create a Session" : "Update Session");
 
+  // Handle delete session with alert confirmation
   const handleDelete = () => {
     Alert.alert("Are you sure you want to delete this session?", "", [
       { text: "Cancel", style: "cancel" },
@@ -57,6 +70,7 @@ export const SessionDetailPage = () => {
             {pageTitle()}
           </Text>
 
+          {/* Subject input */}
           <FormTextInput
             name="subject"
             label="Subject *"
@@ -65,6 +79,7 @@ export const SessionDetailPage = () => {
             {...{ control }}
           />
 
+          {/* Description input */}
           <FormTextInput
             name="description"
             multiline
@@ -75,6 +90,7 @@ export const SessionDetailPage = () => {
             {...{ control }}
           />
 
+          {/* Estimated Duration input */}
           <FormTextInput
             name="estimatedDuration"
             label="Estimated Duration (hours) *"
@@ -84,8 +100,11 @@ export const SessionDetailPage = () => {
             {...{ control }}
           />
 
+          {/* Submit button */}
           <Button onPress={handleSubmit}>{pageTitle()}</Button>
         </View>
+
+        {/* Show delete button only in update mode */}
         {!isAdd && (
           <>
             <Divider style={{ marginVertical: 20 }} />
@@ -112,6 +131,9 @@ export const SessionDetailPage = () => {
   );
 };
 
+/**
+ * Specify Styles to use for session detail page
+ */
 const styles = StyleSheet.create({
   container: {
     paddingHorizontal: 16,
