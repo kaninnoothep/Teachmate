@@ -12,6 +12,11 @@ import { useApiSend } from "@/services/hooks/useApiSend";
 const setAvailabilityRequest = (payload) =>
   apiRequest(SET_AVAILABILITY_API_KEY, "POST", payload);
 
-// Custom Hook to manage Set Availability request
+/**
+ * useSetAvailabilityMutation - Custom hook to handle Set Availability mutation
+ *
+ * @param {*} options - Mutation options
+ * @returns useMutation result
+ */
 export const useSetAvailabilityMutation = (options) =>
   useApiSend(setAvailabilityRequest, [GET_AVAILABILITY_API_KEY], options);

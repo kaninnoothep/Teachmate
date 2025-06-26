@@ -1,7 +1,6 @@
 /**
  * Import Modules
  */
-
 import { UPLOAD_IMAGE_API_KEY } from "@/services/constants";
 import { apiRequest } from "@/services/helpers/apiRequest";
 import { useApiSend } from "@/services/hooks/useApiSend";
@@ -10,6 +9,11 @@ import { useApiSend } from "@/services/hooks/useApiSend";
 const uploadImageRequest = (payload) =>
   apiRequest(UPLOAD_IMAGE_API_KEY, "POST", payload);
 
-// Custom Hook to manage Upload Image request
+/**
+ * useUploadImageMutation - Custom hook to handle image upload mutation
+ *
+ * @param {*} options - Mutation options
+ * @returns useMutation result
+ */
 export const useUploadImageMutation = (options) =>
   useApiSend(uploadImageRequest, [], options);

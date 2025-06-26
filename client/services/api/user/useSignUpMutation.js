@@ -8,6 +8,11 @@ import { useApiSend } from "@/services/hooks/useApiSend";
 // Create Account Request
 const signUpRequest = (payload) => apiRequest(SIGN_UP_API_KEY, "POST", payload);
 
-// Custom Hook to manage Create Account request
+/**
+ * useSignUpMutation - Custom hook to handle Create Account mutation
+ *
+ * @param {*} options - Mutation options
+ * @returns useMutation result
+ */
 export const useSignUpMutation = (options) =>
   useApiSend(signUpRequest, null, options);

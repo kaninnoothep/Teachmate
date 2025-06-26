@@ -1,7 +1,6 @@
 /**
  * Import Modules
  */
-
 import { UPDATE_USER_API_KEY } from "@/services/constants";
 import { apiRequest } from "@/services/helpers/apiRequest";
 import { useApiSend } from "@/services/hooks/useApiSend";
@@ -10,6 +9,11 @@ import { useApiSend } from "@/services/hooks/useApiSend";
 const updateUserRequest = (payload) =>
   apiRequest(UPDATE_USER_API_KEY, "POST", payload);
 
-// Custom Hook to manage Update User request
+/**
+ * useUpdateUserMutation - Custom hook to handle update user mutation
+ *
+ * @param {*} options - Mutation options
+ * @returns useMutation result
+ */
 export const useUpdateUserMutation = (options) =>
   useApiSend(updateUserRequest, [], options);

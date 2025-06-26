@@ -1,6 +1,15 @@
+/**
+ * Import Modules
+ */
 import { GET_PREFERRED_LOCATION_API_KEY } from "@/services/constants";
 import { useApiGet } from "@/services/hooks/useApiGet";
 
+/**
+ * usePreferredLocationQuery - Custom hook to fetch preferred location
+ *
+ * @param {*} options - Additional query options
+ * @returns {object} - Preferred Locations data and query status
+ */
 export const usePreferredLocationQuery = (options) => {
   const { data, ...rest } = useApiGet(
     [GET_PREFERRED_LOCATION_API_KEY],

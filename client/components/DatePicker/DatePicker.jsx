@@ -1,7 +1,6 @@
 /**
  * Import Modules
  */
-
 import { View } from "react-native";
 import { Text, useTheme } from "react-native-paper";
 import DateTimePicker, { useDefaultStyles } from "react-native-ui-datepicker";

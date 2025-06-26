@@ -9,6 +9,11 @@ import { useApiSend } from "@/services/hooks/useApiSend";
 const createBookingRequest = (payload) =>
   apiRequest(BOOKING_API_KEY, "POST", payload);
 
-// Custom Hook to create booking request
+/**
+ * useCreateBookingMutation - Custom hook to handle Create Booking mutation
+ *
+ * @param {*} options - Mutation options
+ * @returns useMutation result
+ */
 export const useCreateBookingMutation = (options) =>
   useApiSend(createBookingRequest, [GET_BOOKINGS_API_KEY], options);

@@ -12,7 +12,12 @@ import { useApiSend } from "@/services/hooks/useApiSend";
 const setPreferredLocationRequest = (payload) =>
   apiRequest(SET_PREFERRED_LOCATION_API_KEY, "POST", payload);
 
-// Custom Hook to manage Set Preferred Location request
+/**
+ * useSetPreferredLocationMutation - Custom hook to handle Set Preferred Location mutation
+ *
+ * @param {*} options - Mutation options
+ * @returns useMutation result
+ */
 export const useSetPreferredLocationMutation = (options) =>
   useApiSend(
     setPreferredLocationRequest,
