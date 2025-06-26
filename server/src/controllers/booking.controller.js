@@ -3,6 +3,12 @@
  */
 import bookingServices from "../services/booking.services.js";
 
+/**
+ * createBooking - Create a new booking
+ *
+ * @param {object} req - Request Object
+ * @param {object} res - Response Object
+ */
 async function createBooking(req, res) {
   try {
     const response = await bookingServices.createBooking(req.user, req.body);
@@ -14,6 +20,12 @@ async function createBooking(req, res) {
   }
 }
 
+/**
+ * cancelBooking - Cancel an existing booking
+ *
+ * @param {object} req - Request Object
+ * @param {object} res - Response Object
+ */
 async function cancelBooking(req, res) {
   try {
     const response = await bookingServices.cancelBooking(
@@ -28,6 +40,12 @@ async function cancelBooking(req, res) {
   }
 }
 
+/**
+ * getMyBookings - Retrieve a user's bookings (tutor or student), filtered by status
+ *
+ * @param {object} req - Request Object
+ * @param {object} res - Response Object
+ */
 async function getMyBookings(req, res) {
   try {
     const response = await bookingServices.getMyBookings(
@@ -42,6 +60,9 @@ async function getMyBookings(req, res) {
   }
 }
 
+/**
+ * Export all functions
+ */
 export default {
   createBooking,
   cancelBooking,

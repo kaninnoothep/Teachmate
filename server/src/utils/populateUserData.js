@@ -1,3 +1,6 @@
+/**
+ * Import modules
+ */
 import { sortByEndDate } from "./sortByEndDate.js";
 
 /**
@@ -24,4 +27,5 @@ async function populateUserData(query) {
   return user;
 }
 
+// Export the function
 export { populateUserData };

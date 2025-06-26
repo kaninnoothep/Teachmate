@@ -8,6 +8,10 @@ import connectDB from "./configs/database.js";
 import userRouter from "./routes/user.route.js";
 import bookingRouter from "./routes/booking.route.js";
 import connectCloudinary from "./configs/cloudinary.js";
+
+/**
+ * Load environment variables from .env file
+ */
 dotenv.config();
 
 /**
@@ -15,11 +19,16 @@ dotenv.config();
  */
 const PORT = process.env.PORT || 5050;
 const app = express();
+
+/**
+ * Connect to MongoDB database and Cloudinary
+ */
 connectDB(process.env.ATLAS_URI);
 connectCloudinary();
 
 /**
- * Specify features to be enabled by the express server
+ * Middleware Setup
+ * Enable CORS, JSON parsing, and define API routes
  */
 app.use(cors());
 app.use(express.json());

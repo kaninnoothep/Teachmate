@@ -4,7 +4,7 @@
 import usersServices from "../services/users.services.js";
 
 /**
- * createAccount - create a new user account
+ * createAccount - Create a new user account
  *
  * @param {object} req - Request Object
  * @param {object} res - Response Object
@@ -39,6 +39,12 @@ async function login(req, res) {
   }
 }
 
+/**
+ * getUser - Retrieve a user details
+ *
+ * @param {object} req - Request Object
+ * @param {object} res - Response Object
+ */
 async function getUser(req, res) {
   try {
     const response = await usersServices.getUser(req.params);
@@ -51,6 +57,12 @@ async function getUser(req, res) {
   }
 }
 
+/**
+ * updateUser - Update user profile
+ *
+ * @param {object} req - Request Object
+ * @param {object} res - Response Object
+ */
 async function updateUser(req, res) {
   try {
     const response = await usersServices.updateUser(req.user, req.body);
@@ -63,6 +75,12 @@ async function updateUser(req, res) {
   }
 }
 
+/**
+ * uploadImage - Upload a profile image
+ *
+ * @param {object} req - Request Object
+ * @param {object} res - Response Object
+ */
 async function uploadImage(req, res) {
   try {
     const response = await usersServices.uploadImage(req.user, req.file);
@@ -76,7 +94,7 @@ async function uploadImage(req, res) {
 }
 
 /**
- * setAvailability - Set availability for the authenticated user
+ * setAvailability - Set or update availability for a user
  *
  * @param {object} req - Request Object
  * @param {object} res - Response Object
@@ -97,7 +115,7 @@ async function setAvailability(req, res) {
 }
 
 /**
- * getAvailability - Get availability for the authenticated user
+ * getAvailability - Retrieve availability for a user
  *
  * @param {object} req - Request Object
  * @param {object} res - Response Object
@@ -115,7 +133,10 @@ async function getAvailability(req, res) {
 }
 
 /**
- * setPreferredLocation - Set preferred locations for the authenticated user
+ * setPreferredLocation - Set preferred locations
+ *
+ * @param {object} req - Request Object
+ * @param {object} res - Response Object
  */
 async function setPreferredLocation(req, res) {
   try {
@@ -133,7 +154,10 @@ async function setPreferredLocation(req, res) {
 }
 
 /**
- * getPreferredLocation - Get preferred locations for the authenticated user
+ * getPreferredLocation - Get user's preferred location
+ *
+ * @param {object} req - Request Object
+ * @param {object} res - Response Object
  */
 async function getPreferredLocation(req, res) {
   try {
@@ -150,6 +174,13 @@ async function getPreferredLocation(req, res) {
 /**
  * Education
  */
+
+/**
+ * addEducation - Add an education record
+ *
+ * @param {object} req - Request Object
+ * @param {object} res - Response Object
+ */
 async function addEducation(req, res) {
   try {
     const response = await usersServices.addEducation(req.user, req.body);
@@ -161,6 +192,12 @@ async function addEducation(req, res) {
   }
 }
 
+/**
+ * getEducations - Retrieve user's education records
+ *
+ * @param {object} req - Request Object
+ * @param {object} res - Response Object
+ */
 async function getEducations(req, res) {
   try {
     const response = await usersServices.getEducations(req.user);
@@ -172,6 +209,12 @@ async function getEducations(req, res) {
   }
 }
 
+/**
+ * updateEducation - Update a specific education record
+ *
+ * @param {object} req - Request Object
+ * @param {object} res - Response Object
+ */
 async function updateEducation(req, res) {
   try {
     const response = await usersServices.updateEducation(
@@ -187,6 +230,12 @@ async function updateEducation(req, res) {
   }
 }
 
+/**
+ * deleteEducation - Delete a specific education record
+ *
+ * @param {object} req - Request Object
+ * @param {object} res - Response Object
+ */
 async function deleteEducation(req, res) {
   try {
     const response = await usersServices.deleteEducation(
@@ -204,6 +253,13 @@ async function deleteEducation(req, res) {
 /**
  * Experience
  */
+
+/**
+ * addExperience - Add an experience record
+ *
+ * @param {object} req - Request Object
+ * @param {object} res - Response Object
+ */
 async function addExperience(req, res) {
   try {
     const response = await usersServices.addExperience(req.user, req.body);
@@ -215,6 +271,12 @@ async function addExperience(req, res) {
   }
 }
 
+/**
+ * getExperiences - Retrieve user's experience records
+ *
+ * @param {object} req - Request Object
+ * @param {object} res - Response Object
+ */
 async function getExperiences(req, res) {
   try {
     const response = await usersServices.getExperiences(req.user);
@@ -226,6 +288,12 @@ async function getExperiences(req, res) {
   }
 }
 
+/**
+ * updateExperience - Update a specific experience record
+ *
+ * @param {object} req - Request Object
+ * @param {object} res - Response Object
+ */
 async function updateExperience(req, res) {
   try {
     const response = await usersServices.updateExperience(
@@ -241,6 +309,12 @@ async function updateExperience(req, res) {
   }
 }
 
+/**
+ * deleteExperience - Delete a specific exprience record
+ *
+ * @param {object} req - Request Object
+ * @param {object} res - Response Object
+ */
 async function deleteExperience(req, res) {
   try {
     const response = await usersServices.deleteExperience(
@@ -258,6 +332,13 @@ async function deleteExperience(req, res) {
 /**
  * Sessions
  */
+
+/**
+ * addSession - Add a session entry for the tutor
+ *
+ * @param {object} req - Request Object
+ * @param {object} res - Response Object
+ */
 async function addSession(req, res) {
   try {
     const response = await usersServices.addSession(req.user, req.body);
@@ -269,6 +350,12 @@ async function addSession(req, res) {
   }
 }
 
+/**
+ * getSessions - Retrieve sessions of the tutor
+ *
+ * @param {object} req - Request Object
+ * @param {object} res - Response Object
+ */
 async function getSessions(req, res) {
   try {
     const response = await usersServices.getSessions(req.user);
@@ -280,6 +367,12 @@ async function getSessions(req, res) {
   }
 }
 
+/**
+ * updateSession - Update a specific session
+ *
+ * @param {object} req - Request Object
+ * @param {object} res - Response Object
+ */
 async function updateSession(req, res) {
   try {
     const response = await usersServices.updateSession(
@@ -295,6 +388,12 @@ async function updateSession(req, res) {
   }
 }
 
+/**
+ * deleteSession - Delete a specific session
+ *
+ * @param {object} req - Request Object
+ * @param {object} res - Response Object
+ */
 async function deleteSession(req, res) {
   try {
     const response = await usersServices.deleteSession(req.user, req.params.id);
@@ -306,6 +405,12 @@ async function deleteSession(req, res) {
   }
 }
 
+/**
+ * getTutors - Retrieve tutors based on search and filter query
+ *
+ * @param {object} req - Request Object
+ * @param {object} res - Response Object
+ */
 async function getTutors(req, res) {
   try {
     const response = await usersServices.getTutors(req.query);
@@ -318,7 +423,7 @@ async function getTutors(req, res) {
 }
 
 /**
- * Export all fuctions
+ * Export all functions
  */
 export default {
   createAccount,

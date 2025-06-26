@@ -15,6 +15,9 @@ import { checkProfileCompletion } from "../utils/checkProfileCompletion.js";
 
 /**
  * createAccount - Create new user account
+ *
+ * @param {Object} payload - User details for registration
+ * @returns {Object} Success or failure status with message and data
  */
 async function createAccount(payload) {
   const { firstName, lastName, email, role } = payload;
@@ -53,7 +56,10 @@ async function createAccount(payload) {
 }
 
 /**
- * login - Login to existing user account
+ * login - Log in an existing user
+ *
+ * @param {Object} payload - Email and password
+ * @returns {Object} Success or failure status with authenticated user info and token
  */
 async function login(payload) {
   const { email, password } = payload;
@@ -95,6 +101,12 @@ async function login(payload) {
   };
 }
 
+/**
+ * getUser - Retrieve a user by ID
+ *
+ * @param {Object} payload - Contains userId
+ * @returns {Object} Success or failure status with user data
+ */
 async function getUser(payload) {
   const { userId } = payload;
 
@@ -107,6 +119,13 @@ async function getUser(payload) {
   return responses.buildSuccessResponse("User details found", 200, foundUser);
 }
 
+/**
+ * updateUser - Update user profile
+ *
+ * @param {Object} user - Current user object
+ * @param {Object} payload - Fields to update
+ * @returns {Object} Updated user or error
+ */
 async function updateUser(user, payload) {
   const currentUser = await User.findById(user._id);
   if (!currentUser) {
@@ -117,6 +136,7 @@ async function updateUser(user, payload) {
     };
   }
 
+  // Merge updates and check if profile completion
   const updatedUser = await populateUserData(
     User.findByIdAndUpdate(
       user._id,
@@ -150,6 +170,13 @@ async function updateUser(user, payload) {
   };
 }
 
+/**
+ * uploadImage - Upload a profile image to Cloudinary
+ *
+ * @param {Object} user - Current user
+ * @param {Object} file - Image file to upload
+ * @returns {Object} Image URL or error
+ */
 async function uploadImage(user, file) {
   const currentUser = await User.findById(user._id);
 
@@ -161,6 +188,7 @@ async function uploadImage(user, file) {
     };
   }
 
+  // Upload image to cloudinary
   const imageUpload = await cloudinary.uploader.upload(file.path, {
     resource_type: "image",
   });
@@ -182,6 +210,10 @@ async function uploadImage(user, file) {
 
 /**
  * setAvailability - Set or update availability for a user
+ *
+ * @param {Object} user - Authenticated user
+ * @param {Array} newAvailability - Array of availability objects
+ * @returns {Object} Updated availability or error
  */
 async function setAvailability(user, newAvailability) {
   if (!Array.isArray(newAvailability)) {
@@ -245,7 +277,10 @@ async function setAvailability(user, newAvailability) {
 }
 
 /**
- * getAvailability - Get availability for a specific user
+ * getAvailability - Retrieve availability for a user
+ *
+ * @param {Object} user - Authenticated user
+ * @returns {Object} Availability array or error
  */
 async function getAvailability(user) {
   const foundUser = await User.findById(user._id).select("availability");
@@ -266,7 +301,11 @@ async function getAvailability(user) {
 }
 
 /**
- * setPreferredLocation - Update preferred location for the authenticated user
+ * setPreferredLocation - Set tutor's preferred location
+ *
+ * @param {Object} user - Authenticated user
+ * @param {Object} preferredLocations - Preferred location settings
+ * @returns {Object} Updated preferences or error
  */
 async function setPreferredLocation(user, preferredLocations) {
   const userDoc = await User.findById(user._id);
@@ -278,6 +317,7 @@ async function setPreferredLocation(user, preferredLocations) {
     };
   }
 
+  // Set the new preferred location
   userDoc.preferredLocations = {
     publicPlace: !!preferredLocations.publicPlace,
     tutorPlace: !!preferredLocations.tutorPlace,
@@ -295,7 +335,10 @@ async function setPreferredLocation(user, preferredLocations) {
 }
 
 /**
- * getPreferredLocation - Retrieve preferred location of the authenticated user
+ * getPreferredLocation - Get user's preferred location
+ *
+ * @param {Object} user - Authenticated user
+ * @returns {Object} Preferred location or error
  */
 async function getPreferredLocation(user) {
   const userDoc = await User.findById(user._id).select("preferredLocations");
@@ -316,13 +359,24 @@ async function getPreferredLocation(user) {
 }
 
 /**
- * Education Services
+ * Education
+ */
+
+/**
+ * addEducation - Add an education record to user
+ *
+ * @param {Object} user - Authenticated user
+ * @param {Object} data - Education details
+ * @returns {Object} Added education or error
  */
 async function addEducation(user, data) {
   const education = await Education.create({ ...data, userId: user._id });
+
+  // Add the education ID to user's education array
   await User.findByIdAndUpdate(user._id, {
     $push: { education: education._id },
   });
+
   return responses.buildSuccessResponse(
     "Education added successfully",
     201,
@@ -330,6 +384,12 @@ async function addEducation(user, data) {
   );
 }
 
+/**
+ * getEducations - Retrieve user's education records
+ *
+ * @param {Object} user - Authenticated user
+ * @returns {Object} Sorted list of education records
+ */
 async function getEducations(user) {
   const educations = await Education.find({ userId: user._id });
   const sortedEducations = sortByEndDate(educations);
@@ -341,6 +401,14 @@ async function getEducations(user) {
   );
 }
 
+/**
+ * updateEducation - Update a specific education record
+ *
+ * @param {Object} user - Authenticated user
+ * @param {string} educationId - ID of the education to update
+ * @param {Object} data - Updated education fields
+ * @returns {Object} Updated education or error
+ */
 async function updateEducation(user, educationId, data) {
   const updated = await Education.findOneAndUpdate(
     { _id: educationId, userId: user._id },
@@ -357,6 +425,13 @@ async function updateEducation(user, educationId, data) {
   );
 }
 
+/**
+ * deleteEducation - Delete a specific education record
+ *
+ * @param {Object} user - Authenticated user
+ * @param {string} educationId - ID of the education to delete
+ * @returns {Object} Deleted education or error
+ */
 async function deleteEducation(user, educationId) {
   const deleted = await Education.findOneAndDelete({
     _id: educationId,
@@ -379,10 +454,20 @@ async function deleteEducation(user, educationId) {
 }
 
 /**
- * Experience Services
+ * Experience
+ */
+
+/**
+ * addExperience - Add a work experience record to user
+ *
+ * @param {Object} user - Authenticated user
+ * @param {Object} data - Experience details
+ * @returns {Object} Added experience or error
  */
 async function addExperience(user, data) {
   const experience = await Experience.create({ ...data, userId: user._id });
+
+  // Add the experience ID to user's experience array
   await User.findByIdAndUpdate(user._id, {
     $push: { experience: experience._id },
   });
@@ -393,6 +478,13 @@ async function addExperience(user, data) {
     experience
   );
 }
+
+/**
+ * getExperiences - Retrieve user's experience records
+ *
+ * @param {Object} user - Authenticated user
+ * @returns {Object} Sorted list of experience records
+ */
 
 async function getExperiences(user) {
   const experiences = await Experience.find({ userId: user._id });
@@ -405,6 +497,14 @@ async function getExperiences(user) {
   );
 }
 
+/**
+ * updateExperience - Update a specific experience record
+ *
+ * @param {Object} user - Authenticated user
+ * @param {string} experienceId - ID of the experience to update
+ * @param {Object} data - Updated experience fields
+ * @returns {Object} Updated experience or error
+ */
 async function updateExperience(user, experienceId, data) {
   const updated = await Experience.findOneAndUpdate(
     { _id: experienceId, userId: user._id },
@@ -421,6 +521,13 @@ async function updateExperience(user, experienceId, data) {
   );
 }
 
+/**
+ * deleteExperience - Delete a specific experience record
+ *
+ * @param {Object} user - Authenticated user
+ * @param {string} experienceId - ID of the experience to delete
+ * @returns {Object} Deleted experience or error
+ */
 async function deleteExperience(user, experienceId) {
   const deleted = await Experience.findOneAndDelete({
     _id: experienceId,
@@ -442,10 +549,20 @@ async function deleteExperience(user, experienceId) {
 }
 
 /**
- * Session Services
+ * Session
+ */
+
+/**
+ * addSession - Add a session entry for the tutor
+ *
+ * @param {Object} user - Authenticated tutor
+ * @param {Object} data - Session details
+ * @returns {Object} Added session or error
  */
 async function addSession(user, data) {
   const session = await Session.create({ ...data, userId: user._id });
+
+  // Add the session ID to user's session array
   await User.findByIdAndUpdate(user._id, {
     $push: { sessions: session._id },
   });
@@ -457,6 +574,12 @@ async function addSession(user, data) {
   );
 }
 
+/**
+ * getSessions - Retrieve sessions of the tutor
+ *
+ * @param {Object} user - Authenticated tutor
+ * @returns {Object} List of sessions
+ */
 async function getSessions(user) {
   const sessions = await Session.find({ userId: user._id });
 
@@ -466,6 +589,15 @@ async function getSessions(user) {
     sessions
   );
 }
+
+/**
+ * updateSession - Update a specific session
+ *
+ * @param {Object} user - Authenticated tutor
+ * @param {string} sessionId - ID of the session to update
+ * @param {Object} data - Updated session fields
+ * @returns {Object} Updated session or error
+ */
 
 async function updateSession(user, sessionId, data) {
   const updated = await Session.findOneAndUpdate(
@@ -482,6 +614,13 @@ async function updateSession(user, sessionId, data) {
   );
 }
 
+/**
+ * deleteSession - Delete a specific session
+ *
+ * @param {Object} user - Authenticated tutor
+ * @param {string} sessionId - ID of the session to delete
+ * @returns {Object} Deleted session or error
+ */
 async function deleteSession(user, sessionId) {
   const deleted = await Session.findOneAndDelete({
     _id: sessionId,
@@ -501,14 +640,22 @@ async function deleteSession(user, sessionId) {
   );
 }
 
+/**
+ * getTutors - Search and filter tutors based on query
+ *
+ * @param {Object} params - Search and location filter parameters
+ * @returns {Object} List of matching tutors
+ */
 async function getTutors(params) {
   const { search = "", country, state, city } = params;
 
+  // Base query to find users with role "tutor" and optional country match
   const locationMatch = {
     role: "tutor",
     ...(country && { "country.name": { $regex: new RegExp(country, "i") } }),
   };
 
+  // Add state filter if provided (matches state name or code)
   if (state) {
     locationMatch["$or"] = [
       { "state.name": { $regex: new RegExp(state, "i") } },
@@ -516,10 +663,12 @@ async function getTutors(params) {
     ];
   }
 
+  // Add city filter if provided
   if (city) {
     locationMatch["city.name"] = { $regex: new RegExp(city, "i") };
   }
 
+  // MongoDB aggregation pipeline starts with location-based filtering
   const pipeline = [
     { $match: locationMatch },
     {
@@ -532,6 +681,7 @@ async function getTutors(params) {
     },
   ];
 
+  // If a search term is provided, filter tutors by session subject
   if (search.trim()) {
     pipeline.push({
       $match: {
@@ -542,8 +692,10 @@ async function getTutors(params) {
     });
   }
 
+  // Run the aggregation query to get matching tutors
   const tutors = await User.aggregate(pipeline);
 
+  // Return successful response with the list of tutors
   return responses.buildSuccessResponse(
     "Tutors fetched successfully",
     200,
@@ -551,6 +703,9 @@ async function getTutors(params) {
   );
 }
 
+/**
+ * Export all functions
+ */
 export default {
   createAccount,
   login,

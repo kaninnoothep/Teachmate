@@ -9,6 +9,7 @@ import authMiddleware from "../middlewares/auth.js";
 const router = express.Router();
 
 // Create booking (student only)
+// POST request to /
 router.post(
   "/",
   authMiddleware.studentAuthenticate,
@@ -16,6 +17,7 @@ router.post(
 );
 
 // Get current user's bookings
+// GET request to /me
 router.get(
   "/me",
   authMiddleware.authenticate,
@@ -23,6 +25,7 @@ router.get(
 );
 
 // Cancel booking by ID (students only)
+// DELETE request to /:bookingId
 router.delete(
   "/:bookingId",
   authMiddleware.studentAuthenticate,
