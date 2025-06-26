@@ -14,6 +14,8 @@ The following folders are used to organize the server:
 
 `src` contains the main source code for the backend logic of the project
 
+</br>
+
 **_Here are subfolders within the `src` folder_**
 
 `configs` contains the backend configuration files and settings
