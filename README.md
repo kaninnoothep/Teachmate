@@ -143,6 +143,10 @@ In each window, run this command
 npm run start
 ```
 
+#### Note
+
+See `README` file in the `client` and `server` folder for more information of How To Run the application.
+
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ---
