@@ -1,7 +1,15 @@
+/**
+ * Import Modules
+ */
 import { BackButton } from "@/components/BackButton/BackButton";
 import { Stack } from "expo-router";
 import { useTheme } from "react-native-paper";
 
+/**
+ * ModalsLayout - Stack layout for modal-related screens.
+ *
+ * @returns JSX Element defining modal navigation screens.
+ */
 export default function ModalsLayout() {
   const theme = useTheme();
 

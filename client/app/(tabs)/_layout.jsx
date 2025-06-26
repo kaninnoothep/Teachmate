@@ -1,12 +1,21 @@
+/**
+ * Import Modules
+ */
 import { Redirect, Tabs } from "expo-router";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { useUser } from "@/context/UserProvider/UserProvider";
 import { useTheme } from "react-native-paper";
 
+/**
+ * TabLayout - Main tab navigation layout for authenticated users
+ *
+ * @returns JSX Element with role-based tab navigation
+ */
 export default function TabLayout() {
   const { user } = useUser();
   const theme = useTheme();
 
+  // Redirect unauthenticated users to login
   if (!user) {
     return <Redirect href="/login" />;
   }
@@ -21,6 +30,7 @@ export default function TabLayout() {
         },
       }}
     >
+      {/* Bookings Tab */}
       <Tabs.Screen
         name="bookings"
         options={{
@@ -31,6 +41,7 @@ export default function TabLayout() {
         }}
       />
 
+      {/* Sessions Tab (only for tutors) */}
       <Tabs.Screen
         name="sessions"
         options={{
@@ -46,6 +57,7 @@ export default function TabLayout() {
         }}
       />
 
+      {/* Explore Tab (only for students) */}
       <Tabs.Screen
         name="explore"
         options={{
@@ -57,6 +69,7 @@ export default function TabLayout() {
         }}
       />
 
+      {/* Profile Tab */}
       <Tabs.Screen
         name="profile"
         options={{

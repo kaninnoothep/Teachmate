@@ -1,15 +1,31 @@
+/**
+ * Import Modules
+ */
 import { SessionsPage } from "@/pages/Sessions/SessionsPage";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { useState } from "react";
+import { useMemo } from "react";
 
+/**
+ * OfferedSessionsScreen - Displays sessions offered by a tutor in read-only view.
+ *
+ * @returns JSX Element
+ */
 export default function OfferredSessionsScreen() {
   const router = useRouter();
   const { sessions, userName } = useLocalSearchParams();
-  const [sessionsState] = useState(JSON.parse(sessions));
+
+  // Parse the sessions from query parameters
+  const parsedSessions = useMemo(() => {
+    try {
+      return JSON.parse(sessions);
+    } catch {
+      return [];
+    }
+  }, [sessions]);
 
   return (
     <SessionsPage
-      sessions={sessionsState}
+      sessions={parsedSessions}
       headerTitle={`${userName}'s Sessions`}
       onSessionPress={(item) =>
         router.push({

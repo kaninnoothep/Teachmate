@@ -1,3 +1,6 @@
+/**
+ * Import Modules
+ */
 import { ScrollViewStyleReset } from "expo-router/html";
 import PropTypes from "prop-types";
 
@@ -41,6 +44,7 @@ body {
   }
 }`;
 
+// Specify types of props to be received by Root
 Root.propTypes = {
   children: PropTypes.node,
 };

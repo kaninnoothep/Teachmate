@@ -1,7 +1,15 @@
+/**
+ * Import Modules
+ */
 import { Link, Stack } from "expo-router";
 import { StyleSheet, View } from "react-native";
 import { Text } from "react-native-paper";
 
+/**
+ * Define interface for page not found
+ *
+ * @returns JSX Element
+ */
 export default function NotFoundScreen() {
   return (
     <>
@@ -16,6 +24,9 @@ export default function NotFoundScreen() {
   );
 }
 
+/**
+ * Specify Styles to use
+ */
 const styles = StyleSheet.create({
   container: {
     flex: 1,

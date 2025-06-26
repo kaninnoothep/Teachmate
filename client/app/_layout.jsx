@@ -1,13 +1,22 @@
+/**
+ * Import Modules
+ */
 import { LogoHeaderTitle } from "@/components/LogoHeaderTitle/LogoHeaderTitle";
 import { AppProvider } from "@/context/AppProvider/AppProvider";
 import { Stack } from "expo-router";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { useTheme } from "react-native-paper";
 
+/**
+ * MainLayout - Defines navigation stack and screen options
+ *
+ * @returns JSX Element with configured screens
+ */
 function MainLayout() {
   const theme = useTheme();
   return (
     <Stack>
+      {/* Login screen */}
       <Stack.Screen
         name="login"
         options={{
@@ -15,6 +24,8 @@ function MainLayout() {
           headerTitleAlign: "center",
         }}
       />
+
+      {/* Signup screen */}
       <Stack.Screen
         name="signup"
         options={{
@@ -25,23 +36,34 @@ function MainLayout() {
           headerTitle: () => <LogoHeaderTitle />,
         }}
       />
+
+      {/* Tab navigator */}
       <Stack.Screen
         name="(tabs)"
         options={{
           headerShown: false,
         }}
       />
+
+      {/* Modal stack */}
       <Stack.Screen
         name="(modals)"
         options={{
           headerShown: false,
         }}
       />
+
+      {/* Fallback screen */}
       <Stack.Screen name="+not-found" />
     </Stack>
   );
 }
 
+/**
+ * RootLayout - App wrapper with providers and gesture support
+ *
+ * @returns JSX Element
+ */
 export default function RootLayout() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
