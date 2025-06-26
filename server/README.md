@@ -1,16 +1,16 @@
 # Teachmate - Server
 
-The server of this project was built with Express working in Node with using Mongoose to manage the MongoDB.
+This is the server-side of the Teachmate project, built with **Node.js** using **Express** and **Mongoose** to manage data in **MongoDB**.
 
-## Folder structure
+## 📁 Folder structure
 
-The following are the folders used to organize this part of the project and what they contain.
+The following folders are used to organize the server:
 
 `package.json` contains essential information about the project, including commands and dependencies
 
 `.env` contains the environment variables
 
-`src` contains the main source code for this part of the project
+`src` contains the main source code for the backend logic of the project
 
 **_Here are subfolders within the `src` folder_**
 
@@ -20,7 +20,7 @@ The following are the folders used to organize this part of the project and what
 
 `middlewares` contains the middleware functions
 
-`models` contains code to define the data structure and interact with the database
+`models` contains code to define the Mongoose schemas and database models
 
 `routes` contains the code that defines the routes for the API and their handlers
 
@@ -28,9 +28,15 @@ The following are the folders used to organize this part of the project and what
 
 `utils` contains helper functions and general purpose modules
 
+## Prerequisites
+
+- [Node.js](https://nodejs.org/)
+- `.env` file in the root of the `server` directory
+- Access granted to the MongoDB Atlas database
+
 ## How To Run
 
-To start the server, make sure you are in the server directory and run these commands in the shell
+To start the server, make sure you are in the `server` directory and run these commands in the shell
 
 ```sh
 npm install
@@ -50,4 +56,6 @@ If this is an error, reach out to the author to grant you access to it.
 
 ## Author
 
-**Kanin Noothep** - [@kaninnoothep](https://github.com/kaninnoothep) - [kaninnoothep@gmail.com](mailto:kaninnoothep@gmail.com)
+**Kanin Noothep**
+GitHub: [@kaninnoothep](https://github.com/kaninnoothep)
+Email: [kaninnoothep@gmail.com](mailto:kaninnoothep@gmail.com)
