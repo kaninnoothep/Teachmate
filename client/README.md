@@ -32,8 +32,6 @@ The following folders are used to organize the project:
 
 `ios` contains the prebuild configuration for iOS platform
 
----
-
 ## Prerequisites
 
 To run the app locally, make sure the following are installed:
@@ -47,8 +45,6 @@ To run the app locally, make sure the following are installed:
   ```
 
 - `.env` file in the root of the `client` directory
-
----
 
 ## How To Run
 
@@ -78,8 +74,6 @@ Example steps to open the app on iOS platform:
 
 - Scan the QR code with the Expo Go app on an iPhone
 
----
-
 ## Learn more
 
 To learn more about developing your project with Expo, look at the following resources:
@@ -87,8 +81,6 @@ To learn more about developing your project with Expo, look at the following res
 - [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
 
 - [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
----
 
 <!-- CONTACT -->
 

@@ -28,8 +28,6 @@ The following folders are used to organize the server:
 
 `utils` contains helper functions and general purpose modules
 
----
-
 ## Prerequisites
 
 To run the server locally, make sure the following are installed:
@@ -37,8 +35,6 @@ To run the server locally, make sure the following are installed:
 - [Node.js](https://nodejs.org/)
 - `.env` file in the root of the `server` directory
 - Access granted to the MongoDB Atlas database
-
----
 
 ## How To Run
 
@@ -57,8 +53,6 @@ npm run start
 The server will not connect to the database if your IP is not granted permission to access the database in MongoDB Atlas.
 
 If this is an error, reach out to the author to grant you access to it.
-
----
 
 <!-- CONTACT -->
 

@@ -95,8 +95,6 @@ Technologies employed to build this application include:
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
----
-
 <!-- GETTING STARTED -->
 
 ## Getting Started
@@ -129,8 +127,6 @@ To install the application, simply follow these steps:
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
----
-
 <!-- USAGE -->
 
 ## Usage
@@ -149,8 +145,6 @@ See `README` file in the `client` and `server` folder for more information of Ho
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
----
-
 <!-- CONTACT -->
 
 ## Author
@@ -160,8 +154,6 @@ GitHub: [@kaninnoothep](https://github.com/kaninnoothep)
 Email: [kaninnoothep@gmail.com](mailto:kaninnoothep@gmail.com)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
-
----
 
 <!-- LICENSE -->
 
