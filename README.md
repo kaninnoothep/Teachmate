@@ -123,7 +123,7 @@ To install the application, simply follow these steps:
    cd client && npm install
    cd ../server && npm install
    ```
-3. Initialize environment variables
+3. Initialize `.env` (environment variables) in both `client` and `server` directory
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
