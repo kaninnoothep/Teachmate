@@ -50,7 +50,7 @@
 
 ## About The Project
 
-This project is a **Tutor-Student Matching platform**. As the education system is rapidly changing, finding a tutor is a crucial and challenging task for students. Traditional tutoring methods, such as word-of-mouth or bulletin boards, still have gaps in tutors' background and experience, resulting in students having an unpleasant experience of finding tutors who meet their needs. Consequently, the students may miss out on learning opportunities and receive an ineffective learning experience. **Teachmate** addresses these problems by providing a comprehensive mobile app solution for connecting tutors and students, streamlining the process of matching based on subjects, expertise, availability, and learning preferences. The goal of Teachmate is to match tutors with students, where students can investigate and verify the identity of tutors for credibility, and book sessions with confident tutors, enhancing the learning experience to be more effective and appropriate for the students' needs.
+This project is a **Tutor-Student Matching platform**. As the education system is rapidly changing, finding a tutor is a crucial and challenging task for students. Traditional tutoring methods, such as word-of-mouth or bulletin boards, still have gaps in tutors' background and experience, resulting in students having an unpleasant experience of finding tutors who meet their needs. Consequently, the students may miss out on learning opportunities and receive an ineffective learning experience. **Teachmate** addresses these problems by providing a comprehensive mobile app solution for connecting tutors and students, streamlining the process of matching based on subjects, expertise, availability, and preferences. The goal of Teachmate is to match tutors with students, where students can investigate and verify the identity of tutors for credibility, and book sessions with confident tutors, enhancing the learning experience to be more effective and appropriate for the students' needs.
 
 The following are key features implemented in **MVP 1** to satisfy this goal, categorized by user role:
 
@@ -64,8 +64,8 @@ The following are key features implemented in **MVP 1** to satisfy this goal, ca
       Tutors can set and update their available dates and time slots. This helps with session scheduling from students, ensuring accurate session booking.
 - [x] **Session Management**
       Tutors can create and manage session details such as subject, description, and estimated duration, allowing students to view their offered sessions.
-- [x] **Review Booking Details**
-      Tutors can see student booking information, including time, subject, and student profile details, helping them prepare more effectively for the session.
+- [x] **Review Bookings**
+      Tutors can see bookings from students and the booking information, including subject, date, time, preferred locations, notes, and student profile details, helping them prepare more effectively for the session.
 
 **Student Features**
 
@@ -134,7 +134,7 @@ To install the application, simply follow these steps:
    ```sh
    git clone https://github.com/kaninnoothep/Teachmate.git
    ```
-2. **Install NPM packages**, open the terminal in the project,  and run the following commands
+2. **Install NPM packages**, open the terminal in the project, and run the following commands
 
    ```sh
    cd client && npm install
