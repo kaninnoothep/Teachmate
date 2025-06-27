@@ -10,7 +10,7 @@ import mongoose from "mongoose";
 const connectDB = async (ATLAS_URI) => {
   try {
     await mongoose.connect(ATLAS_URI);
-    console.log(`MongoDB Connected Succesfully`);
+    console.log(`MongoDB Connected Successfully`);
   } catch (error) {
     console.log("DB connection error: ", error);
     process.exit(1);

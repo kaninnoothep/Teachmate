@@ -40,7 +40,7 @@
         <li><a href="#installation">Installation</a></li>
       </ul>
     </li>
-    <li><a href="#usage">Usage</a></li>
+    <li><a href="#how-to-run">How To Run</a></li>
     <li><a href="#author">Author</a></li>
     <li><a href="#license">License</a></li>
   </ol>
@@ -57,7 +57,7 @@ The following are key features implemented in **MVP 1** to satisfy this goal, ca
 **Tutor Features**
 
 - [x] **Signup & Login**
-      Tutors can create an account and securely log in to access tutor's features.
+      Tutors can create an account and securely log in to access the tutor features.
 - [x] **Profile Setups**
       Tutors can build a detailed profile that includes personal information, education, experience, and preferred location, helping students to access their credibility and expertise.
 - [x] **Availability Management**
@@ -70,7 +70,7 @@ The following are key features implemented in **MVP 1** to satisfy this goal, ca
 **Student Features**
 
 - [x] **Signup & Login**
-      Students can create an account and securely log in to access student's features.
+      Students can create an account and securely log in to access the student features.
 - [x] **Profile Setups**
       Students can complete their profiles with personal details and education level to help tutors tailor sessions effectively.
 - [x] **Search and Filter Tutors**
@@ -78,11 +78,11 @@ The following are key features implemented in **MVP 1** to satisfy this goal, ca
 - [x] **Booking with Tutors**
       Students can view tutor profiles, select a preferred session, date, time slots, and location. After booking, they can review all upcoming sessions in one place. Students can also cancel the booking.
 
-This project was developed using the **MERN stack** (MongoDB, Express.js, React Native, Node.js). MongoDB Atlas serves as the database platform, Express and Node.js support the backend server, and the mobile interface was built using React Native, with the Expo framework. Together, these technologies support a scalable, maintainable, and user-friendly mobile application for modern education needs.
-
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ## Built With
+
+This project was developed using the **MERN stack** (MongoDB, Express.js, React Native, Node.js). MongoDB Atlas serves as the database platform, Express and Node.js support the backend server, and the mobile interface was built using React Native, with the Expo framework. Together, these technologies support a scalable, maintainable, and user-friendly mobile application for modern education needs.
 
 Technologies employed to build this application include:
 
@@ -92,6 +92,13 @@ Technologies employed to build this application include:
 - ![NodeJS](https://img.shields.io/badge/node.js-6DA55F?style=for-the-badge&logo=node.js&logoColor=white)
 - ![MongoDB](https://img.shields.io/badge/MongoDB-%234ea94b.svg?style=for-the-badge&logo=mongodb&logoColor=white)
 - ![JWT](https://img.shields.io/badge/JWT-black?style=for-the-badge&logo=JSON%20web%20tokens)
+
+Supporting libraries and services:
+
+- TanStack Query (data fetching and caching)
+- Axios (HTTP client)
+- React Native Paper (UI components)
+- Cloudinary (image handling)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -106,30 +113,41 @@ This project was built to run locally. To get a local copy up and running, follo
 To ensure you have no difficulty running this application, be sure to have the following installed:
 
 - npm (latest version)
+
   ```sh
   npm install npm@latest -g
+  ```
+
+- [Node.js](https://nodejs.org/en)
+
+- [Expo CLI](https://docs.expo.dev/more/expo-cli/)
+
+  ```sh
+  npm install expo-cli --global
   ```
 
 ### Installation
 
 To install the application, simply follow these steps:
 
-1. Clone the repo
+1. **Clone the repo**
    ```sh
    git clone https://github.com/kaninnoothep/Teachmate.git
    ```
-2. Install NPM packages
+2. **Install NPM packages**, open the terminal in the project,  and run the following commands
+
    ```sh
    cd client && npm install
    cd ../server && npm install
    ```
-3. Initialize `.env` (environment variables) in both `client` and `server` directory
+
+3. **Initialize environment variables**, be sure to have `.env` in both the `client` and `server` directories
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- USAGE -->
 
-## Usage
+## How To Run
 
 To run the application, you will need to open 2 terminal windows, one in the `client` directory and the other in the `server` directory.
 
@@ -141,7 +159,7 @@ npm run start
 
 #### Note
 
-See `README` file in the `client` and `server` directory for more information of How To Run the application.
+See `README` file in the `client` and `server` directory for more information of **How To Run** the application.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 

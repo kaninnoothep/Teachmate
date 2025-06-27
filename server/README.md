@@ -58,9 +58,9 @@ npm run start
 
 ### Note
 
-The server will not connect to the database if your IP is not granted permission to access the database in MongoDB Atlas.
+The server will not connect to the database if your IP address is not granted permission to access the database in MongoDB Atlas.
 
-If this is an error, reach out to the author to grant you access to it.
+If this error occurs, reach out to the author to grant you access to it.
 
 </br>
 

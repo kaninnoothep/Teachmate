@@ -74,7 +74,7 @@ In the output, you'll find options to open the app in:
 
 - [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
 
-Example steps to open the app on iOS platform:
+Example steps to open the app on the iOS platform:
 
 - Press `i` to open in the iOS Simulator (requires Xcode), or
 
