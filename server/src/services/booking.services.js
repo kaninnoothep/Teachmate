@@ -151,21 +151,25 @@ async function getMyBookings(user, status) {
     query.student = user._id;
   }
 
-  const now = new Date();
-
-  // Define today's date in UTC, starting at midnight
-  const todayUTC = new Date();
-  todayUTC.setUTCHours(0, 0, 0, 0); // Today at UTC midnight
+  // Get today's date in local timezone, then create UTC midnight boundaries
+  const todayLocal = new Date();
+  const todayUTC = new Date(
+    Date.UTC(
+      todayLocal.getFullYear(),
+      todayLocal.getMonth(),
+      todayLocal.getDate()
+    )
+  );
 
   // Define tomorrow's date in UTC
   const tomorrowUTC = new Date(todayUTC);
-  tomorrowUTC.setUTCDate(tomorrowUTC.getUTCDate() + 1); // Tomorrow at UTC midnight
+  tomorrowUTC.setUTCDate(tomorrowUTC.getUTCDate() + 1);
 
-  // Get current time in HH:MM format (local time for comparison with stored times)
+  // Current time in HH:MM format
   const currentTime =
-    now.getHours().toString().padStart(2, "0") +
+    todayLocal.getHours().toString().padStart(2, "0") +
     ":" +
-    now.getMinutes().toString().padStart(2, "0");
+    todayLocal.getMinutes().toString().padStart(2, "0");
 
   // Filter based on booking status
   if (status === "active") {
