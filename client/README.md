@@ -97,5 +97,7 @@ To learn more about developing your project with Expo, look at the following res
 ## Author
 
 **Kanin Noothep**
+
 GitHub: [@kaninnoothep](https://github.com/kaninnoothep)
+
 Email: [kaninnoothep@gmail.com](mailto:kaninnoothep@gmail.com)

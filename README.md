@@ -168,7 +168,9 @@ See `README` file in the `client` and `server` directory for more information of
 ## Author
 
 **Kanin Noothep**
+
 GitHub: [@kaninnoothep](https://github.com/kaninnoothep)
+
 Email: [kaninnoothep@gmail.com](mailto:kaninnoothep@gmail.com)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
