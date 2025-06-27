@@ -91,6 +91,7 @@ export const ExplorePage = () => {
     let { status } = await Location.requestForegroundPermissionsAsync(); // pop up box asking for permission to use location
 
     if (status !== "granted") {
+      setLocationLoading(false);
       Alert.alert(
         "Permission denied",
         "Please enable your location to use the location services",
