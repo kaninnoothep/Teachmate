@@ -3,9 +3,7 @@
   "compilerOptions": {
     "strict": true,
     "paths": {
-      "@/*": [
-        "./*"
-      ]
+      "@/*": ["./*"]
     }
   },
   "include": [
@@ -14,6 +12,7 @@
     ".expo/types/**/*.ts",
     "expo-env.d.ts",
     "**/*.js",
-    "**/*.jsx"
-, "eslint.config.mjs"  ]
+    "**/*.jsx",
+    "eslint.config.mjs"
+  ]
 }
