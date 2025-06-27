@@ -69,5 +69,7 @@ If this error occurs, reach out to the author to grant you access to it.
 ## Author
 
 **Kanin Noothep**
+
 GitHub: [@kaninnoothep](https://github.com/kaninnoothep)
+
 Email: [kaninnoothep@gmail.com](mailto:kaninnoothep@gmail.com)
