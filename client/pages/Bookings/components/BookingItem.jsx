@@ -1,6 +1,8 @@
 /**
  * Import Modules
  */
+import { Button } from "@/components/Button/Button";
+import { Chip } from "@/components/Chip/Chip";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import { useState } from "react";
@@ -15,7 +17,14 @@ dayjs.extend(utc); // Enable UTC support in dayjs
  * @param {object} props
  * @returns JSX Element
  */
-export const BookingItem = ({ subject, description, user, date, time }) => {
+export const BookingItem = ({
+  status = "pending",
+  subject,
+  description,
+  user,
+  date,
+  time,
+}) => {
   const theme = useTheme();
   const styles = useStyles(theme);
   const [loadImageError, setLoadImageError] = useState(false);
@@ -23,6 +32,13 @@ export const BookingItem = ({ subject, description, user, date, time }) => {
   return (
     <View style={styles.container}>
       <View style={[styles.wrapper, styles.leftWrapper]}>
+        <Chip
+          textVariant="bodySmall"
+          value={status}
+          containerStyle={styles.chip}
+          textStyle={styles.chipText}
+        />
+
         <Text variant="titleMedium" numberOfLines={1} style={styles.title}>
           {subject}
         </Text>
@@ -53,6 +69,12 @@ export const BookingItem = ({ subject, description, user, date, time }) => {
             {user.firstName} {user.lastName}
           </Text>
         </View>
+
+        {status === "finished" && (
+          <Button variant="secondary" onPress={() => {}}>
+            Write a review
+          </Button>
+        )}
       </View>
 
       <View style={[styles.wrapper, styles.rightWrapper]}>
@@ -118,5 +140,12 @@ const useStyles = (theme) =>
       flexDirection: "row",
       alignItems: "center",
       gap: 8,
+    },
+    chip: {
+      paddingHorizontal: 8,
+      paddingVertical: 4,
+    },
+    chipText: {
+      textTransform: "capitalize",
     },
   });
