@@ -45,15 +45,17 @@ export const PickerButton = ({
         {...props}
       >
         <View style={styles.content}>
-          <Text
-            style={[
-              styles.label,
-              hasValue && styles.labelShrink,
-              disabled && styles.disabled,
-            ]}
-          >
-            {label}
-          </Text>
+          {label && (
+            <Text
+              style={[
+                styles.label,
+                hasValue && styles.labelShrink,
+                disabled && styles.disabled,
+              ]}
+            >
+              {label}
+            </Text>
+          )}
           {hasValue && <Text style={styles.valueText}>{value}</Text>}
         </View>
 

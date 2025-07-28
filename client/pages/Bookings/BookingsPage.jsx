@@ -4,18 +4,21 @@
 import { useRouter } from "expo-router";
 import {
   Alert,
-  FlatList,
   Pressable,
   RefreshControl,
   TouchableOpacity,
 } from "react-native";
-import { Text, useTheme } from "react-native-paper";
+import { Portal, Text, useTheme } from "react-native-paper";
 import { useStyles } from "./BookingsPage.styles";
 import { EmptyList } from "@/components/EmptyList/EmptyList";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useBookingsQuery } from "@/services/api/bookings/useBookingsQuery";
 import { useUser } from "@/context/UserProvider/UserProvider";
 import { BookingItem } from "./components/BookingItem";
+import { StickyFlatList } from "@/components/StickyFlatList/StickyFlatList";
+import { PickerButton } from "@/components/Picker/PickerButton";
+import { STATUS, StatusPickerSheet } from "./components/StatusPickerSheet";
+
 
 /**
  * BookingsPage - Displays a list of active bookings for the current user
@@ -27,7 +30,9 @@ export const BookingsPage = () => {
   const router = useRouter();
   const theme = useTheme();
   const styles = useStyles();
+  const statusSheetRef = useRef(null);
   const [isManualRefreshing, setIsManualRefreshing] = useState(false);
+  const [status, setStatus] = useState(STATUS[0]);
   const { bookings, isFetching, refetch } = useBookingsQuery("active");
 
   // Show alert if user hasn't completed their profile
@@ -57,6 +62,11 @@ export const BookingsPage = () => {
     }
   };
 
+  // Handle set status
+  const handleStatusSelect = (value) => {
+    setStatus(value);
+  };
+
   // Renders greeting and title
   const renderHeaderComponent = () => (
     <Pressable style={styles.listHeaderContainer}>
@@ -75,53 +85,78 @@ export const BookingsPage = () => {
       </Text>
     </Pressable>
   );
+  const renderStickyComponent = () => (
+    <Pressable
+      style={{
+        width: "100%",
+        padding: 16,
+        backgroundColor: theme.colors.background,
+      }}
+    >
+      <PickerButton
+        value={status.label}
+        onPress={() => statusSheetRef.current?.open()}
+        hideHelperTextSpace
+      />
+    </Pressable>
+  );
   const renderFooterComponent = () => <Pressable style={{ height: 50 }} />;
   const renderSeparatorComponent = () => <Pressable style={{ height: 10 }} />;
 
   return (
-    <Pressable style={styles.container}>
-      <FlatList
-        ListHeaderComponent={renderHeaderComponent}
-        ListFooterComponent={renderFooterComponent}
-        ItemSeparatorComponent={renderSeparatorComponent}
-        data={bookings}
-        showsVerticalScrollIndicator={false}
-        refreshControl={
-          <RefreshControl
-            refreshing={isManualRefreshing}
-            onRefresh={handleRefresh}
-          />
-        }
-        renderItem={({ item }) => (
-          <TouchableOpacity
-            onPress={() =>
-              router.push({
-                pathname: `/bookings/${item._id}`,
-                params: { booking: JSON.stringify(item) },
-              })
-            }
-          >
-            <BookingItem
-              subject={item.session.subject}
-              description={item.note}
-              user={user.role === "tutor" ? item.student : item.tutor}
-              date={item.date}
-              time={item.startTime}
+    <>
+      <Pressable style={styles.container}>
+        <StickyFlatList
+          customContainerStyle={{
+            flex: 1,
+          }}
+          ListHeaderComponent={renderHeaderComponent}
+          StickyElementComponent={renderStickyComponent}
+          ListFooterComponent={renderFooterComponent}
+          ItemSeparatorComponent={renderSeparatorComponent}
+          data={bookings}
+          showsVerticalScrollIndicator={false}
+          refreshControl={
+            <RefreshControl
+              refreshing={isManualRefreshing}
+              onRefresh={handleRefresh}
             />
-          </TouchableOpacity>
-        )}
-        keyExtractor={(item) => item._id}
-        removeClippedSubviews
-        contentContainerStyle={styles.listContentContainer}
-        ListEmptyComponent={
-          <EmptyList
-            iconName="notebook"
-            message="No bookings"
-            containerStyle={{ marginTop: 100 }}
-            isLoading={isFetching}
-          />
-        }
-      />
-    </Pressable>
+          }
+          renderItem={({ item }) => (
+            <TouchableOpacity
+              onPress={() =>
+                router.push({
+                  pathname: `/bookings/${item._id}`,
+                  params: { booking: JSON.stringify(item) },
+                })
+              }
+            >
+              <BookingItem
+                subject={item.session.subject}
+                description={item.note}
+                user={user.role === "tutor" ? item.student : item.tutor}
+                date={item.date}
+                time={item.startTime}
+              />
+            </TouchableOpacity>
+          )}
+          keyExtractor={(item) => item._id}
+          removeClippedSubviews
+          contentContainerStyle={styles.listContentContainer}
+          ListEmptyComponent={
+            <EmptyList
+              iconName="notebook"
+              message="No bookings"
+              containerStyle={{ marginTop: 100 }}
+              isLoading={isFetching}
+            />
+          }
+        />
+      </Pressable>
+
+      <Portal>
+        <StatusPickerSheet ref={statusSheetRef} onSelect={handleStatusSelect} />
+      </Portal>
+    </>
   );
 };

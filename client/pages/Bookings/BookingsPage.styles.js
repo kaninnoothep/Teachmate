@@ -16,7 +16,7 @@ export const useStyles = () =>
     greetingText: { fontWeight: "700" },
     listHeaderContainer: {
       paddingTop: 26,
-      paddingBottom: 20,
+      paddingBottom: 6,
       gap: 18,
     },
     listContentContainer: {

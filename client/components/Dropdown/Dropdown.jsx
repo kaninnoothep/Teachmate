@@ -14,7 +14,7 @@ import { Text, useTheme } from "react-native-paper";
  * @returns JSX Element
  */
 export const Dropdown = ({
-  label = "Select",
+  label = "",
   placeholder = "",
   data,
   search = false,
@@ -32,6 +32,8 @@ export const Dropdown = ({
 
   // Show label only if value exists or field is focused
   const renderLabel = () => {
+    if (!label) return null;
+
     if (value || isFocus) {
       return <Text style={styles.label}>{label}</Text>;
     }
