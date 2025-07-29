@@ -41,11 +41,27 @@ const bookingSchema = mongoose.Schema(
       required: false,
     },
     note: { type: String },
+    status: {
+      type: String,
+      enum: [
+        "pending",
+        "confirmed",
+        "rejected",
+        "cancelled",
+        "finished",
+        "expired",
+      ],
+      default: "pending",
+    },
+    cancelNote: { type: String },
+    confirmedAt: { type: Date },
+    finishedAt: { type: Date },
   },
   {
     timestamps: true,
   }
 );
+
 /**
  * Export booking model
  */

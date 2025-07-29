@@ -8,6 +8,7 @@ import connectDB from "./configs/database.js";
 import userRouter from "./routes/user.route.js";
 import bookingRouter from "./routes/booking.route.js";
 import connectCloudinary from "./configs/cloudinary.js";
+import runBookingStatusCron from "./jobs/bookingStatusUpdater.js";
 
 /**
  * Load environment variables from .env file
@@ -25,6 +26,8 @@ const app = express();
  */
 connectDB(process.env.ATLAS_URI);
 connectCloudinary();
+
+runBookingStatusCron();
 
 /**
  * Middleware Setup

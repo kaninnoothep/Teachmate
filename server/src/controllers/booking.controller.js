@@ -20,6 +20,31 @@ async function createBooking(req, res) {
   }
 }
 
+async function confirmBooking(req, res) {
+  try {
+    const response = await bookingServices.confirmBooking(req.params.bookingId);
+    res.status(response.statusCode).json(response);
+  } catch {
+    res
+      .status(500)
+      .json({ message: "Unable to confirm booking", status: "failure" });
+  }
+}
+
+async function rejectBooking(req, res) {
+  try {
+    const response = await bookingServices.rejectBooking(
+      req.params.bookingId,
+      req.body.rejectNote
+    );
+    res.status(response.statusCode).json(response);
+  } catch {
+    res
+      .status(500)
+      .json({ message: "Unable to reject booking", status: "failure" });
+  }
+}
+
 /**
  * cancelBooking - Cancel an existing booking
  *
@@ -29,8 +54,8 @@ async function createBooking(req, res) {
 async function cancelBooking(req, res) {
   try {
     const response = await bookingServices.cancelBooking(
-      req.user,
-      req.params.bookingId
+      req.params.bookingId,
+      req.body.cancelNote
     );
     res.status(response.statusCode).json(response);
   } catch {
@@ -65,6 +90,8 @@ async function getMyBookings(req, res) {
  */
 export default {
   createBooking,
+  confirmBooking,
+  rejectBooking,
   cancelBooking,
   getMyBookings,
 };

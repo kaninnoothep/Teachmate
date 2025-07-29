@@ -91,21 +91,36 @@ async function createBooking(user, data) {
   );
 }
 
-/**
- * cancelBooking - Cancel an existing booking
- *
- * @param {Object} user - Logged-in student user
- * @param {string} bookingId - ID of the booking to cancel
- * @returns {Object} Response indicating success or failure
- */
-async function cancelBooking(user, bookingId) {
-  // Find booking by ID
+// Confirm booking
+export async function confirmBooking(bookingId) {
   const booking = await Booking.findById(bookingId);
   if (!booking) return responses.buildFailureResponse("Booking not found", 404);
+  if (booking.status !== "pending")
+    return responses.buildFailureResponse(
+      "Only pending bookings can be confirmed",
+      403
+    );
 
-  // Only the student who booked can cancel it
-  if (booking.student.toString() !== user.id)
-    return responses.buildFailureResponse("Not authorized", 403);
+  booking.status = "confirmed";
+  booking.confirmedAt = new Date();
+  await booking.save();
+
+  return responses.buildSuccessResponse(
+    "Booking confirmed successfully",
+    200,
+    booking
+  );
+}
+
+// Reject booking
+export async function rejectBooking(bookingId, rejectNote) {
+  const booking = await Booking.findById(bookingId);
+  if (!booking) return responses.buildFailureResponse("Booking not found", 404);
+  if (booking.status !== "pending")
+    return responses.buildFailureResponse(
+      "Only pending bookings can be rejected",
+      403
+    );
 
   // Find tutor to update their availability
   const tutor = await User.findById(booking.tutor);
@@ -124,8 +139,50 @@ async function cancelBooking(user, bookingId) {
     await tutor.save();
   }
 
-  // Delete booking from database
-  await booking.deleteOne();
+  booking.status = "rejected";
+  if (rejectNote) booking.cancelNote = rejectNote;
+  await booking.save();
+
+  return responses.buildSuccessResponse(
+    "Booking reject successfully",
+    200,
+    booking
+  );
+}
+
+/**
+ * cancelBooking - Cancel an existing booking
+ *
+ * @param {string} bookingId - ID of the booking to cancel
+ * @returns {Object} Response indicating success or failure
+ */
+async function cancelBooking(bookingId, cancelNote) {
+  // Find booking by ID
+  const booking = await Booking.findById(bookingId);
+  if (!booking) return responses.buildFailureResponse("Booking not found", 404);
+  if (["cancelled", "rejected", "finished"].includes(booking.status))
+    return responses.buildFailureResponse("Cannot cancel this booking", 403);
+
+  // Find tutor to update their availability
+  const tutor = await User.findById(booking.tutor);
+  const availability = tutor.availability.find((av) =>
+    av.date.toISOString().startsWith(booking.date.toISOString().split("T")[0])
+  );
+
+  if (availability) {
+    const { startTime, endTime } = booking;
+    // Unbook the time slots in the availability
+    availability.slots.forEach((slot) => {
+      if (slot.startTime >= startTime && slot.endTime <= endTime) {
+        slot.isBooked = false;
+      }
+    });
+    await tutor.save();
+  }
+
+  booking.status = "cancelled";
+  if (cancelNote) booking.cancelNote = cancelNote;
+  await booking.save();
 
   return responses.buildSuccessResponse(
     "Booking cancelled successfully",
@@ -213,6 +270,8 @@ async function getMyBookings(user, status) {
  */
 export default {
   createBooking,
+  confirmBooking,
+  rejectBooking,
   cancelBooking,
   getMyBookings,
 };
