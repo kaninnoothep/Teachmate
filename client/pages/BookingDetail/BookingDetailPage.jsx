@@ -21,6 +21,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import Toast from "react-native-toast-message";
 import { useCancelBookingMutation } from "@/services/api/bookings/useCancelBookingMutation";
 import { Button } from "@/components/Button/Button";
+import { getBookingStatusColor } from "@/utils/getBookingStatusColor";
 
 dayjs.extend(utc); // Enable UTC support in dayjs
 
@@ -70,6 +71,7 @@ export const BookingDetailPage = () => {
 
   // Destructure fields from booking object
   const {
+    status,
     session,
     preferredLocation,
     date,
@@ -79,6 +81,11 @@ export const BookingDetailPage = () => {
     tutor,
     note,
   } = booking;
+
+  const { backgroundColor, borderColor, textColor } = getBookingStatusColor(
+    theme,
+    status
+  );
 
   // Format date and time display
   const formattedDate = dayjs.utc(date).format("MMMM D, YYYY");
@@ -133,13 +140,23 @@ export const BookingDetailPage = () => {
             {session.subject}
           </Text>
 
-          {/* Preferred Location Chip */}
-          {preferredLocation && (
+          <View style={styles.infoRow}>
+            {/* Status Chip */}
             <Chip
-              icon={getPreferredLocationDisplay().icon}
-              value={getPreferredLocationDisplay().label}
+              value={status}
+              containerStyle={[styles.chip, { backgroundColor, borderColor }]}
+              textStyle={[styles.chipText, { color: textColor }]}
             />
-          )}
+
+            {/* Preferred Location Chip */}
+            {preferredLocation && (
+              <Chip
+                icon={getPreferredLocationDisplay().icon}
+                value={getPreferredLocationDisplay().label}
+                containerStyle={styles.chip}
+              />
+            )}
+          </View>
 
           {/* Date & Time Info */}
           <View style={styles.infoRow}>
@@ -239,18 +256,7 @@ const styles = StyleSheet.create({
   },
   infoRow: {
     flexDirection: "row",
-    gap: 12,
-  },
-
-  label: {
-    fontSize: 14,
-    color: "#888",
-    marginBottom: 4,
-  },
-  card: {
-    backgroundColor: "#f4f4f4",
-    padding: 12,
-    borderRadius: 8,
+    gap: 10,
   },
   userRow: {
     flexDirection: "row",
@@ -262,10 +268,11 @@ const styles = StyleSheet.create({
     fontSize: 18,
     flex: 1,
   },
-  noteText: {
-    marginTop: 8,
-    fontSize: 14,
-    color: "#333",
-    lineHeight: 20,
+  chip: {
+    height: 46,
+    alignSelf: "center",
+  },
+  chipText: {
+    textTransform: "capitalize",
   },
 });
