@@ -3,6 +3,7 @@
  */
 import { Button } from "@/components/Button/Button";
 import { Chip } from "@/components/Chip/Chip";
+import { getBookingStatusColor } from "@/utils/getBookingStatusColor";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import { useState } from "react";
@@ -28,6 +29,10 @@ export const BookingItem = ({
   const theme = useTheme();
   const styles = useStyles(theme);
   const [loadImageError, setLoadImageError] = useState(false);
+  const { backgroundColor, borderColor, textColor } = getBookingStatusColor(
+    theme,
+    status
+  );
 
   return (
     <View style={styles.container}>
@@ -35,8 +40,8 @@ export const BookingItem = ({
         <Chip
           textVariant="bodySmall"
           value={status}
-          containerStyle={styles.chip}
-          textStyle={styles.chipText}
+          containerStyle={[styles.chip, { backgroundColor, borderColor }]}
+          textStyle={[styles.chipText, { color: textColor }]}
         />
 
         <Text variant="titleMedium" numberOfLines={1} style={styles.title}>

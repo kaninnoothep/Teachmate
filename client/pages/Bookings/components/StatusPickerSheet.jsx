@@ -1,10 +1,7 @@
 /**
  * Import Modules
  */
-import BottomSheet, {
-  BottomSheetBackdrop,
-  BottomSheetScrollView,
-} from "@gorhom/bottom-sheet";
+import BottomSheet, { BottomSheetBackdrop } from "@gorhom/bottom-sheet";
 import { Picker } from "@react-native-picker/picker";
 import {
   forwardRef,
@@ -21,8 +18,10 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 export const STATUS = [
   { label: "Pending", value: "pending" },
   { label: "Confirmed", value: "confirmed" },
-  { label: "Rejected / Cancelled", value: "cancelled" },
+  { label: "Cancelled", value: "cancelled" },
+  { label: "Rejected", value: "rejected" },
   { label: "Finished", value: "finished" },
+  { label: "Expired", value: "expired" },
 ];
 
 /**

@@ -6,8 +6,10 @@ import { apiRequest } from "@/services/helpers/apiRequest";
 import { useApiSend } from "@/services/hooks/useApiSend";
 
 // Cancel booking Request
-const cancelBookingRequest = (bookingId) =>
-  apiRequest(`${BOOKING_API_KEY}/${bookingId}`, "DELETE");
+const cancelBookingRequest = (payload) => {
+  const { bookingId, ...data } = payload;
+  apiRequest(`${BOOKING_API_KEY}/${bookingId}/cancel`, "POST", data);
+};
 
 /**
  * useCancelBookingMutation - Custom hook to handle Cancel Booking mutation

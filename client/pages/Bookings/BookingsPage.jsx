@@ -19,7 +19,6 @@ import { StickyFlatList } from "@/components/StickyFlatList/StickyFlatList";
 import { PickerButton } from "@/components/Picker/PickerButton";
 import { STATUS, StatusPickerSheet } from "./components/StatusPickerSheet";
 
-
 /**
  * BookingsPage - Displays a list of active bookings for the current user
  *
@@ -33,7 +32,7 @@ export const BookingsPage = () => {
   const statusSheetRef = useRef(null);
   const [isManualRefreshing, setIsManualRefreshing] = useState(false);
   const [status, setStatus] = useState(STATUS[0]);
-  const { bookings, isFetching, refetch } = useBookingsQuery("active");
+  const { bookings, isFetching, refetch } = useBookingsQuery(status.value);
 
   // Show alert if user hasn't completed their profile
   useEffect(() => {
@@ -132,6 +131,7 @@ export const BookingsPage = () => {
               }
             >
               <BookingItem
+                status={item.status}
                 subject={item.session.subject}
                 description={item.note}
                 user={user.role === "tutor" ? item.student : item.tutor}
