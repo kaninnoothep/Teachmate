@@ -75,7 +75,7 @@ async function getMyBookings(req, res) {
   try {
     const response = await bookingServices.getMyBookings(
       req.user,
-      req.query.status // "active" | "inactive" | undefined
+      req.query.status
     );
     res.status(response.statusCode).json(response);
   } catch (error) {

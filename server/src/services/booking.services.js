@@ -195,7 +195,7 @@ async function cancelBooking(bookingId, cancelNote) {
  * getMyBookings - Get a user's bookings (tutor or student), filtered by status
  *
  * @param {Object} user - Logged-in user
- * @param {string} status - 'active' or 'inactive' bookings
+ * @param {string} status - Booking status
  * @returns {Object} List of bookings
  */
 async function getMyBookings(user, status) {
@@ -208,47 +208,18 @@ async function getMyBookings(user, status) {
     query.student = user._id;
   }
 
-  // Get today's date in local timezone, then create UTC midnight boundaries
-  const todayLocal = new Date();
-  const todayUTC = new Date(
-    Date.UTC(
-      todayLocal.getFullYear(),
-      todayLocal.getMonth(),
-      todayLocal.getDate()
-    )
-  );
-
-  // Define tomorrow's date in UTC
-  const tomorrowUTC = new Date(todayUTC);
-  tomorrowUTC.setUTCDate(tomorrowUTC.getUTCDate() + 1);
-
-  // Current time in HH:MM format
-  const currentTime =
-    todayLocal.getHours().toString().padStart(2, "0") +
-    ":" +
-    todayLocal.getMinutes().toString().padStart(2, "0");
-
-  // Filter based on booking status
-  if (status === "active") {
-    query.$or = [
-      // Bookings after today
-      { date: { $gte: tomorrowUTC } },
-      // Bookings today that haven't ended yet
-      {
-        date: { $gte: todayUTC, $lt: tomorrowUTC },
-        endTime: { $gt: currentTime },
-      },
-    ];
-  } else if (status === "inactive") {
-    query.$or = [
-      // Bookings before today
-      { date: { $lt: todayUTC } },
-      // Bookings today that already ended
-      {
-        date: { $gte: todayUTC, $lt: tomorrowUTC },
-        endTime: { $lte: currentTime },
-      },
-    ];
+  // Filter by status
+  if (
+    [
+      "pending",
+      "confirmed",
+      "rejected",
+      "cancelled",
+      "finished",
+      "expired",
+    ].includes(status)
+  ) {
+    query.status = status;
   }
 
   // Fetch bookings and populate related fields
