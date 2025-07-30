@@ -223,13 +223,20 @@ async function getMyBookings(user, status) {
   ) {
     query.status = status;
   }
+  let sortOption = { date: 1, startTime: 1 }; // default: upcoming
+
+  if (["rejected", "cancelled"].includes(status)) {
+    sortOption = { updatedAt: -1 };
+  } else if (["expired", "finished"].includes(status)) {
+    sortOption = { date: -1, startTime: -1 };
+  }
 
   // Fetch bookings and populate related fields
   const bookings = await Booking.find(query)
     .populate("student", "-password")
     .populate("tutor", "-password")
     .populate("session")
-    .sort({ date: 1, startTime: 1 });
+    .sort(sortOption);
 
   return responses.buildSuccessResponse(
     "Bookings fetched successfully",
