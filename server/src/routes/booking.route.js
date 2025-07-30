@@ -24,20 +24,24 @@ router.get(
   bookingControllers.getMyBookings
 );
 
+// Confirm booking by ID
+// POST request to /:bookingId/confirm
 router.post(
   "/:bookingId/confirm",
   authMiddleware.tutorAuthenticate,
   bookingControllers.confirmBooking
 );
 
+// Reject booking by ID
+// POST request to /:bookingId/reject
 router.post(
   "/:bookingId/reject",
   authMiddleware.tutorAuthenticate,
   bookingControllers.rejectBooking
 );
 
-// Cancel booking by ID (students only)
-// DELETE request to /:bookingId
+// Cancel booking by ID
+// POST request to /:bookingId/cancel
 router.post(
   "/:bookingId/cancel",
   authMiddleware.authenticate,
