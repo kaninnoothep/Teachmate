@@ -1,6 +1,7 @@
 /**
  * Import Modules
  */
+import { Button } from "@/components/Button/Button";
 import BottomSheet, { BottomSheetBackdrop } from "@gorhom/bottom-sheet";
 import { Picker } from "@react-native-picker/picker";
 import {
@@ -18,8 +19,8 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 export const STATUS = [
   { label: "Pending", value: "pending" },
   { label: "Confirmed", value: "confirmed" },
-  { label: "Cancelled", value: "cancelled" },
   { label: "Rejected", value: "rejected" },
+  { label: "Cancelled", value: "cancelled" },
   { label: "Finished", value: "finished" },
   { label: "Expired", value: "expired" },
 ];
@@ -41,7 +42,7 @@ export const StatusPickerSheet = forwardRef(
     const insets = useSafeAreaInsets();
 
     // Define snap points for BottomSheet
-    const snapPoints = useMemo(() => ["38%"], []);
+    const snapPoints = useMemo(() => ["44%"], []);
 
     // Expose methods to open and close the BottomSheet
     useImperativeHandle(ref, () => ({
@@ -87,11 +88,9 @@ export const StatusPickerSheet = forwardRef(
         enableDynamicSizing={false}
         backdropComponent={renderBackdrop}
         backgroundStyle={{ backgroundColor: theme.colors.background }}
-        handleIndicatorStyle={{
-          backgroundColor: theme.colors.outlineVariant,
-        }}
         containerStyle={{ marginTop: insets.top }}
         onAnimate={() => Keyboard.dismiss()}
+        handleComponent={null}
       >
         <View style={styles.container}>
           <Text style={styles.title}>Status</Text>
@@ -106,6 +105,13 @@ export const StatusPickerSheet = forwardRef(
               <Picker.Item key={value} label={label} value={value} />
             ))}
           </Picker>
+
+          <Button
+            onPress={() => sheetRef.current?.close()}
+            style={styles.button}
+          >
+            Done
+          </Button>
         </View>
       </BottomSheet>
     );
@@ -131,7 +137,8 @@ const useStyles = (theme) =>
       fontSize: 18,
       fontWeight: "600",
       textAlign: "center",
-      marginVertical: 12,
+      marginTop: 20,
+      marginBottom: 12,
     },
     picker: {
       height: 240,
