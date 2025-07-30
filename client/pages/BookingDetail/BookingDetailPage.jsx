@@ -4,7 +4,6 @@
 import { useRouter, useLocalSearchParams } from "expo-router";
 import { useEffect, useMemo, useState } from "react";
 import {
-  Alert,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -18,10 +17,9 @@ import { Chip } from "@/components/Chip/Chip";
 import { InfoBox } from "@/components/InfoBox/InfoBox";
 import { useUser } from "@/context/UserProvider/UserProvider";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import Toast from "react-native-toast-message";
-import { useCancelBookingMutation } from "@/services/api/bookings/useCancelBookingMutation";
 import { Button } from "@/components/Button/Button";
 import { getBookingStatusColor } from "@/utils/getBookingStatusColor";
+import { CancellationDialog } from "./components/CancellationDialog";
 
 dayjs.extend(utc); // Enable UTC support in dayjs
 
@@ -35,18 +33,8 @@ export const BookingDetailPage = () => {
   const theme = useTheme();
   const router = useRouter();
   const [loadImageError, setLoadImageError] = useState(false);
-  const { bookingId, booking: bookingJSON } = useLocalSearchParams(); // Get booking data from route parameters
-
-  // Hook to cancel booking
-  const { mutateAsync: cancelBooking } = useCancelBookingMutation({
-    onSuccess: (response) => {
-      Toast.show({ type: "success", text1: response.message });
-      router.back();
-    },
-    onError: (error) => {
-      Toast.show({ type: "error", text1: error.message });
-    },
-  });
+  const [showCancellationDialog, setShowCancellationDialog] = useState(false);
+  const { booking: bookingJSON } = useLocalSearchParams(); // Get booking data from route parameters
 
   // Parse booking JSON string to object
   const booking = useMemo(() => {
@@ -139,21 +127,9 @@ export const BookingDetailPage = () => {
     [user, booking]
   );
 
-  // Confirm and cancel booking
-  const handleDelete = () => {
-    Alert.alert("Are you sure you want to cancel this booking?", "", [
-      { text: "Later", style: "cancel" },
-      {
-        text: "Yes, cancel booking",
-        onPress: () => cancelBooking(bookingId),
-        style: "destructive",
-      },
-    ]);
-  };
-
   const renderActions = () => {
     const sessionDateTime = dayjs(`${date.split("T")[0]}T${startTime}`).utc();
-    const canCancel = sessionDateTime.subtract(5, "hour").isAfter(dayjs.utc());
+    const canCancel = sessionDateTime.subtract(1, "hour").isAfter(dayjs.utc());
 
     if (
       (status === "pending" && user.role === "student" && canCancel) ||
@@ -162,7 +138,7 @@ export const BookingDetailPage = () => {
       return (
         <View style={{ marginTop: 20, gap: 6 }}>
           <Button
-            onPress={handleDelete}
+            onPress={() => setShowCancellationDialog(true)}
             variant="red-outlined"
             icon={({ color }) => (
               <MaterialCommunityIcons
@@ -198,7 +174,7 @@ export const BookingDetailPage = () => {
             Confirm
           </Button>
           <Button
-            onPress={() => {}}
+            onPress={() => setShowCancellationDialog(true)}
             variant="red-outlined"
             icon={({ color }) => (
               <MaterialCommunityIcons name="close" size={24} color={color} />
@@ -213,99 +189,107 @@ export const BookingDetailPage = () => {
   };
 
   return (
-    <ScrollView style={styles.scrollContainer}>
-      <Pressable>
-        <View style={styles.container}>
-          {/* Subject Title */}
-          <Text variant="headlineSmall" style={styles.title}>
-            {session.subject}
-          </Text>
+    <>
+      <ScrollView style={styles.scrollContainer}>
+        <Pressable>
+          <View style={styles.container}>
+            {/* Subject Title */}
+            <Text variant="headlineSmall" style={styles.title}>
+              {session.subject}
+            </Text>
 
-          {/* Status & Preferred Location Chip */}
-          <View style={styles.infoRow}>
-            <Chip
-              value={status}
-              containerStyle={[styles.chip, { backgroundColor, borderColor }]}
-              textStyle={[styles.chipText, { color: textColor }]}
-            />
-
-            {preferredLocation && (
+            {/* Status & Preferred Location Chip */}
+            <View style={styles.infoRow}>
               <Chip
-                icon={getPreferredLocationDisplay().icon}
-                value={getPreferredLocationDisplay().label}
-                containerStyle={styles.chip}
+                value={status}
+                containerStyle={[styles.chip, { backgroundColor, borderColor }]}
+                textStyle={[styles.chipText, { color: textColor }]}
               />
-            )}
-          </View>
 
-          {cancelNote && (
-            <InfoBox label={getReasonLabel()}>
-              <Text variant="bodyLarge">{cancelNote}</Text>
-            </InfoBox>
-          )}
-
-          {/* Date & Time Info */}
-          <View style={styles.infoRow}>
-            <InfoBox label="Date">
-              <Text variant="bodyLarge">{formattedDate}</Text>
-            </InfoBox>
-            <InfoBox label="Time">
-              <Text variant="bodyLarge">{formattedTime}</Text>
-            </InfoBox>
-          </View>
-
-          {/* Author Info (tutor or student) */}
-          <InfoBox label={getAuthorLabel()} disabledContentPadding>
-            <TouchableOpacity
-              style={styles.userRow}
-              onPress={() =>
-                router.push({
-                  pathname: `/(modals)/userDetails/${author._id}`,
-                  params: {
-                    itemName:
-                      author.role === "tutor"
-                        ? "Tutor Details"
-                        : "Student Details",
-                  },
-                })
-              }
-            >
-              {author?.image && !loadImageError ? (
-                <Avatar.Image
-                  size={40}
-                  source={{ uri: author.image }}
-                  onError={() => setLoadImageError(true)}
-                />
-              ) : (
-                <Avatar.Text
-                  size={40}
-                  label={`${author.firstName[0]}${author.lastName[0]}`}
-                  style={{ backgroundColor: theme.colors.primary }}
+              {preferredLocation && (
+                <Chip
+                  icon={getPreferredLocationDisplay().icon}
+                  value={getPreferredLocationDisplay().label}
+                  containerStyle={styles.chip}
                 />
               )}
-              <Text variant="titleMedium" style={styles.userName}>
-                {author.firstName} {author.lastName}
-              </Text>
+            </View>
 
-              <MaterialCommunityIcons
-                name="chevron-right"
-                size={24}
-                color={theme.colors.textSecondary}
-              />
-            </TouchableOpacity>
-          </InfoBox>
+            {cancelNote && (
+              <InfoBox label={getReasonLabel()}>
+                <Text variant="bodyLarge">{cancelNote}</Text>
+              </InfoBox>
+            )}
 
-          {/* Note */}
-          {note && (
-            <InfoBox label="Note">
-              <Text variant="bodyLarge">{note}</Text>
+            {/* Date & Time Info */}
+            <View style={styles.infoRow}>
+              <InfoBox label="Date">
+                <Text variant="bodyLarge">{formattedDate}</Text>
+              </InfoBox>
+              <InfoBox label="Time">
+                <Text variant="bodyLarge">{formattedTime}</Text>
+              </InfoBox>
+            </View>
+
+            {/* Author Info (tutor or student) */}
+            <InfoBox label={getAuthorLabel()} disabledContentPadding>
+              <TouchableOpacity
+                style={styles.userRow}
+                onPress={() =>
+                  router.push({
+                    pathname: `/(modals)/userDetails/${author._id}`,
+                    params: {
+                      itemName:
+                        author.role === "tutor"
+                          ? "Tutor Details"
+                          : "Student Details",
+                    },
+                  })
+                }
+              >
+                {author?.image && !loadImageError ? (
+                  <Avatar.Image
+                    size={40}
+                    source={{ uri: author.image }}
+                    onError={() => setLoadImageError(true)}
+                  />
+                ) : (
+                  <Avatar.Text
+                    size={40}
+                    label={`${author.firstName[0]}${author.lastName[0]}`}
+                    style={{ backgroundColor: theme.colors.primary }}
+                  />
+                )}
+                <Text variant="titleMedium" style={styles.userName}>
+                  {author.firstName} {author.lastName}
+                </Text>
+
+                <MaterialCommunityIcons
+                  name="chevron-right"
+                  size={24}
+                  color={theme.colors.textSecondary}
+                />
+              </TouchableOpacity>
             </InfoBox>
-          )}
 
-          {renderActions()}
-        </View>
-      </Pressable>
-    </ScrollView>
+            {/* Note */}
+            {note && (
+              <InfoBox label="Note">
+                <Text variant="bodyLarge">{note}</Text>
+              </InfoBox>
+            )}
+
+            {renderActions()}
+          </View>
+        </Pressable>
+      </ScrollView>
+
+      <CancellationDialog
+        visible={showCancellationDialog}
+        setVisible={setShowCancellationDialog}
+        isCancelDialog={status !== "pending" || user.role !== "tutor"}
+      />
+    </>
   );
 };
 

@@ -61,6 +61,7 @@ export const Colors = {
     onSurfaceGrey: "#F5F5F5",
     divider: "#ECECEC",
     infoBackground: "#F5F5F5",
+    iosError: "#E4403B",
   },
   dark: {
     text: "#FFFFFF",
@@ -122,5 +123,6 @@ export const Colors = {
     onSurfaceGrey: "#F5F5F5",
     divider: "#ECECEC",
     infoBackground: "#F5F5F5",
+    iosError: "#E4403B",
   },
 };
