@@ -21,6 +21,9 @@ export const getMode = (variant) => {
     case "red-outlined":
       return "outlined";
 
+    case "green-outlined":
+      return "outlined";
+
     case "text":
       return "text";
 
@@ -81,6 +84,14 @@ export const getTheme = (variant, theme) => {
         colors: {
           primary: theme.colors.error,
           outline: theme.colors.error,
+        },
+      };
+
+    case "green-outlined":
+      return {
+        colors: {
+          primary: theme.colors.success,
+          outline: theme.colors.success,
         },
       };
 

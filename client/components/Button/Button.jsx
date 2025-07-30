@@ -53,6 +53,7 @@ Button.propTypes = {
     "tertiary",
     "black-outlined",
     "red-outlined",
+    "green-outlined",
     "text",
     "link",
   ]),
