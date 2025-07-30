@@ -34,6 +34,7 @@ async function confirmBooking(req, res) {
 async function rejectBooking(req, res) {
   try {
     const response = await bookingServices.rejectBooking(
+      req.user,
       req.params.bookingId,
       req.body.rejectNote
     );
@@ -54,6 +55,7 @@ async function rejectBooking(req, res) {
 async function cancelBooking(req, res) {
   try {
     const response = await bookingServices.cancelBooking(
+      req.user,
       req.params.bookingId,
       req.body.cancelNote
     );

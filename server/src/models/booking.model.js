@@ -54,6 +54,7 @@ const bookingSchema = mongoose.Schema(
       default: "pending",
     },
     cancelNote: { type: String },
+    cancelledBy: { type: String },
     confirmedAt: { type: Date },
     finishedAt: { type: Date },
   },

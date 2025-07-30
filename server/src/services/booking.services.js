@@ -113,7 +113,7 @@ export async function confirmBooking(bookingId) {
 }
 
 // Reject booking
-export async function rejectBooking(bookingId, rejectNote) {
+export async function rejectBooking(user, bookingId, rejectNote) {
   const booking = await Booking.findById(bookingId);
   if (!booking) return responses.buildFailureResponse("Booking not found", 404);
   if (booking.status !== "pending")
@@ -140,6 +140,7 @@ export async function rejectBooking(bookingId, rejectNote) {
   }
 
   booking.status = "rejected";
+  booking.cancelledBy = user.role;
   if (rejectNote) booking.cancelNote = rejectNote;
   await booking.save();
 
@@ -156,7 +157,7 @@ export async function rejectBooking(bookingId, rejectNote) {
  * @param {string} bookingId - ID of the booking to cancel
  * @returns {Object} Response indicating success or failure
  */
-async function cancelBooking(bookingId, cancelNote) {
+async function cancelBooking(user, bookingId, cancelNote) {
   // Find booking by ID
   const booking = await Booking.findById(bookingId);
   if (!booking) return responses.buildFailureResponse("Booking not found", 404);
@@ -181,6 +182,7 @@ async function cancelBooking(bookingId, cancelNote) {
   }
 
   booking.status = "cancelled";
+  booking.cancelledBy = user.role;
   if (cancelNote) booking.cancelNote = cancelNote;
   await booking.save();
 
