@@ -13,6 +13,7 @@ import {
 import { Avatar, Text, useTheme } from "react-native-paper";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
+import Toast from "react-native-toast-message";
 import { Chip } from "@/components/Chip/Chip";
 import { InfoBox } from "@/components/InfoBox/InfoBox";
 import { useUser } from "@/context/UserProvider/UserProvider";
@@ -20,6 +21,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Button } from "@/components/Button/Button";
 import { getBookingStatusColor } from "@/utils/getBookingStatusColor";
 import { CancellationDialog } from "./components/CancellationDialog";
+import { useConfirmBookingMutation } from "@/services/api/bookings/useConfirmBookingMutation";
 
 dayjs.extend(utc); // Enable UTC support in dayjs
 
@@ -34,7 +36,18 @@ export const BookingDetailPage = () => {
   const router = useRouter();
   const [loadImageError, setLoadImageError] = useState(false);
   const [showCancellationDialog, setShowCancellationDialog] = useState(false);
-  const { booking: bookingJSON } = useLocalSearchParams(); // Get booking data from route parameters
+  const { bookingId, booking: bookingJSON } = useLocalSearchParams(); // Get booking data from route parameters
+
+  // Hook to confirm booking
+  const { mutateAsync: confirmBooking } = useConfirmBookingMutation({
+    onSuccess: (response) => {
+      Toast.show({ type: "success", text1: response.message });
+      router.back();
+    },
+    onError: (error) => {
+      Toast.show({ type: "error", text1: error.message });
+    },
+  });
 
   // Parse booking JSON string to object
   const booking = useMemo(() => {
@@ -127,9 +140,13 @@ export const BookingDetailPage = () => {
     [user, booking]
   );
 
+  const handleConfirm = async () => {
+    await confirmBooking({ bookingId });
+  };
+
   const renderActions = () => {
     const sessionDateTime = dayjs(`${date.split("T")[0]}T${startTime}`).utc();
-    const canCancel = sessionDateTime.subtract(1, "hour").isAfter(dayjs.utc());
+    const canCancel = sessionDateTime.subtract(24, "hour").isAfter(dayjs.utc());
 
     if (
       (status === "pending" && user.role === "student" && canCancel) ||
@@ -154,7 +171,7 @@ export const BookingDetailPage = () => {
             variant="bodySmall"
             style={{ color: theme.colors.textSecondary }}
           >
-            *Cancellations must be made at least 5 hours before the session.
+            *Cancellations must be made at least 24 hours before the session.
           </Text>
         </View>
       );
@@ -164,7 +181,7 @@ export const BookingDetailPage = () => {
       return (
         <View style={[styles.infoRow, { marginTop: 20 }]}>
           <Button
-            onPress={() => {}}
+            onPress={handleConfirm}
             variant="green-outlined"
             icon={({ color }) => (
               <MaterialCommunityIcons name="check" size={24} color={color} />
