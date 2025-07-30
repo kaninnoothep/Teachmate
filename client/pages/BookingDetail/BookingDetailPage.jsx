@@ -80,6 +80,8 @@ export const BookingDetailPage = () => {
     student,
     tutor,
     note,
+    cancelNote,
+    cancelledBy,
   } = booking;
 
   const { backgroundColor, borderColor, textColor } = getBookingStatusColor(
@@ -113,6 +115,24 @@ export const BookingDetailPage = () => {
     }
   };
 
+  const getReasonLabel = () => {
+    let label = "Reason for";
+
+    if (status === "rejected") {
+      label += " Rejection by";
+    } else if (status === "cancelled") {
+      label += " Cancellation by";
+    }
+
+    if (cancelledBy === "tutor") {
+      label += " Tutor";
+    } else if (cancelledBy === "student") {
+      label += " Student";
+    }
+
+    return label;
+  };
+
   // Get the opposite party (either tutor or student)
   const author = useMemo(
     () => (user.role === "tutor" ? student : tutor),
@@ -131,6 +151,67 @@ export const BookingDetailPage = () => {
     ]);
   };
 
+  const renderActions = () => {
+    const sessionDateTime = dayjs(`${date.split("T")[0]}T${startTime}`).utc();
+    const canCancel = sessionDateTime.subtract(5, "hour").isAfter(dayjs.utc());
+
+    if (
+      (status === "pending" && user.role === "student" && canCancel) ||
+      (status === "confirmed" && canCancel)
+    ) {
+      return (
+        <View style={{ marginTop: 20, gap: 6 }}>
+          <Button
+            onPress={handleDelete}
+            variant="red-outlined"
+            icon={({ color }) => (
+              <MaterialCommunityIcons
+                name="calendar-remove"
+                size={24}
+                color={color}
+              />
+            )}
+          >
+            Cancel Booking
+          </Button>
+          <Text
+            variant="bodySmall"
+            style={{ color: theme.colors.textSecondary }}
+          >
+            *Cancellations must be made at least 5 hours before the session.
+          </Text>
+        </View>
+      );
+    }
+
+    if (status === "pending" && user.role === "tutor") {
+      return (
+        <View style={[styles.infoRow, { marginTop: 20 }]}>
+          <Button
+            onPress={() => {}}
+            variant="green-outlined"
+            icon={({ color }) => (
+              <MaterialCommunityIcons name="check" size={24} color={color} />
+            )}
+            style={styles.actionButton}
+          >
+            Confirm
+          </Button>
+          <Button
+            onPress={() => {}}
+            variant="red-outlined"
+            icon={({ color }) => (
+              <MaterialCommunityIcons name="close" size={24} color={color} />
+            )}
+            style={styles.actionButton}
+          >
+            Reject
+          </Button>
+        </View>
+      );
+    }
+  };
+
   return (
     <ScrollView style={styles.scrollContainer}>
       <Pressable>
@@ -140,15 +221,14 @@ export const BookingDetailPage = () => {
             {session.subject}
           </Text>
 
+          {/* Status & Preferred Location Chip */}
           <View style={styles.infoRow}>
-            {/* Status Chip */}
             <Chip
               value={status}
               containerStyle={[styles.chip, { backgroundColor, borderColor }]}
               textStyle={[styles.chipText, { color: textColor }]}
             />
 
-            {/* Preferred Location Chip */}
             {preferredLocation && (
               <Chip
                 icon={getPreferredLocationDisplay().icon}
@@ -157,6 +237,12 @@ export const BookingDetailPage = () => {
               />
             )}
           </View>
+
+          {cancelNote && (
+            <InfoBox label={getReasonLabel()}>
+              <Text variant="bodyLarge">{cancelNote}</Text>
+            </InfoBox>
+          )}
 
           {/* Date & Time Info */}
           <View style={styles.infoRow}>
@@ -216,23 +302,7 @@ export const BookingDetailPage = () => {
             </InfoBox>
           )}
 
-          {/* Cancel Booking for students*/}
-          {user.role === "student" && (
-            <Button
-              onPress={handleDelete}
-              variant="red-outlined"
-              icon={({ color }) => (
-                <MaterialCommunityIcons
-                  name="calendar-remove"
-                  size={24}
-                  color={color}
-                />
-              )}
-              style={{ marginTop: 20 }}
-            >
-              Cancel Booking
-            </Button>
-          )}
+          {renderActions()}
         </View>
       </Pressable>
     </ScrollView>
@@ -274,5 +344,8 @@ const styles = StyleSheet.create({
   },
   chipText: {
     textTransform: "capitalize",
+  },
+  actionButton: {
+    flex: 1,
   },
 });
