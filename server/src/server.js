@@ -7,6 +7,7 @@ import cors from "cors";
 import connectDB from "./configs/database.js";
 import userRouter from "./routes/user.route.js";
 import bookingRouter from "./routes/booking.route.js";
+import reviewRouter from "./routes/review.route.js";
 import connectCloudinary from "./configs/cloudinary.js";
 import runBookingStatusCron from "./jobs/bookingStatusUpdater.js";
 
@@ -37,6 +38,7 @@ app.use(cors());
 app.use(express.json());
 app.use("/api/user", userRouter);
 app.use("/api/booking", bookingRouter);
+app.use("/api/review", reviewRouter);
 
 /**
  * Start the server
