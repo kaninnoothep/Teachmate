@@ -39,6 +39,9 @@ export const useStyles = (theme) =>
     avatarContainer: {
       position: "relative",
     },
+    nameContainer: {
+      gap: 10,
+    },
     iconContainer: {
       position: "absolute",
       bottom: 0,
@@ -74,5 +77,20 @@ export const useStyles = (theme) =>
       paddingHorizontal: 16,
       paddingBottom: 40,
       paddingTop: 11,
+    },
+    rating: {
+      flexDirection: "row",
+      alignItems: "center",
+      gap: 4,
+      padding: 4,
+      paddingLeft: 6,
+      borderWidth: 1,
+      borderColor: theme.colors.outline,
+      borderRadius: 20,
+      backgroundColor: theme.colors.background,
+    },
+    starContainer: { marginRight: 2 },
+    star: {
+      marginHorizontal: 0,
     },
   });

@@ -62,6 +62,15 @@ export default function ModalsLayout() {
           headerTintColor: theme.colors.inverseText,
         }}
       />
+
+      {/* Reviews Screen */}
+      <Stack.Screen
+        name="reviews/[userId]"
+        options={{
+          title: "Reviews",
+          headerTintColor: theme.colors.inverseText,
+        }}
+      />
     </Stack>
   );
 }

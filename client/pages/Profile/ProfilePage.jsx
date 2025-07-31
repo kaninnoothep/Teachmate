@@ -24,6 +24,7 @@ import { useUploadImageMutation } from "@/services/api/user/useUploadImageMutati
 import Toast from "react-native-toast-message";
 import { useUser } from "@/context/UserProvider/UserProvider";
 import { Button } from "@/components/Button/Button";
+import { StarRatingDisplay } from "react-native-star-rating-widget";
 
 dayjs.extend(utc); // Enable UTC support in dayjs
 
@@ -40,6 +41,8 @@ export const ProfilePage = ({ user, externalView = false }) => {
   const router = useRouter();
   const [loadImageError, setLoadImageError] = useState(false);
   const { mutateAsync: uploadImage } = useUploadImageMutation({}); // Upload image mutation
+
+  const [rating, setRating] = useState(5);
 
   // Helper function to format location string from user data
   const formatLocation = () => {
@@ -179,9 +182,30 @@ export const ProfilePage = ({ user, externalView = false }) => {
                   )}
                 </TouchableOpacity>
 
-                <Text variant="headlineSmall" style={{ fontWeight: 700 }}>
-                  {user.firstName} {user.lastName}
-                </Text>
+                <View style={styles.nameContainer}>
+                  <Text variant="headlineSmall" style={{ fontWeight: 700 }}>
+                    {user.firstName} {user.lastName}
+                  </Text>
+
+                  {/* Rating */}
+                  <TouchableOpacity
+                    onPress={() => router.push(`/(modals)/reviews/${user._id}`)}
+                    style={styles.rating}
+                  >
+                    <StarRatingDisplay
+                      rating={rating}
+                      starSize={18}
+                      starStyle={styles.star}
+                      style={styles.starContainer}
+                    />
+                    <Text variant="bodyMedium">5.0</Text>
+                    <MaterialCommunityIcons
+                      name="chevron-right"
+                      size={18}
+                      color={theme.colors.textSecondary}
+                    />
+                  </TouchableOpacity>
+                </View>
               </View>
 
               {!externalView && (
