@@ -197,6 +197,7 @@ export const ProfilePage = ({ user, externalView = false }) => {
                       starSize={18}
                       starStyle={styles.star}
                       style={styles.starContainer}
+                      color={theme.colors.star}
                     />
                     <Text variant="bodyMedium">5.0</Text>
                     <MaterialCommunityIcons

@@ -62,6 +62,7 @@ export const Colors = {
     divider: "#ECECEC",
     infoBackground: "#F5F5F5",
     iosError: "#E4403B",
+    star: "#FACB5C",
   },
   dark: {
     text: "#FFFFFF",
@@ -124,5 +125,6 @@ export const Colors = {
     divider: "#ECECEC",
     infoBackground: "#F5F5F5",
     iosError: "#E4403B",
+    star: "#FACB5C",
   },
 };
