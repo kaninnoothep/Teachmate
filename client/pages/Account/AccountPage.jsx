@@ -125,6 +125,7 @@ export const AccountPage = () => {
               label="Postal Code"
               placeholder="Enter postal code"
               fullWidth
+              autoCapitalize="characters"
               style={{ marginTop: 4, marginBottom: 16 }}
               {...{ control }}
             />

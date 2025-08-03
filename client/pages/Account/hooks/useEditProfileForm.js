@@ -12,6 +12,7 @@ import { useUser } from "@/context/UserProvider/UserProvider";
 const validationSchema = object({
   firstName: string().required("First Name is required"),
   lastName: string().required("Last Name is required"),
+  postalCode: string().uppercase(),
 });
 
 /**
