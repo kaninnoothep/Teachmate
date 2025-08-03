@@ -7,6 +7,7 @@ import { useDeleteReviewMutation } from "@/services/api/reviews/useDeleteReviewM
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
+import { useRouter } from "expo-router";
 import { useMemo, useState } from "react";
 import { Alert, StyleSheet, TouchableOpacity, View } from "react-native";
 import { Avatar, Text, useTheme } from "react-native-paper";
@@ -32,13 +33,21 @@ export const ReviewReplyItem = ({
   createdAt,
   reply,
   isReply = false,
+  readonly = false,
 }) => {
+  const router = useRouter();
   const { user } = useUser();
   const theme = useTheme();
   const styles = useStyles(theme);
   const [loadImageError, setLoadImageError] = useState(false);
-  const canReply = useMemo(() => reviewee?._id === user._id, [reviewee, user]);
-  const canDelete = useMemo(() => author._id === user._id, [author, user]);
+  const canReply = useMemo(
+    () => reviewee?._id === user._id && !readonly,
+    [reviewee, user, readonly]
+  );
+  const canDelete = useMemo(
+    () => author._id === user._id && !readonly,
+    [author, user, readonly]
+  );
 
   const { mutateAsync: deleteReview } = useDeleteReviewMutation({
     onSuccess: (response) => {
@@ -133,7 +142,24 @@ export const ReviewReplyItem = ({
       </View>
 
       {!isReply && !reply && canReply && (
-        <TouchableOpacity style={styles.replyButton}>
+        <TouchableOpacity
+          style={styles.replyButton}
+          onPress={() =>
+            router.push({
+              pathname: "/(modals)/reviews/replyToReview",
+              params: {
+                review: JSON.stringify({
+                  reviewId,
+                  author,
+                  rating,
+                  title,
+                  message,
+                  createdAt,
+                }),
+              },
+            })
+          }
+        >
           <MaterialCommunityIcons
             name="reply"
             size={20}

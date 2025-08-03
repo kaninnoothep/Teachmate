@@ -71,6 +71,17 @@ export default function ModalsLayout() {
           headerTintColor: theme.colors.inverseText,
         }}
       />
+
+      {/* Reply to Review Screen */}
+      <Stack.Screen
+        name="reviews/replyToReview"
+        options={{
+          title: "Reply Review",
+          headerTintColor: theme.colors.inverseText,
+          presentation: "fullScreenModal",
+          headerLeft: () => <BackButton isCloseButton />,
+        }}
+      />
     </Stack>
   );
 }
