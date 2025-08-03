@@ -67,7 +67,7 @@ export const AddReviewPage = () => {
           <FormTextInput
             name="reviewMessage"
             multiline
-            label="Message"
+            label="Write a review *"
             placeholder="Write your review..."
             fullWidth
             style={styles.textarea}

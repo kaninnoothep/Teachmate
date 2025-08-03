@@ -36,7 +36,7 @@ export const ReplyToReviewPage = () => {
           <FormTextInput
             name="replyMessage"
             multiline
-            label="Write a reply"
+            label="Write a reply *"
             placeholder="Write your reply..."
             fullWidth
             style={styles.textarea}
