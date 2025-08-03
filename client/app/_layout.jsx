@@ -1,6 +1,7 @@
 /**
  * Import Modules
  */
+import { BackButton } from "@/components/BackButton/BackButton";
 import { LogoHeaderTitle } from "@/components/LogoHeaderTitle/LogoHeaderTitle";
 import { AppProvider } from "@/context/AppProvider/AppProvider";
 import { Stack } from "expo-router";
@@ -50,6 +51,24 @@ function MainLayout() {
         name="(modals)"
         options={{
           headerShown: false,
+        }}
+      />
+
+      {/* Add Review Modal */}
+      <Stack.Screen
+        name="addReview"
+        options={{
+          title: "Write a Review",
+          headerTintColor: theme.colors.inverseText,
+          headerStyle: {
+            backgroundColor: theme.colors.primary,
+          },
+          headerTitleStyle: {
+            fontWeight: "500",
+          },
+          headerTitleAlign: "center",
+          presentation: "fullScreenModal",
+          headerLeft: () => <BackButton isCloseButton />,
         }}
       />
 

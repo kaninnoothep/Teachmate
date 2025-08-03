@@ -6,6 +6,7 @@ import { Chip } from "@/components/Chip/Chip";
 import { getBookingStatusColor } from "@/utils/getBookingStatusColor";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
+import { useRouter } from "expo-router";
 import { useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { Avatar, Text, useTheme } from "react-native-paper";
@@ -26,6 +27,7 @@ export const BookingItem = ({
   date,
   time,
 }) => {
+  const router = useRouter();
   const theme = useTheme();
   const styles = useStyles(theme);
   const [loadImageError, setLoadImageError] = useState(false);
@@ -76,7 +78,22 @@ export const BookingItem = ({
         </View>
 
         {status === "finished" && (
-          <Button variant="secondary" onPress={() => {}}>
+          <Button
+            variant="secondary"
+            onPress={() =>
+              router.push({
+                pathname: "/addReview",
+                params: {
+                  reviewing: JSON.stringify({
+                    _id: user?._id,
+                    firstName: user?.firstName,
+                    lastName: user?.lastName,
+                    image: user?.image,
+                  }),
+                },
+              })
+            }
+          >
             Write a review
           </Button>
         )}

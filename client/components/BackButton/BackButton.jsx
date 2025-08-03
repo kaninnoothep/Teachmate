@@ -13,17 +13,17 @@ import { useTheme } from "react-native-paper";
  * @param {*} onPress
  * @returns JSX Element
  */
-export const BackButton = ({ onPress }) => {
+export const BackButton = ({ isCloseButton = false, onPress }) => {
   const router = useRouter();
   const theme = useTheme();
 
   return (
     <TouchableOpacity onPress={onPress ? onPress : () => router.back()}>
       <MaterialCommunityIcons
-        name="chevron-left"
-        size={40}
+        name={!isCloseButton ? "chevron-left" : "close"}
+        size={!isCloseButton ? 40 : 24}
         color={theme.colors.inverseText}
-        style={{ marginLeft: -14 }}
+        style={!isCloseButton && { marginLeft: -14 }}
       />
     </TouchableOpacity>
   );

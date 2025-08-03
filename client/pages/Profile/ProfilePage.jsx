@@ -189,7 +189,19 @@ export const ProfilePage = ({ user, externalView = false }) => {
 
                   {/* Rating */}
                   <TouchableOpacity
-                    onPress={() => router.push(`/(modals)/reviews/${user._id}`)}
+                    onPress={() =>
+                      router.push({
+                        pathname: `/(modals)/reviews/${user._id}`,
+                        params: {
+                          reviewing: JSON.stringify({
+                            _id: user?._id,
+                            firstName: user?.firstName,
+                            lastName: user?.lastName,
+                            image: user?.image,
+                          }),
+                        },
+                      })
+                    }
                     style={styles.rating}
                   >
                     <StarRatingDisplay

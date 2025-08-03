@@ -12,17 +12,18 @@ import { ReviewReplyItem } from "./components/ReviewReplyItem";
 import { EmptyList } from "@/components/EmptyList/EmptyList";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useUser } from "@/context/UserProvider/UserProvider";
-import { useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { useReviewsQuery } from "@/services/api/reviews/useReviewsQuery";
 import { useMemo, useState } from "react";
 import { useCanReviewQuery } from "@/services/api/reviews/useCanReviewQuery";
 
 export const ReviewsPage = () => {
+  const router = useRouter();
   const { user } = useUser();
   const theme = useTheme();
   const styles = useStyles(theme);
+  const { userId: reviewUserId, reviewing } = useLocalSearchParams();
   const [isManualRefreshing, setIsManualRefreshing] = useState(false);
-  const { userId: reviewUserId } = useLocalSearchParams();
   const { reviews, totalReviews, averageRating, isFetching, refetch } =
     useReviewsQuery(reviewUserId);
   const { canReview } = useCanReviewQuery(reviewUserId);
@@ -79,7 +80,15 @@ export const ReviewsPage = () => {
       </View>
 
       {user._id !== reviewUserId && canReview && (
-        <TouchableOpacity TouchableOpacity style={styles.reviewButton}>
+        <TouchableOpacity
+          style={styles.reviewButton}
+          onPress={() =>
+            router.push({
+              pathname: "/addReview",
+              params: { reviewing },
+            })
+          }
+        >
           <MaterialCommunityIcons
             name="pencil"
             size={20}
