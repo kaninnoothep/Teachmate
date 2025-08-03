@@ -1,6 +1,8 @@
 import responses from "../utils/response.js";
 import Booking from "../models/booking.model.js";
 import Review from "../models/review.model.js";
+import User from "../models/users.model.js";
+import { updateUserRating } from "../utils/updateUserRating.js";
 
 async function canReview(user, otherUserId) {
   if (!otherUserId) {
@@ -31,18 +33,6 @@ async function addReview(user, data) {
     return responses.buildFailureResponse("You cannot review yourself", 400);
   }
 
-  //   const alreadyReviewed = await Review.findOne({
-  //     reviewer: user._id,
-  //     reviewee: revieweeId,
-  //   });
-
-  //   if (alreadyReviewed) {
-  //     return responses.buildFailureResponse(
-  //       "You already reviewed this user",
-  //       400
-  //     );
-  //   }
-
   const review = await Review.create({
     reviewer: user._id,
     reviewee: revieweeId,
@@ -50,6 +40,9 @@ async function addReview(user, data) {
     title,
     reviewMessage,
   });
+
+  // Update the reviewee's average rating
+  await updateUserRating(revieweeId);
 
   return responses.buildSuccessResponse(
     "Review added successfully",
@@ -60,8 +53,6 @@ async function addReview(user, data) {
 
 async function replyToReview(user, reviewId, replyMessage) {
   const review = await Review.findById(reviewId);
-
-  console.log("review.reply", review.reply);
 
   if (!review) {
     return responses.buildFailureResponse("Review not found", 404);
@@ -100,7 +91,10 @@ async function deleteReview(user, reviewId) {
     );
   }
 
+  const revieweeId = review.reviewee;
   await review.deleteOne();
+  // Update the reviewee's average rating after deletion
+  await updateUserRating(revieweeId);
 
   return responses.buildSuccessResponse("Review deleted successfully", 200);
 }
@@ -130,22 +124,20 @@ async function deleteReply(user, reviewId) {
 }
 
 async function getReviews(userId) {
-  const reviews = await Review.find({ reviewee: userId })
-    .populate("reviewer", "_id firstName lastName image role")
-    .populate("reviewee", "_id firstName lastName image role")
-    .populate("reply.author", "_id firstName lastName image role")
-    .sort({ createdAt: -1 });
-
-  const totalReviews = reviews.length;
-  const averageRating =
-    totalReviews > 0
-      ? reviews.reduce((sum, r) => sum + r.rating, 0) / totalReviews
-      : 0;
+  // Fetch reviews and user rating info in parallel
+  const [reviews, user] = await Promise.all([
+    Review.find({ reviewee: userId })
+      .populate("reviewer", "_id firstName lastName image role")
+      .populate("reviewee", "_id firstName lastName image role")
+      .populate("reply.author", "_id firstName lastName image role")
+      .sort({ createdAt: -1 }),
+    User.findById(userId).select("averageRating totalReviews"),
+  ]);
 
   return {
     reviews,
-    totalReviews,
-    averageRating: Number(averageRating.toFixed(1)),
+    totalReviews: user?.totalReviews || 0,
+    averageRating: user?.averageRating || 0,
   };
 }
 

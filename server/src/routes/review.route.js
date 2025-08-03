@@ -46,7 +46,11 @@ router.delete(
 
 // Get reviews for a specific user
 // GET request to /user/:userId
-router.get("/user/:userId", reviewControllers.getReviews);
+router.get(
+  "/user/:userId",
+  authMiddleware.authenticate,
+  reviewControllers.getReviews
+);
 
 /**
  * Export router object
