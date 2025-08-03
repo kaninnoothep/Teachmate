@@ -79,6 +79,7 @@ export const useStyles = (theme) =>
       paddingTop: 11,
     },
     rating: {
+      alignSelf: "flex-start",
       flexDirection: "row",
       alignItems: "center",
       gap: 4,

@@ -16,6 +16,7 @@ export const Chip = ({
   value,
   icon,
   iconSize = 24,
+  iconColor,
   containerStyle,
   textStyle,
 }) => {
@@ -28,7 +29,7 @@ export const Chip = ({
         <MaterialCommunityIcons
           name={icon}
           size={iconSize}
-          color={theme.colors.primary}
+          color={iconColor || theme.colors.primary}
         />
       )}
       <Text variant={textVariant} style={[styles.text, textStyle]}>

@@ -3,6 +3,7 @@
  */
 import {
   GET_AVAILABILITY_API_KEY,
+  GET_USER_API_KEY,
   SET_AVAILABILITY_API_KEY,
 } from "@/services/constants";
 import { apiRequest } from "@/services/helpers/apiRequest";
@@ -19,4 +20,8 @@ const setAvailabilityRequest = (payload) =>
  * @returns useMutation result
  */
 export const useSetAvailabilityMutation = (options) =>
-  useApiSend(setAvailabilityRequest, [GET_AVAILABILITY_API_KEY], options);
+  useApiSend(
+    setAvailabilityRequest,
+    [GET_AVAILABILITY_API_KEY, GET_USER_API_KEY],
+    options
+  );

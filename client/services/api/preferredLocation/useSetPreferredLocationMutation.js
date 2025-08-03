@@ -3,6 +3,7 @@
  */
 import {
   GET_PREFERRED_LOCATION_API_KEY,
+  GET_USER_API_KEY,
   SET_PREFERRED_LOCATION_API_KEY,
 } from "@/services/constants";
 import { apiRequest } from "@/services/helpers/apiRequest";
@@ -21,6 +22,6 @@ const setPreferredLocationRequest = (payload) =>
 export const useSetPreferredLocationMutation = (options) =>
   useApiSend(
     setPreferredLocationRequest,
-    [GET_PREFERRED_LOCATION_API_KEY],
+    [GET_PREFERRED_LOCATION_API_KEY, GET_USER_API_KEY],
     options
   );

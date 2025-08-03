@@ -2,7 +2,7 @@
  * Import Modules
  */
 import { useRouter, useLocalSearchParams } from "expo-router";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import {
   Pressable,
   ScrollView,
@@ -22,6 +22,7 @@ import { Button } from "@/components/Button/Button";
 import { getBookingStatusColor } from "@/utils/getBookingStatusColor";
 import { CancellationDialog } from "./components/CancellationDialog";
 import { useConfirmBookingMutation } from "@/services/api/bookings/useConfirmBookingMutation";
+import { StarRatingDisplay } from "react-native-star-rating-widget";
 
 dayjs.extend(utc); // Enable UTC support in dayjs
 
@@ -30,13 +31,13 @@ dayjs.extend(utc); // Enable UTC support in dayjs
  *
  * @returns JSX Element rendering the availability management interface
  */
-export const BookingDetailPage = () => {
+export const BookingDetailPage = ({ booking }) => {
   const { user } = useUser();
   const theme = useTheme();
   const router = useRouter();
   const [loadImageError, setLoadImageError] = useState(false);
   const [showCancellationDialog, setShowCancellationDialog] = useState(false);
-  const { bookingId, booking: bookingJSON } = useLocalSearchParams(); // Get booking data from route parameters
+  const { bookingId } = useLocalSearchParams(); // Get booking ID from route parameters
 
   // Hook to confirm booking
   const { mutateAsync: confirmBooking } = useConfirmBookingMutation({
@@ -48,27 +49,6 @@ export const BookingDetailPage = () => {
       Toast.show({ type: "error", text1: error.message });
     },
   });
-
-  // Parse booking JSON string to object
-  const booking = useMemo(() => {
-    if (bookingJSON) {
-      try {
-        return JSON.parse(bookingJSON);
-      } catch (error) {
-        console.warn("Failed to parse booking:", error);
-      }
-    }
-    return null;
-  }, [bookingJSON]);
-
-  // If no booking found, navigate back
-  useEffect(() => {
-    if (!booking) {
-      router.back();
-    }
-  }, [booking]);
-
-  if (!booking) return null;
 
   // Destructure fields from booking object
   const {
@@ -137,7 +117,7 @@ export const BookingDetailPage = () => {
   // Get the opposite party (either tutor or student)
   const author = useMemo(
     () => (user.role === "tutor" ? student : tutor),
-    [user, booking]
+    [user.role, student, tutor]
   );
 
   const handleConfirm = async () => {
@@ -273,13 +253,35 @@ export const BookingDetailPage = () => {
                 ) : (
                   <Avatar.Text
                     size={40}
-                    label={`${author.firstName[0]}${author.lastName[0]}`}
+                    label={`${author?.firstName?.[0] || ""}${
+                      author?.lastName?.[0] || ""
+                    }`}
                     style={{ backgroundColor: theme.colors.primary }}
                   />
                 )}
-                <Text variant="titleMedium" style={styles.userName}>
-                  {author.firstName} {author.lastName}
-                </Text>
+                <View style={styles.userNameWrapper}>
+                  <Text variant="titleMedium" style={styles.userName}>
+                    {author?.firstName} {author?.lastName}
+                  </Text>
+
+                  {author?.averageRating !== 0 && (
+                    <View style={styles.starWrapper}>
+                      <StarRatingDisplay
+                        rating={author?.averageRating || 0}
+                        starSize={18}
+                        starStyle={styles.star}
+                        style={styles.starContainer}
+                        color={theme.colors.star}
+                      />
+                      <Text
+                        variant="bodyMedium"
+                        style={{ color: theme.colors.textSecondary }}
+                      >
+                        {author?.averageRating?.toFixed(1)}
+                      </Text>
+                    </View>
+                  )}
+                </View>
 
                 <MaterialCommunityIcons
                   name="chevron-right"
@@ -335,9 +337,20 @@ const styles = StyleSheet.create({
     gap: 12,
     padding: 16,
   },
+  userNameWrapper: {
+    flex: 1,
+    gap: 2,
+  },
   userName: {
     fontSize: 18,
-    flex: 1,
+  },
+  starWrapper: {
+    flexDirection: "row",
+    gap: 4,
+  },
+  starContainer: { marginRight: 2 },
+  star: {
+    marginHorizontal: 0,
   },
   chip: {
     height: 46,

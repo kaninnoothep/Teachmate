@@ -1,7 +1,7 @@
 /**
  * Import Modules
  */
-import { REVIEW_API_KEY, GET_REVIEWS_API_KEY } from "@/services/constants";
+import { REVIEW_API_KEY, GET_REVIEWS_API_KEY, BOOKING_API_KEY } from "@/services/constants";
 import { apiRequest } from "@/services/helpers/apiRequest";
 import { useApiSend } from "@/services/hooks/useApiSend";
 
@@ -16,4 +16,4 @@ const addReviewRequest = (payload) =>
  * @returns useMutation result
  */
 export const useAddReviewMutation = (options) =>
-  useApiSend(addReviewRequest, [GET_REVIEWS_API_KEY], options);
+  useApiSend(addReviewRequest, [GET_REVIEWS_API_KEY, BOOKING_API_KEY], options);

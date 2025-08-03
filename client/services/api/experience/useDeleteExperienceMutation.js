@@ -1,7 +1,7 @@
 /**
  * Import Modules
  */
-import { EXPERIENCE_API_KEY } from "@/services/constants";
+import { EXPERIENCE_API_KEY, GET_USER_API_KEY } from "@/services/constants";
 import { apiRequest } from "@/services/helpers/apiRequest";
 import { useApiSend } from "@/services/hooks/useApiSend";
 
@@ -16,4 +16,4 @@ const deleteExperienceRequest = (experienceId) =>
  * @returns useMutation result
  */
 export const useDeleteExperienceMutation = (options) =>
-  useApiSend(deleteExperienceRequest, [], options);
+  useApiSend(deleteExperienceRequest, [GET_USER_API_KEY], options);

@@ -88,6 +88,26 @@ async function getMyBookings(req, res) {
 }
 
 /**
+ * getBooking - Get a specific booking by ID
+ *
+ * @param {object} req - Request Object
+ * @param {object} res - Response Object
+ */
+async function getBooking(req, res) {
+  try {
+    const response = await bookingServices.getBooking(
+      req.user,
+      req.params.bookingId
+    );
+    res.status(response.statusCode).json(response);
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Unable to fetch booking", status: "failure" });
+  }
+}
+
+/**
  * Export all functions
  */
 export default {
@@ -96,4 +116,5 @@ export default {
   rejectBooking,
   cancelBooking,
   getMyBookings,
+  getBooking,
 };

@@ -1,7 +1,7 @@
 /**
  * Import Modules
  */
-import { EDUCATION_API_KEY } from "@/services/constants";
+import { EDUCATION_API_KEY, GET_USER_API_KEY } from "@/services/constants";
 import { apiRequest } from "@/services/helpers/apiRequest";
 import { useApiSend } from "@/services/hooks/useApiSend";
 
@@ -16,4 +16,4 @@ const addEducationRequest = (payload) =>
  * @returns useMutation result
  */
 export const useAddEducationMutation = (options) =>
-  useApiSend(addEducationRequest, [], options);
+  useApiSend(addEducationRequest, [GET_USER_API_KEY], options);

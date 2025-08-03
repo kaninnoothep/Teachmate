@@ -246,6 +246,44 @@ async function getMyBookings(user, status) {
 }
 
 /**
+ * getBooking - Get a specific booking by ID
+ *
+ * @param {Object} user - Logged-in user
+ * @param {string} bookingId - ID of the booking to retrieve
+ * @returns {Object} Response with booking info or error
+ */
+async function getBooking(user, bookingId) {
+  // Find booking by ID and populate related fields
+  const booking = await Booking.findById(bookingId)
+    .populate("student", "-password")
+    .populate("tutor", "-password")
+    .populate("session");
+
+  if (!booking) {
+    return responses.buildFailureResponse("Booking not found", 404);
+  }
+
+  // Check if user has permission to view this booking
+  // User can only view bookings where they are either the tutor or student
+  const isAuthorized =
+    booking.tutor._id.toString() === user._id.toString() ||
+    booking.student._id.toString() === user._id.toString();
+
+  if (!isAuthorized) {
+    return responses.buildFailureResponse(
+      "You don't have permission to view this booking",
+      403
+    );
+  }
+
+  return responses.buildSuccessResponse(
+    "Booking fetched successfully",
+    200,
+    booking
+  );
+}
+
+/**
  * Export all functions
  */
 export default {
@@ -254,4 +292,5 @@ export default {
   rejectBooking,
   cancelBooking,
   getMyBookings,
+  getBooking,
 };

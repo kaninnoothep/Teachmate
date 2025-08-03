@@ -1,7 +1,7 @@
 /**
  * Import Modules
  */
-import { EXPERIENCE_API_KEY } from "@/services/constants";
+import { EXPERIENCE_API_KEY, GET_USER_API_KEY } from "@/services/constants";
 import { apiRequest } from "@/services/helpers/apiRequest";
 import { useApiSend } from "@/services/hooks/useApiSend";
 
@@ -16,4 +16,4 @@ const addExperienceRequest = (payload) =>
  * @returns useMutation result
  */
 export const useAddExperienceMutation = (options) =>
-  useApiSend(addExperienceRequest, [], options);
+  useApiSend(addExperienceRequest, [GET_USER_API_KEY], options);

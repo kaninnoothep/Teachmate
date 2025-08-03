@@ -49,14 +49,27 @@ export const TutorItem = ({ tutor }) => {
             </Text>
           )}
         </View>
+        <View style={styles.chipContainer}>
+          {tutor?.averageRating !== 0 && (
+            <Chip
+              textVariant="bodySmall"
+              icon="star"
+              iconSize={16}
+              iconColor={theme.colors.star}
+              value={tutor.averageRating.toFixed(1)}
+              containerStyle={[styles.chip, styles.starChip]}
+              textStyle={styles.starChipText}
+            />
+          )}
 
-        {tutor?.hourlyRate && (
-          <Chip
-            textVariant="bodySmall"
-            value={`$${tutor.hourlyRate}/h`}
-            containerStyle={styles.chip}
-          />
-        )}
+          {tutor?.hourlyRate && (
+            <Chip
+              textVariant="bodySmall"
+              value={`$${tutor.hourlyRate}/h`}
+              containerStyle={styles.chip}
+            />
+          )}
+        </View>
       </View>
     </View>
   );
@@ -104,9 +117,22 @@ const useStyles = (theme) =>
       color: theme.colors.textSecondary,
       lineHeight: 18,
     },
+    chipContainer: {
+      flexDirection: "row",
+      gap: 6,
+    },
     chip: {
+      alignSelf: "center",
       paddingHorizontal: 10,
       paddingVertical: 6,
-      gap: 6,
+      gap: 4,
+    },
+    starChip: {
+      paddingLeft: 8,
+      backgroundColor: theme.colors.background,
+      borderColor: theme.colors.outline,
+    },
+    starChipText: {
+      color: theme.colors.textPrimary,
     },
   });

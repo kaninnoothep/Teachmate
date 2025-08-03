@@ -42,8 +42,6 @@ export const ProfilePage = ({ user, externalView = false }) => {
   const [loadImageError, setLoadImageError] = useState(false);
   const { mutateAsync: uploadImage } = useUploadImageMutation({}); // Upload image mutation
 
-  const [rating, setRating] = useState(5);
-
   // Helper function to format location string from user data
   const formatLocation = () => {
     const locationParts = [];
@@ -205,13 +203,29 @@ export const ProfilePage = ({ user, externalView = false }) => {
                     style={styles.rating}
                   >
                     <StarRatingDisplay
-                      rating={rating}
+                      rating={user.averageRating !== 0 ? user.averageRating : 1}
                       starSize={18}
+                      maxStars={user.averageRating !== 0 ? 5 : 1}
                       starStyle={styles.star}
                       style={styles.starContainer}
-                      color={theme.colors.star}
+                      color={
+                        user.averageRating !== 0
+                          ? theme.colors.star
+                          : theme.colors.grey
+                      }
                     />
-                    <Text variant="bodyMedium">5.0</Text>
+                    <Text
+                      variant="bodyMedium"
+                      style={
+                        user.averageRating === 0 && {
+                          color: theme.colors.textSecondary,
+                        }
+                      }
+                    >
+                      {user.averageRating !== 0
+                        ? user.averageRating.toFixed(1)
+                        : "No reviews yet"}
+                    </Text>
                     <MaterialCommunityIcons
                       name="chevron-right"
                       size={18}

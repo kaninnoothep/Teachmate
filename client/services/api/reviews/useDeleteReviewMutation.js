@@ -1,7 +1,11 @@
 /**
  * Import Modules
  */
-import { REVIEW_API_KEY, GET_REVIEWS_API_KEY } from "@/services/constants";
+import {
+  REVIEW_API_KEY,
+  GET_REVIEWS_API_KEY,
+  BOOKING_API_KEY,
+} from "@/services/constants";
 import { apiRequest } from "@/services/helpers/apiRequest";
 import { useApiSend } from "@/services/hooks/useApiSend";
 
@@ -16,4 +20,8 @@ const deleteReviewRequest = (reviewId) =>
  * @returns useMutation result
  */
 export const useDeleteReviewMutation = (options) =>
-  useApiSend(deleteReviewRequest, [GET_REVIEWS_API_KEY], options);
+  useApiSend(
+    deleteReviewRequest,
+    [GET_REVIEWS_API_KEY, BOOKING_API_KEY],
+    options
+  );

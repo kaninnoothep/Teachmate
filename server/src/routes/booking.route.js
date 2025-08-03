@@ -24,6 +24,12 @@ router.get(
   bookingControllers.getMyBookings
 );
 
+router.get(
+  "/:bookingId",
+  authMiddleware.authenticate,
+  bookingControllers.getBooking
+);
+
 // Confirm booking by ID
 // POST request to /:bookingId/confirm
 router.post(

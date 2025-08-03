@@ -1,7 +1,7 @@
 /**
  * Import Modules
  */
-import { UPDATE_USER_API_KEY } from "@/services/constants";
+import { GET_USER_API_KEY, UPDATE_USER_API_KEY } from "@/services/constants";
 import { apiRequest } from "@/services/helpers/apiRequest";
 import { useApiSend } from "@/services/hooks/useApiSend";
 
@@ -16,4 +16,4 @@ const updateUserRequest = (payload) =>
  * @returns useMutation result
  */
 export const useUpdateUserMutation = (options) =>
-  useApiSend(updateUserRequest, [], options);
+  useApiSend(updateUserRequest, [GET_USER_API_KEY], options);
