@@ -1,3 +1,6 @@
+/**
+ * Import Modules
+ */
 import { FormTextInput } from "@/components/Form/FormTextInput/FormTextInput";
 import { SafeKeyboardScrollView } from "@/components/SafeKeyboardScrollView/SafeKeyboardScrollView";
 import { useLocalSearchParams } from "expo-router";
@@ -8,6 +11,11 @@ import { Button } from "@/components/Button/Button";
 import { useState } from "react";
 import { Text } from "react-native-paper";
 
+/**
+ * ReplyToReviewPage - Displays the reply form page for replying the review
+ *
+ * @returns JSX Element
+ */
 export const ReplyToReviewPage = () => {
   const styles = useStyles();
   const { review } = useLocalSearchParams();
