@@ -41,6 +41,17 @@ export default function TabLayout() {
         }}
       />
 
+      {/* Calendar Tab  */}
+      <Tabs.Screen
+        name="calendar"
+        options={{
+          title: "Calendar",
+          tabBarIcon: ({ color }) => (
+            <MaterialCommunityIcons name="calendar" size={24} color={color} />
+          ),
+        }}
+      />
+
       {/* Sessions Tab (only for tutors) */}
       <Tabs.Screen
         name="sessions"
@@ -65,6 +76,17 @@ export default function TabLayout() {
           title: "Explore",
           tabBarIcon: ({ color }) => (
             <MaterialCommunityIcons name="magnify" size={24} color={color} />
+          ),
+        }}
+      />
+
+      {/* Dashboard Tab  */}
+      <Tabs.Screen
+        name="dashboard"
+        options={{
+          title: "Dashboard",
+          tabBarIcon: ({ color }) => (
+            <MaterialCommunityIcons name="chart-box" size={24} color={color} />
           ),
         }}
       />
