@@ -1,6 +1,7 @@
 /**
  * Import Modules
  */
+import { BackButton } from "@/components/BackButton/BackButton";
 import { LogoHeaderTitle } from "@/components/LogoHeaderTitle/LogoHeaderTitle";
 import { Stack } from "expo-router";
 import { useTheme } from "react-native-paper";
@@ -32,6 +33,16 @@ export default function CalendarLayout() {
         options={{
           title: "Calendar",
           headerTitle: () => <LogoHeaderTitle />,
+        }}
+      />
+
+      {/* Booking Details Screen */}
+      <Stack.Screen
+        name="[calendarBookingId]"
+        options={{
+          title: "Booking Details",
+          headerTintColor: theme.colors.inverseText,
+          headerLeft: () => <BackButton />,
         }}
       />
     </Stack>
