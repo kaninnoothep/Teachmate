@@ -124,7 +124,7 @@ export const CalendarPage = () => {
     a.startTime.localeCompare(b.startTime)
   );
   const renderFooterComponent = () => <Pressable style={{ height: 50 }} />;
-  const renderSeparatorComponent = () => <Pressable style={{ height: 12 }} />;
+  const renderSeparatorComponent = () => <Pressable style={{ height: 10 }} />;
   return (
     <Pressable style={{ flex: 1 }}>
       <CalendarProvider
@@ -139,15 +139,20 @@ export const CalendarPage = () => {
           disablePan={true}
           initialPosition="open"
           hideKnob
+          disableWeekScroll
           closeOnDayPress={false}
           markedDates={marked}
           theme={{
             ...calendarTheme,
+            dayTextColor: theme.colors.text,
+            monthTextColor: theme.colors.text,
             arrowColor: theme.colors.textSecondary,
             dotColor: theme.colors.primary,
             todayTextColor: theme.colors.text,
             todayDotColor: theme.colors.primary,
             textMonthFontWeight: 600,
+            textDayFontWeight: 400,
+            textDayStyle: { fontSize: 14, paddingTop: 2 },
             "stylesheet.day.basic": {
               selected: {
                 backgroundColor: theme.colors.primary,

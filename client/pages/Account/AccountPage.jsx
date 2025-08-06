@@ -105,7 +105,7 @@ export const AccountPage = () => {
             {/* Only show state picker if country is selected and has states */}
             {watchedCountry && watchedCountry?.hasStates && (
               <PickerButton
-                label="State"
+                label="State / Province"
                 value={watchedState?.name}
                 onPress={() => statePickerRef.current?.open()}
               />
