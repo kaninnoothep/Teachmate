@@ -129,24 +129,26 @@ export const BookingDetailPage = ({ booking }) => {
     const canCancel = sessionDateTime.subtract(24, "hour").isAfter(dayjs.utc());
 
     if (
-      (status === "pending" && user.role === "student" && canCancel) ||
-      (status === "confirmed" && canCancel)
+      (status === "pending" && user.role === "student") ||
+      status === "confirmed"
     ) {
       return (
-        <View style={{ marginTop: 20, gap: 6 }}>
-          <Button
-            onPress={() => setShowCancellationDialog(true)}
-            variant="red-outlined"
-            icon={({ color }) => (
-              <MaterialCommunityIcons
-                name="calendar-remove"
-                size={24}
-                color={color}
-              />
-            )}
-          >
-            Cancel Booking
-          </Button>
+        <View style={{ marginTop: canCancel && 20, gap: 6 }}>
+          {canCancel && (
+            <Button
+              onPress={() => setShowCancellationDialog(true)}
+              variant="red-outlined"
+              icon={({ color }) => (
+                <MaterialCommunityIcons
+                  name="calendar-remove"
+                  size={24}
+                  color={color}
+                />
+              )}
+            >
+              Cancel Booking
+            </Button>
+          )}
           <Text
             variant="bodySmall"
             style={{ color: theme.colors.textSecondary }}
