@@ -41,12 +41,16 @@ export const ChartSection = ({ title, subtitle, legend, children }) => {
 const useStyles = (theme) =>
   StyleSheet.create({
     chartContainer: {
-      overflow: "hidden",
       padding: 20,
       gap: 24,
       borderWidth: 1,
       borderRadius: 20,
       borderColor: theme.colors.outline,
+      backgroundColor: theme.colors.background,
+      shadowColor: theme.colors.shadow,
+      shadowOffset: { width: 0, height: 4 },
+      shadowOpacity: 0.06,
+      shadowRadius: 10,
     },
     chartTitle: {
       fontSize: 18,
