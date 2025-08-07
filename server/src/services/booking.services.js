@@ -284,6 +284,80 @@ async function getBooking(user, bookingId) {
 }
 
 /**
+ * getCalendarBookings - Get bookings for calendar view (3 months range)
+ * Only returns confirmed and finished bookings for calendar display
+ *
+ * @param {Object} user - Logged-in user
+ * @param {string} selectedDate - Selected date in YYYY-MM-DD format
+ * @returns {Object} Response with bookings grouped by date
+ */
+async function getCalendarBookings(user, selectedDate) {
+  // Parse the selected date or use current date
+  const baseDate = selectedDate ? new Date(selectedDate) : new Date();
+
+  // Calculate date range
+  // First day of previous month
+  const startDate = new Date(
+    baseDate.getFullYear(),
+    baseDate.getMonth() - 1,
+    1
+  );
+
+  // Last day of next month
+  const endDate = new Date(baseDate.getFullYear(), baseDate.getMonth() + 2, 0);
+
+  const query = {
+    date: {
+      $gte: startDate,
+      $lte: endDate,
+    },
+    status: { $in: ["confirmed", "finished"] }, // Only confirmed and finished bookings
+  };
+
+  // Filter by user role (tutor or student)
+  if (user.role === "tutor") {
+    query.tutor = user._id;
+  } else {
+    query.student = user._id;
+  }
+
+  // Fetch bookings and populate related fields
+  const bookings = await Booking.find(query)
+    .populate("student", "firstName lastName image")
+    .populate("tutor", "firstName lastName image")
+    .populate("session", "subject")
+    .sort({ date: 1, startTime: 1 });
+
+  // Group bookings by date
+  const groupedBookings = {};
+  const markedDates = {};
+
+  bookings.forEach((booking) => {
+    const dateKey = booking.date.toISOString().split("T")[0];
+
+    if (!groupedBookings[dateKey]) {
+      groupedBookings[dateKey] = [];
+    }
+
+    groupedBookings[dateKey].push(booking);
+    markedDates[dateKey] = { marked: true };
+  });
+
+  return responses.buildSuccessResponse(
+    "Calendar bookings fetched successfully",
+    200,
+    {
+      bookings: groupedBookings,
+      markedDates: markedDates,
+      dateRange: {
+        start: startDate.toISOString().split("T")[0],
+        end: endDate.toISOString().split("T")[0],
+      },
+    }
+  );
+}
+
+/**
  * Export all functions
  */
 export default {
@@ -293,4 +367,5 @@ export default {
   cancelBooking,
   getMyBookings,
   getBooking,
+  getCalendarBookings,
 };

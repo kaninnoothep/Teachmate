@@ -31,6 +31,7 @@ export const GET_TUTORS_API_KEY = "/user/tutors";
 // Bookings
 export const BOOKING_API_KEY = "/booking";
 export const GET_BOOKINGS_API_KEY = "/booking/me";
+export const GET_BOOKINGS_CALENDAR_API_KEY = "/booking/calendar";
 
 // Reviews
 export const REVIEW_API_KEY = "/review";

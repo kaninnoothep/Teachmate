@@ -24,6 +24,14 @@ router.get(
   bookingControllers.getMyBookings
 );
 
+// Get calendar bookings (3 months range)
+// GET request to /calendar
+router.get(
+  "/calendar",
+  authMiddleware.authenticate,
+  bookingControllers.getCalendarBookings
+);
+
 router.get(
   "/:bookingId",
   authMiddleware.authenticate,

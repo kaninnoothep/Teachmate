@@ -108,6 +108,27 @@ async function getBooking(req, res) {
 }
 
 /**
+ * getCalendarBookings - Get bookings for calendar view (3 months range)
+ *
+ * @param {object} req - Request Object
+ * @param {object} res - Response Object
+ */
+async function getCalendarBookings(req, res) {
+  try {
+    const response = await bookingServices.getCalendarBookings(
+      req.user,
+      req.query.date
+    );
+    res.status(response.statusCode).json(response);
+  } catch (error) {
+    res.status(500).json({
+      message: "Unable to fetch calendar bookings",
+      status: "failure",
+    });
+  }
+}
+
+/**
  * Export all functions
  */
 export default {
@@ -117,4 +138,5 @@ export default {
   cancelBooking,
   getMyBookings,
   getBooking,
+  getCalendarBookings,
 };
