@@ -128,6 +128,36 @@ async function getCalendarBookings(req, res) {
   }
 }
 
+async function getWeeklyBookingHours(req, res) {
+  try {
+    const response = await bookingServices.getWeeklyBookingHours(
+      req.user,
+      req.query.date
+    );
+    res.status(response.statusCode).json(response);
+  } catch {
+    res.status(500).json({
+      message: "Unable to fetch weekly data",
+      status: "failure",
+    });
+  }
+}
+
+async function getMonthlyBookingHours(req, res) {
+  try {
+    const response = await bookingServices.getMonthlyBookingHours(
+      req.user,
+      req.query.date
+    );
+    res.status(response.statusCode).json(response);
+  } catch {
+    res.status(500).json({
+      message: "Unable to fetch monthly data",
+      status: "failure",
+    });
+  }
+}
+
 /**
  * Export all functions
  */
@@ -139,4 +169,6 @@ export default {
   getMyBookings,
   getBooking,
   getCalendarBookings,
+  getWeeklyBookingHours,
+  getMonthlyBookingHours,
 };

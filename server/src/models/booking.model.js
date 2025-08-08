@@ -35,6 +35,10 @@ const bookingSchema = mongoose.Schema(
       type: String,
       required: true,
     },
+    totalHours: {
+      type: Number,
+      required: true,
+    },
     preferredLocation: {
       type: String,
       enum: ["publicPlace", "tutorPlace", "online", ""],

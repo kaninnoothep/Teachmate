@@ -62,6 +62,22 @@ router.post(
   bookingControllers.cancelBooking
 );
 
+// Get weekly booking hours
+// GET request to /analytics/weekly
+router.get(
+  "/analytics/weekly",
+  authMiddleware.authenticate,
+  bookingControllers.getWeeklyBookingHours
+);
+
+// Get monthly booking hours
+// GET request to /analytics/monthly
+router.get(
+  "/analytics/monthly",
+  authMiddleware.authenticate,
+  bookingControllers.getMonthlyBookingHours
+);
+
 /**
  * Export router object
  */

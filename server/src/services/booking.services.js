@@ -5,6 +5,14 @@ import User from "../models/users.model.js";
 import responses from "../utils/response.js";
 import Booking from "../models/booking.model.js";
 import { calculateDuration } from "../utils/calculateDuration.js";
+import {
+  startOfMonth,
+  endOfMonth,
+  startOfWeek,
+  endOfWeek,
+  addWeeks,
+  format,
+} from "date-fns";
 
 /**
  * createBooking - Create a new booking for a tutor session
@@ -47,10 +55,10 @@ async function createBooking(user, data) {
   );
 
   // Calculate how many slots should be selected based on duration
-  const expectedDuration = calculateDuration(startTime, endTime);
+  const duration = calculateDuration(startTime, endTime);
 
   // Check if the number of slots matches the expected duration
-  if (selectedSlots.length !== expectedDuration) {
+  if (selectedSlots.length !== duration) {
     return responses.buildFailureResponse(
       "Slots are not continuous or partially booked",
       400
@@ -80,6 +88,7 @@ async function createBooking(user, data) {
     date,
     startTime,
     endTime,
+    totalHours: duration,
     preferredLocation,
     note,
   });
@@ -357,6 +366,73 @@ async function getCalendarBookings(user, selectedDate) {
   );
 }
 
+export async function getWeeklyBookingHours(user, dateStr) {
+  const date = dateStr ? new Date(dateStr) : new Date();
+  const start = startOfWeek(date, { weekStartsOn: 0 }); // Sunday
+  const end = endOfWeek(date, { weekStartsOn: 0 }); // Saturday
+
+  const query = {
+    date: { $gte: start, $lte: end },
+    status: { $in: ["finished"] },
+    [user.role]: user._id,
+  };
+
+  const bookings = await Booking.find(query);
+
+  const dayLabels = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+  const result = dayLabels.map((label) => ({ label, value: 0 }));
+
+  bookings.forEach((b) => {
+    const dayIndex = new Date(b.date).getUTCDay(); // 0 = Sun ... 6 = Sat
+    result[dayIndex].value += b.totalHours;
+  });
+
+  return responses.buildSuccessResponse("Weekly hours", 200, {
+    data: result,
+    range: `${format(start, "MMM d, yyyy")} - ${format(end, "MMM d, yyyy")}`,
+  });
+}
+
+async function getMonthlyBookingHours(user, dateStr) {
+  const date = dateStr ? new Date(dateStr) : new Date();
+  const monthStart = startOfMonth(date);
+  const monthEnd = endOfMonth(date);
+  const firstWeekStart = startOfWeek(monthStart, { weekStartsOn: 0 });
+  const lastWeekEnd = endOfWeek(monthEnd, { weekStartsOn: 0 });
+
+  const query = {
+    date: { $gte: firstWeekStart, $lte: lastWeekEnd },
+    status: { $in: ["finished"] },
+    [user.role]: user._id,
+  };
+
+  const bookings = await Booking.find(query);
+
+  const weeklyData = [];
+  let cursor = new Date(firstWeekStart);
+
+  while (cursor <= lastWeekEnd) {
+    const weekStart = new Date(cursor);
+    const weekEnd = endOfWeek(weekStart, { weekStartsOn: 0 });
+
+    const weekTotal = bookings
+      .filter((b) => b.date >= weekStart && b.date <= weekEnd)
+      .reduce((sum, b) => sum + b.totalHours, 0);
+
+    weeklyData.push({
+      label: format(weekStart, "MMM d"),
+      value: weekTotal,
+    });
+
+    cursor = addWeeks(cursor, 1);
+  }
+
+  return responses.buildSuccessResponse("Monthly hours", 200, {
+    data: weeklyData,
+    subtitle: format(date, "MMM yyyy"),
+  });
+}
+
 /**
  * Export all functions
  */
@@ -368,4 +444,6 @@ export default {
   getMyBookings,
   getBooking,
   getCalendarBookings,
+  getWeeklyBookingHours,
+  getMonthlyBookingHours,
 };
