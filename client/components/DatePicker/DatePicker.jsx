@@ -148,6 +148,10 @@ export const DatePicker = ({
         button_next_image: { tintColor: theme.colors.textDarkGrey },
         button_prev: { padding: 10 },
         button_prev_image: { tintColor: theme.colors.textDarkGrey },
+        weekday_label: {
+          textTransform: "capitalize",
+          color: theme.colors.textWeekDay,
+        },
         ...styles,
       }}
     />

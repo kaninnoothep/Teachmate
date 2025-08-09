@@ -93,7 +93,7 @@ export const StatusPickerSheet = forwardRef(
         handleComponent={null}
       >
         <View style={styles.container}>
-          <Text style={styles.title}>Status</Text>
+          <Text style={styles.title}>Select Status</Text>
 
           <Picker
             selectedValue={selectedStatus}

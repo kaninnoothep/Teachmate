@@ -63,6 +63,7 @@ export const Colors = {
     infoBackground: "#F5F5F5",
     iosError: "#E4403B",
     star: "#FACB5C",
+    textWeekDay: "#B8C1CC",
   },
   dark: {
     text: "#FFFFFF",
@@ -126,5 +127,6 @@ export const Colors = {
     infoBackground: "#F5F5F5",
     iosError: "#E4403B",
     star: "#FACB5C",
+    textWeekDay: "#B8C1CC",
   },
 };

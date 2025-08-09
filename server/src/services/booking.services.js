@@ -429,7 +429,7 @@ async function getMonthlyBookingHours(user, dateStr) {
 
   return responses.buildSuccessResponse("Monthly hours", 200, {
     data: weeklyData,
-    subtitle: format(date, "MMM yyyy"),
+    monthLabel: format(date, "MMM yyyy"),
   });
 }
 

@@ -51,6 +51,7 @@ const useStyles = (theme) =>
       shadowOffset: { width: 0, height: 4 },
       shadowOpacity: 0.06,
       shadowRadius: 10,
+      minHeight: 400,
     },
     chartTitle: {
       fontSize: 18,
