@@ -4,9 +4,9 @@ The client of this project was built with **React Native** using **Expo**, with 
 
 </br>
 
-## 📁 Folder Structure
+## 📁 File/Folder Structure
 
-The following folders are used to organize the project:
+The following files/folders are used to organize the project:
 
 `package.json` contains essential information about the project, including commands and dependencies
 

@@ -15,7 +15,9 @@
     <a href="https://github.com/kaninnoothep/Teachmate"><strong>Explore »</strong></a>
     <br />
     <br />
-    <a href="https://drive.google.com/file/d/1lDS2fPy3Nth1clOyNSEFzVpQRRPOf5o2/view?usp=sharing">View Demo</a>
+    <a href="https://drive.google.com/file/d/1lDS2fPy3Nth1clOyNSEFzVpQRRPOf5o2/view?usp=sharing">View Demo (MVP 1)</a>
+    ·
+    <a href="#">View Demo (MVP 2)</a>
     ·
     <a href="https://github.com/kaninnoothep/Teachmate/issues/new?labels=bug&template=bug-report---.md">Report Bug</a>
     ·
@@ -52,7 +54,7 @@
 
 This project is a **Tutor-Student Matching platform**. As the education system is rapidly changing, finding a tutor is a crucial and challenging task for students. Traditional tutoring methods, such as word-of-mouth or bulletin boards, still have gaps in tutors' background and experience, resulting in students having an unpleasant experience of finding tutors who meet their needs. Consequently, the students may miss out on learning opportunities and receive an ineffective learning experience. **Teachmate** addresses these problems by providing a comprehensive mobile app solution for connecting tutors and students, streamlining the process of matching based on subjects, expertise, availability, and preferences. The goal of Teachmate is to match tutors with students, where students can investigate and verify the identity of tutors for credibility, and book sessions with confident tutors, enhancing the learning experience to be more effective and appropriate for the students' needs.
 
-The following are key features implemented in **MVP 1** to satisfy this goal, categorized by user role:
+The following are key features implemented in **MVP 1** and **MVP 2** to satisfy the goal, categorized by user role:
 
 **Tutor Features**
 
@@ -66,6 +68,14 @@ The following are key features implemented in **MVP 1** to satisfy this goal, ca
       Tutors can create and manage session details such as subject, description, and estimated duration, allowing students to view their offered sessions.
 - [x] **Review Bookings**
       Tutors can see bookings from students and the booking information, including subject, date, time, preferred locations, notes, and student profile details, helping them prepare more effectively for the session.
+- [x] **Confirm, Reject, and Cancel Bookings**
+      Tutors can accept or decline booking requests, or cancel previously confirmed sessions, to maintain accurate scheduling and avoid conflicts.
+- [x] **Calendar View of Bookings**
+      Tutors can view all upcoming sessions in a calendar, making it easier to plan lessons and manage availability.
+- [x] **Ratings and Reviews on Students**
+      Tutors can leave feedback and rate students after sessions, promoting transparency and helping other tutors assess student reliability.
+- [x] **Overview Tracking Dashboard**
+      Tutors can view statistics on completed tutoring hours per week and month, enabling them to track performance and plan their schedules effectively.
 
 **Student Features**
 
@@ -76,7 +86,13 @@ The following are key features implemented in **MVP 1** to satisfy this goal, ca
 - [x] **Search and Filter Tutors**
       Students can search for tutors by keywords and use filters (e.g., subject, location) to narrow down the most suitable tutors.
 - [x] **Booking with Tutors**
-      Students can view tutor profiles, select a preferred session, date, time slots, and location. After booking, they can review all upcoming sessions in one place. Students can also cancel the booking.
+      Students can view tutor profiles, select a preferred session, date, time slots, and location. After booking, they can review all upcoming sessions. Students can also cancel the booking.
+- [x] **Calendar View of Bookings**
+      Students can see all upcoming tutoring sessions in a calendar view, helping them organize study plans and avoid schedule conflicts.
+- [x] **Ratings and Reviews on Tutors**
+      Students can provide ratings and written feedback after sessions, helping other students make informed decisions and encouraging quality teaching.
+- [x] **Overview Tracking Dashboard**
+      Students can track completed tutoring hours weekly and monthly, enabling them to monitor progress and set learning goals.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -134,14 +150,14 @@ To install the application, simply follow these steps:
    ```sh
    git clone https://github.com/kaninnoothep/Teachmate.git
    ```
-2. **Install NPM packages**, open the terminal in the project, and run the following commands
+2. **Install NPM packages** – open the terminal in the root of the project directory (Teachmate), and run the following commands
 
    ```sh
    cd client && npm install
    cd ../server && npm install
    ```
 
-3. **Initialize environment variables**, be sure to have `.env` in both the `client` and `server` directories
+3. **Initialize environment variables** – be sure to have `.env` in the root of both `client` and `server` directories, and ensure to use the correct variables
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -149,17 +165,52 @@ To install the application, simply follow these steps:
 
 ## How To Run
 
-To run the application, you will need to open 2 terminal windows, one in the `client` directory and the other in the `server` directory.
+To run the application, you will need to open 2 terminal windows in the root of the project directory (Teachmate), one window will be used for the `client` directory, and the other for the `server` directory.
+On the first terminal window, move to the `client` directory:
 
-In each window, run this command
+```sh
+cd client
+```
+
+On the second terminal window, move to the `server` directory:
+
+```sh
+cd server
+```
+
+On each window, run this command:
 
 ```sh
 npm run start
 ```
 
+**On the client terminal window**
+In the output, you'll find options to open the app in:
+
+- [Development build](https://docs.expo.dev/develop/development-builds/introduction/)
+
+- [Android Emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
+
+- [iOS Simulator](https://docs.expo.dev/workflow/ios-simulator/)
+
+- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+
+Example steps to open the app on the iOS platform:
+
+- Press `i` to open in the iOS Simulator (requires Xcode), or
+
+- Scan the QR code with the Expo Go app on an iPhone
+
+**On the server terminal window,** you’ll find the successful message:
+
+```
+Server running on port 3000
+MongoDB Connected Successfully
+```
+
 #### Note
 
-See `README` file in the `client` and `server` directory for more information of **How To Run** the application.
+See the `README` file in the `client` and `server` directories for more information on the application.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 

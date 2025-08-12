@@ -4,9 +4,9 @@ This is the server-side of the Teachmate project, built with **Node.js** using *
 
 </br>
 
-## 📁 Folder Structure
+## 📁 File/Folder Structure
 
-The following folders are used to organize the server:
+The following files/folders are used to organize the server:
 
 `package.json` contains essential information about the project, including commands and dependencies
 
@@ -21,6 +21,8 @@ The following folders are used to organize the server:
 `configs` contains the backend configuration files and settings
 
 `controllers` contains the functions handling the logic for various routes
+
+`jobs` contains the functions handling the scheduling cron job logic
 
 `middlewares` contains the middleware functions
 
@@ -54,6 +56,13 @@ npm install
 
 ```sh
 npm run start
+```
+
+**On the server terminal window,** you’ll find the successful message:
+
+```
+Server running on port 3000
+MongoDB Connected Successfully
 ```
 
 ### Note
