@@ -27,8 +27,10 @@ import { StarRatingDisplay } from "react-native-star-rating-widget";
 dayjs.extend(utc); // Enable UTC support in dayjs
 
 /**
- * BookingDetailPage - Displays details of a specific booking and allows students to cancel it.
+ * BookingDetailPage - Displays details of a specific booking and allows students/tutors
+ * to view booking information, cancel, reject, or confirm bookings based on their role and status.
  *
+ * @param {object} booking - Booking data object containing all relevant details
  * @returns JSX Element rendering the availability management interface
  */
 export const BookingDetailPage = ({ booking }) => {
@@ -36,7 +38,7 @@ export const BookingDetailPage = ({ booking }) => {
   const theme = useTheme();
   const router = useRouter();
   const [loadImageError, setLoadImageError] = useState(false);
-  const [showCancellationDialog, setShowCancellationDialog] = useState(false);
+  const [showCancellationDialog, setShowCancellationDialog] = useState(false); // Controls visibility of cancel/reject dialog
   const { bookingId } = useLocalSearchParams(); // Get booking ID from route parameters
 
   // Hook to confirm booking
@@ -65,6 +67,7 @@ export const BookingDetailPage = ({ booking }) => {
     cancelledBy,
   } = booking;
 
+  // Get colors for the booking status chip
   const { backgroundColor, borderColor, textColor } = getBookingStatusColor(
     theme,
     status
@@ -87,7 +90,7 @@ export const BookingDetailPage = ({ booking }) => {
     }
   };
 
-  // Determine label for user (depends on current user's role)
+  // Determine label for author info (depends on current user's role)
   const getAuthorLabel = () => {
     if (user.role === "tutor") {
       return "Booked by";
@@ -96,6 +99,7 @@ export const BookingDetailPage = ({ booking }) => {
     }
   };
 
+  // Returns label describing the reason for cancellation or rejection based on status and who cancelled
   const getReasonLabel = () => {
     let label = "Reason for";
 
@@ -120,14 +124,20 @@ export const BookingDetailPage = ({ booking }) => {
     [user.role, student, tutor]
   );
 
+  // Handles confirming the booking via API call
   const handleConfirm = async () => {
     await confirmBooking({ bookingId });
   };
 
+  // Render booking action buttons depending on booking status, user role, and time constraints
   const renderActions = () => {
+    // Create a date/time object for the session start, UTC timezone
     const sessionDateTime = dayjs(`${date.split("T")[0]}T${startTime}`).utc();
+
+    // Allow cancellation only if more than 24 hours before session start
     const canCancel = sessionDateTime.subtract(24, "hour").isAfter(dayjs.utc());
 
+    // If booking is pending and user is student OR booking is confirmed, show cancel option
     if (
       (status === "pending" && user.role === "student") ||
       status === "confirmed"
@@ -159,6 +169,7 @@ export const BookingDetailPage = ({ booking }) => {
       );
     }
 
+    // If booking is pending and user is tutor, show confirm and reject buttons
     if (status === "pending" && user.role === "tutor") {
       return (
         <View style={[styles.infoRow, { marginTop: 20 }]}>
@@ -214,6 +225,7 @@ export const BookingDetailPage = ({ booking }) => {
               )}
             </View>
 
+            {/* Cancellation/Rejection Note */}
             {cancelNote && (
               <InfoBox label={getReasonLabel()}>
                 <Text variant="bodyLarge">{cancelNote}</Text>
@@ -246,6 +258,7 @@ export const BookingDetailPage = ({ booking }) => {
                   })
                 }
               >
+                {/* Avatar image */}
                 {author?.image && !loadImageError ? (
                   <Avatar.Image
                     size={40}
@@ -261,6 +274,8 @@ export const BookingDetailPage = ({ booking }) => {
                     style={{ backgroundColor: theme.colors.primary }}
                   />
                 )}
+
+                {/* Author name and average rating */}
                 <View style={styles.userNameWrapper}>
                   <Text variant="titleMedium" style={styles.userName}>
                     {author?.firstName} {author?.lastName}
@@ -293,18 +308,20 @@ export const BookingDetailPage = ({ booking }) => {
               </TouchableOpacity>
             </InfoBox>
 
-            {/* Note */}
+            {/* Note from booking */}
             {note && (
               <InfoBox label="Note">
                 <Text variant="bodyLarge">{note}</Text>
               </InfoBox>
             )}
 
+            {/* Render action buttons */}
             {renderActions()}
           </View>
         </Pressable>
       </ScrollView>
 
+      {/* Cancellation/Reject dialog */}
       <CancellationDialog
         visible={showCancellationDialog}
         setVisible={setShowCancellationDialog}

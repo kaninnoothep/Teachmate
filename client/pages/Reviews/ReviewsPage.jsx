@@ -1,3 +1,6 @@
+/**
+ * Import Modules
+ */
 import {
   FlatList,
   Pressable,
@@ -17,6 +20,12 @@ import { useReviewsQuery } from "@/services/api/reviews/useReviewsQuery";
 import { useMemo, useState } from "react";
 import { useCanReviewQuery } from "@/services/api/reviews/useCanReviewQuery";
 
+/**
+ * ReviewsPage - Displays all reviews for a user with rating summary,
+ * allows writing a review if permitted, and supports pull-to-refresh.
+ *
+ * @returns JSX.Element rendering the reviews list and UI controls.
+ */
 export const ReviewsPage = () => {
   const router = useRouter();
   const { user } = useUser();
@@ -24,12 +33,18 @@ export const ReviewsPage = () => {
   const styles = useStyles(theme);
   const { userId: reviewUserId, reviewing } = useLocalSearchParams();
   const [isManualRefreshing, setIsManualRefreshing] = useState(false);
+
+  // Fetch reviews data, loading status, and refetch function for the reviewUserId
   const { reviews, totalReviews, averageRating, isFetching, refetch } =
     useReviewsQuery(reviewUserId);
+
+  // Query to check if current user can write a review for reviewUserId
   const { canReview } = useCanReviewQuery(reviewUserId);
 
+  // Flag for whether this user has any reviews
   const hasReviews = useMemo(() => totalReviews !== 0, [totalReviews]);
 
+  // Helper function to return text summary for total reviews count
   const getTotalReviewText = () => {
     let totalText = `${totalReviews} Review`;
 
@@ -50,6 +65,7 @@ export const ReviewsPage = () => {
     }
   };
 
+  // Render header component with average rating and "Write a review" button if allowed
   const renderHeaderComponent = () => (
     <>
       <View style={styles.ratingContainer}>
@@ -105,6 +121,7 @@ export const ReviewsPage = () => {
   const renderFooterComponent = () => <Pressable style={{ height: 32 }} />;
   const renderSeparatorComponent = () => <Pressable style={{ height: 10 }} />;
 
+  // Render each review item and its reply
   const renderListItem = ({ item }) => {
     const {
       _id,
@@ -173,6 +190,12 @@ export const ReviewsPage = () => {
   );
 };
 
+/**
+ * useStyles - Specify styles to use for reviews page
+ *
+ * @param {*} theme
+ * @returns StyleSheet object
+ */
 const useStyles = (theme) =>
   StyleSheet.create({
     container: {

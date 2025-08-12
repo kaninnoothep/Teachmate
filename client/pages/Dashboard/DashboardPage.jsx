@@ -13,25 +13,37 @@ import { PickerButton } from "@/components/Picker/PickerButton";
 import { DatePickerSheet } from "@/components/DatePickerSheet/DatePickerSheet";
 import dayjs from "dayjs";
 
+/**
+ * DashboardPage - Displays dashboard with weekly and monthly booking hour charts,
+ * and allows date selection to filter the displayed data.
+ *
+ * @returns JSX.Element rendering the dashboard page
+ */
 export const DashboardPage = () => {
   const theme = useTheme();
   const styles = useStyles(theme);
   const datePickerRef = useRef(null);
   const [selectedDate, setSelectedDate] = useState(new Date());
+
+  // Fetch weekly booking hour data and range string based on selectedDate
   const {
     data: weekBarData,
     range,
     isFetching: isWeekFetching,
   } = useWeeklyBookingHoursQuery(selectedDate);
+
+  // Fetch monthly booking hour data and label based on selectedDate
   const {
     data: monthBarData,
     monthLabel,
     isFetching: isMonthFetching,
   } = useMonthlyBookingHoursQuery(selectedDate);
 
+  // Calculate spacing between bars in the bar chart
   const getSpacing = (width, padding = 40, barWidth, data) =>
     (width - padding - barWidth * data.length) / data.length - 1;
 
+  // Handle update selected date
   const handleSelectDateTime = (date) => {
     setSelectedDate(date);
   };
@@ -43,10 +55,12 @@ export const DashboardPage = () => {
         stickyHeaderIndices={[1]}
         showsVerticalScrollIndicator={false}
       >
+        {/* Page title */}
         <Text variant="headlineSmall" style={styles.titleContainer}>
           Dashboard
         </Text>
 
+        {/* Date picker trigger button */}
         <View style={styles.picker}>
           <PickerButton
             value={dayjs(selectedDate).format("MMMM D, YYYY")}
@@ -59,6 +73,7 @@ export const DashboardPage = () => {
         </View>
 
         <Pressable style={styles.chartContainer}>
+          {/* Weekly booking hours chart section */}
           <ChartSection
             title="Week Overview"
             subtitle={range}
@@ -111,6 +126,7 @@ export const DashboardPage = () => {
             </ViewWithDimensions>
           </ChartSection>
 
+          {/* Monthly booking hours chart section */}
           <ChartSection
             title="Month Overview"
             subtitle={monthLabel}
@@ -171,6 +187,7 @@ export const DashboardPage = () => {
         </Pressable>
       </ScrollView>
 
+      {/* Date picker modal */}
       <Portal>
         <DatePickerSheet
           ref={datePickerRef}
@@ -185,6 +202,7 @@ export const DashboardPage = () => {
 /**
  * useStyles - Specify styles for Dashboard page
  *
+ * @param {*} theme
  * @returns StyleSheet object
  */
 const useStyles = (theme) =>

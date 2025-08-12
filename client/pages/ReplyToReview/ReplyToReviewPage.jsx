@@ -20,6 +20,8 @@ export const ReplyToReviewPage = () => {
   const styles = useStyles();
   const { review } = useLocalSearchParams();
   const [reviewState] = useState(JSON.parse(review));
+
+  // Hook to handle form state and validation
   const { control, handleSubmit } = useReplyToReviewForm(reviewState.reviewId);
 
   return (
@@ -60,6 +62,11 @@ export const ReplyToReviewPage = () => {
   );
 };
 
+/**
+ * useStyles - Specify styles to use for reply-to-review page
+ *
+ * @returns StyleSheet object
+ */
 const useStyles = () =>
   StyleSheet.create({
     container: {

@@ -1,6 +1,15 @@
+/**
+ * Import Modules
+ */
 import { useStickyFlatList } from "./hooks/useStickyFlatList";
 import { Animated, View } from "react-native";
 
+/**
+ * StickyFlatList - A FlatList with a sticky header element which stays fixed at the top while scrolling.
+ *
+ * @param {object} props
+ * @returns JSX Element rendering a FlatList with sticky header behavior
+ */
 export const StickyFlatList = ({
   customContainerStyle = {},
   ListHeaderComponent,
@@ -8,13 +17,15 @@ export const StickyFlatList = ({
   StickyElementComponent,
   ...props
 }) => {
+  // Hook returns scroll position, styles for sticky effect, and layout callbacks to measure header and sticky elements
   const [scrollY, styles, onLayoutHeaderElement, onLayoutStickyElement] =
     useStickyFlatList();
 
   return (
     <View style={customContainerStyle}>
+      {/* Sticky header element that stays fixed at the top */}
       {StickyElementComponent && (
-        <Animated.View // <-- Sticky Component
+        <Animated.View
           style={styles.stickyElement}
           onLayout={onLayoutStickyElement}
         >
@@ -22,10 +33,10 @@ export const StickyFlatList = ({
         </Animated.View>
       )}
 
+      {/* Main scrollable list */}
       <Animated.FlatList
         {...props}
         ListHeaderComponent={
-          // <-- Header Component
           ListHeaderComponent && (
             <Animated.View onLayout={onLayoutHeaderElement}>
               {ListHeaderComponent()}

@@ -11,7 +11,8 @@ import dayjs from "dayjs";
  *
  * @param {*} props
  * @returns JSX Element
- */ const DateWithDot = ({
+ */
+const DateWithDot = ({
   day,
   availabilityMap,
   hideDisabled,

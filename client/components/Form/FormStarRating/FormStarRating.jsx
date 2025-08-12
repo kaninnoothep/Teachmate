@@ -38,6 +38,7 @@ export const FormStarRating = ({
         fieldState: { invalid, error },
       }) => (
         <View style={[styles.container, containerStyle]}>
+          {/* Label */}
           {label && (
             <Text
               variant="titleMedium"
@@ -51,6 +52,7 @@ export const FormStarRating = ({
             </Text>
           )}
 
+          {/* Star Rating */}
           <StarRating
             {...{ ...props, onChange }}
             rating={value}
@@ -62,6 +64,7 @@ export const FormStarRating = ({
             starStyle={[styles.star, starStyle]}
           />
 
+          {/* Helper Text */}
           {(!hideHelperTextSpace || helperText || invalid || hasError) && (
             <HelperText
               type={error ? "error" : "info"}
@@ -94,6 +97,9 @@ FormStarRating.propTypes = {
   starStyle: PropTypes.object,
 };
 
+/**
+ * Specify Styles to use
+ */
 const styles = StyleSheet.create({
   container: {
     flex: 1,

@@ -31,13 +31,15 @@ export const GET_TUTORS_API_KEY = "/user/tutors";
 // Bookings
 export const BOOKING_API_KEY = "/booking";
 export const GET_BOOKINGS_API_KEY = "/booking/me";
+
+// Calendar
 export const GET_BOOKINGS_CALENDAR_API_KEY = "/booking/calendar";
+
+// Dashboard
+export const GET_WEEKLY_BOOKING_HOURS_API_KEY = "/booking/analytics/weekly";
+export const GET_MONTHLY_BOOKING_HOURS_API_KEY = "/booking/analytics/monthly";
 
 // Reviews
 export const REVIEW_API_KEY = "/review";
 export const GET_REVIEWS_API_KEY = "/review/user";
 export const CHECK_CAN_REVIEW_API_KEY = "/review/can-review";
-
-// Dashboard
-export const GET_WEEKLY_BOOKING_HOURS_API_KEY = "/booking/analytics/weekly";
-export const GET_MONTHLY_BOOKING_HOURS_API_KEY = "/booking/analytics/monthly";

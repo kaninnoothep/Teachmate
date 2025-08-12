@@ -1,3 +1,6 @@
+/**
+ * Import Modules
+ */
 import Dialog from "react-native-dialog";
 import Toast from "react-native-toast-message";
 import { BlurView } from "expo-blur";
@@ -8,6 +11,14 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 import { useCancelBookingMutation } from "@/services/api/bookings/useCancelBookingMutation";
 import { useRejectBookingMutation } from "@/services/api/bookings/useRejectBookingMutation";
 
+/**
+ * CancellationDialog - A confirmation dialog to cancel or reject a booking.
+ *
+ * @param {boolean} visible - Controls whether the dialog is visible
+ * @param {function} setVisible - Function to update visibility state
+ * @param {boolean} isCancelDialog - Determines if this is a cancel (true) or reject (false) dialog
+ * @returns JSX element rendering a dialog with input and action buttons
+ */
 export const CancellationDialog = ({
   visible,
   setVisible,
@@ -18,10 +29,12 @@ export const CancellationDialog = ({
   const [reason, setReason] = useState("");
   const { bookingId } = useLocalSearchParams();
 
+  // Blur effect component used on iOS for dialog backdrop
   const blurComponentIOS = (
     <BlurView intensity={100} style={StyleSheet.absoluteFill} />
   );
 
+  // Label text changes depending on whether this is cancel or reject dialog
   const cancelLabel = isCancelDialog ? "cancel" : "reject";
 
   // Hook to cancel booking
@@ -44,6 +57,7 @@ export const CancellationDialog = ({
     },
   });
 
+  // Handles on success of cancel or reject mutation
   const handleSuccess = (response) => {
     Toast.show({ type: "success", text1: response.message });
     setReason("");
@@ -51,6 +65,7 @@ export const CancellationDialog = ({
     router.back();
   };
 
+  // Handles the submit button press to trigger cancel or reject mutation based on dialog type
   const handleSubmit = async () => {
     if (isCancelDialog) {
       // Cancel Booking
@@ -61,7 +76,7 @@ export const CancellationDialog = ({
     }
   };
 
-  // Handle search input changes
+  // Handles search input changes
   const handleChangeText = useCallback(
     (value) => {
       setReason(value);
@@ -77,14 +92,17 @@ export const CancellationDialog = ({
       contentStyle={styles.container}
       blurComponentIOS={blurComponentIOS}
     >
+      {/* Dialog title */}
       <Dialog.Title>
         Are you sure you want to {cancelLabel} this booking?
       </Dialog.Title>
 
+      {/* Description prompting user to leave a reason */}
       <Dialog.Description style={styles.description}>
         Leave a message why you want to {cancelLabel}.
       </Dialog.Description>
 
+      {/* Multiline input field for entering reason */}
       <Dialog.Input
         value={reason}
         onChangeText={handleChangeText}
@@ -94,11 +112,14 @@ export const CancellationDialog = ({
         style={styles.input}
       />
 
+      {/* Confirm button triggers submit */}
       <Dialog.Button
         label={`Yes, ${cancelLabel} booking`}
         color={theme.colors.iosError}
         onPress={handleSubmit}
       />
+
+      {/* Cancel button closes dialog and resets input */}
       <Dialog.Button
         label="Later"
         onPress={() => {
@@ -110,6 +131,9 @@ export const CancellationDialog = ({
   );
 };
 
+/**
+ * Specify Styles to use
+ */
 const styles = StyleSheet.create({
   container: {
     width: 310,

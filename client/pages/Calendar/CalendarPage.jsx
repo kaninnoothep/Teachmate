@@ -1,3 +1,6 @@
+/**
+ * Import Modules
+ */
 import { useRef, useState } from "react";
 import {
   CalendarProvider,
@@ -11,6 +14,11 @@ import { CalendarItem } from "./components/CalendarItem";
 import { EmptyList } from "@/components/EmptyList/EmptyList";
 import { useBookingsCalendarQuery } from "@/services/api/bookings/useBookingsCalendarQuery";
 
+/**
+ * CalendarPage - Displays a calendar view and a list of bookings/events for the selected date.
+ *
+ * @returns JSX.Element rendering the calendar page
+ */
 export const CalendarPage = () => {
   const router = useRouter();
   const theme = useTheme();
@@ -20,14 +28,17 @@ export const CalendarPage = () => {
   const [selectedDate, setSelectedDate] = useState(
     new Date().toLocaleDateString()
   );
+
+  // Fetch bookings and marked dates for calendar based on selectedDate
   const { bookings, markedDates, isFetching, refetch } =
     useBookingsCalendarQuery(selectedDate);
 
-  // Sort items by start time for proper timeline order
+  // Sort bookings for selected date by start time for timeline order
   const itemsForDate = (bookings[selectedDate] || []).sort((a, b) =>
     a.startTime.localeCompare(b.startTime)
   );
 
+  // Handle update selected date
   const handleDateChange = (date) => {
     setSelectedDate(date);
   };
@@ -53,6 +64,7 @@ export const CalendarPage = () => {
         onDateChanged={handleDateChange}
         theme={{ ...calendarTheme, todayButtonTextColor: theme.colors.primary }}
       >
+        {/* Calendar */}
         <ExpandableCalendar
           ref={calendarRef}
           disablePan={true}
@@ -85,6 +97,7 @@ export const CalendarPage = () => {
           }}
         />
 
+        {/* List of bookings/events for the selected date */}
         <FlatList
           data={itemsForDate}
           keyExtractor={(item) => item._id}
@@ -126,6 +139,12 @@ export const CalendarPage = () => {
   );
 };
 
+/**
+ * useStyles - Specify styles for calendar page
+ *
+ * @param {*} theme
+ * @returns StyleSheet object
+ */
 const useStyles = (theme) =>
   StyleSheet.create({
     listContainer: {

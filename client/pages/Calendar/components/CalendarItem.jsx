@@ -1,3 +1,6 @@
+/**
+ * Import Modules
+ */
 import { Chip } from "@/components/Chip/Chip";
 import { getBookingStatusColor } from "@/utils/getBookingStatusColor";
 import dayjs from "dayjs";
@@ -5,6 +8,12 @@ import { useState } from "react";
 import { Pressable, StyleSheet, TouchableOpacity, View } from "react-native";
 import { Avatar, Text, useTheme } from "react-native-paper";
 
+/**
+ * CalendarItem - Displays a single booking/event item in the calendar list
+ *
+ * @param {object} props
+ * @returns JSX.Element rendering a styled booking card with timeline and user avatar
+ */
 export const CalendarItem = ({
   status,
   subject,
@@ -17,6 +26,8 @@ export const CalendarItem = ({
   const theme = useTheme();
   const styles = useStyles(theme);
   const [loadImageError, setLoadImageError] = useState(false);
+
+  // Get colors for booking status badge
   const { backgroundColor, borderColor, textColor } = getBookingStatusColor(
     theme,
     status
@@ -84,6 +95,12 @@ export const CalendarItem = ({
   );
 };
 
+/**
+ * useStyles - Specify styles for calendar item
+ *
+ * @param {*} theme
+ * @returns StyleSheet object
+ */
 const useStyles = (theme) =>
   StyleSheet.create({
     container: {

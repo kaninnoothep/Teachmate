@@ -72,7 +72,7 @@ export default function ModalsLayout() {
         }}
       />
 
-      {/* Reply to Review Screen */}
+      {/* Reply-to-Review Screen */}
       <Stack.Screen
         name="reviews/replyToReview"
         options={{

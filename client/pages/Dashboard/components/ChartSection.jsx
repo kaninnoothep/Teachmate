@@ -1,6 +1,16 @@
+/**
+ * Import Modules
+ */
 import { StyleSheet, View } from "react-native";
 import { Text, useTheme } from "react-native-paper";
 
+/**
+ * ChartSection - A reusable container component for chart display sections,
+ * showing an optional title, subtitle, chart content (children), and legend.
+ *
+ * @param {object} props
+ * @returns JSX.Element - Rendered chart section with styled layout
+ */
 export const ChartSection = ({ title, subtitle, legend, children }) => {
   const theme = useTheme();
   const styles = useStyles(theme);

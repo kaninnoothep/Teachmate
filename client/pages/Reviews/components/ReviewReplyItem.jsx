@@ -18,7 +18,7 @@ import Toast from "react-native-toast-message";
 dayjs.extend(relativeTime);
 
 /**
- * ReviewItem - Displays review card
+ * ReviewReplyItem - Displays a review or a reply card with author info, rating, message, and actions.
  *
  * @param {object} props
  * @returns JSX Element
@@ -40,15 +40,20 @@ export const ReviewReplyItem = ({
   const theme = useTheme();
   const styles = useStyles(theme);
   const [loadImageError, setLoadImageError] = useState(false);
+
+  // Determine if current user can reply (must be the reviewee and not readonly)
   const canReply = useMemo(
     () => reviewee?._id === user._id && !readonly,
     [reviewee, user, readonly]
   );
+
+  // Determine if current user can delete this review/reply (must be the author and not readonly)
   const canDelete = useMemo(
     () => author._id === user._id && !readonly,
     [author, user, readonly]
   );
 
+  // Mutation hook to delete the review
   const { mutateAsync: deleteReview } = useDeleteReviewMutation({
     onSuccess: (response) => {
       Toast.show({ type: "success", text1: response.message });
@@ -58,6 +63,7 @@ export const ReviewReplyItem = ({
     },
   });
 
+  // Mutation hook to delete the reply
   const { mutateAsync: deleteReply } = useDeleteReplyMutation({
     onSuccess: (response) => {
       Toast.show({ type: "success", text1: response.message });
@@ -67,6 +73,7 @@ export const ReviewReplyItem = ({
     },
   });
 
+  // Handler for delete action, shows confirmation alert
   const handleDelete = () => {
     Alert.alert(
       `Are you sure you want to delete this ${!isReply ? "review" : "reply"}?`,
@@ -88,6 +95,7 @@ export const ReviewReplyItem = ({
       <View style={styles.headingContainer}>
         <View style={styles.headingWrapper}>
           <View style={styles.userContainer}>
+            {/* Avatar image */}
             {author.image && !loadImageError ? (
               <Avatar.Image
                 size={28}
@@ -106,6 +114,7 @@ export const ReviewReplyItem = ({
             </Text>
           </View>
 
+          {/* Show delete icon if user can delete */}
           {canDelete && (
             <TouchableOpacity onPress={handleDelete}>
               <MaterialCommunityIcons
@@ -117,6 +126,7 @@ export const ReviewReplyItem = ({
           )}
         </View>
 
+        {/* Show star rating only for reviews (not replies) */}
         {!isReply && (
           <StarRatingDisplay
             rating={rating}
@@ -126,11 +136,13 @@ export const ReviewReplyItem = ({
           />
         )}
 
+        {/* Creation time */}
         <Text variant="bodySmall" style={styles.subtitle}>
           {dayjs(createdAt).fromNow()}
         </Text>
       </View>
 
+      {/* Review/Reply content */}
       <View style={styles.contentContainer}>
         {!isReply && (
           <Text variant="titleSmall" style={styles.title}>
@@ -141,6 +153,7 @@ export const ReviewReplyItem = ({
         <Text variant="bodyMedium">{message}</Text>
       </View>
 
+      {/* Show reply button if no reply exists, user can reply, and this is a review (not reply) */}
       {!isReply && !reply && canReply && (
         <TouchableOpacity
           style={styles.replyButton}
@@ -175,7 +188,7 @@ export const ReviewReplyItem = ({
 };
 
 /**
- * useStyles - Specify styles to use for review item
+ * useStyles - Specify styles to use for review/reply item
  *
  * @param {*} theme
  * @returns StyleSheet object

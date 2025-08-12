@@ -39,6 +39,7 @@ export const BookingItem = ({
   return (
     <View style={styles.container}>
       <View style={[styles.wrapper, styles.leftWrapper]}>
+        {/* Status */}
         <Chip
           textVariant="bodySmall"
           value={status}
@@ -46,10 +47,12 @@ export const BookingItem = ({
           textStyle={[styles.chipText, { color: textColor }]}
         />
 
+        {/* Title */}
         <Text variant="titleMedium" numberOfLines={1} style={styles.title}>
           {subject}
         </Text>
 
+        {/* Description */}
         <Text
           variant="bodyMedium"
           numberOfLines={2}
@@ -58,6 +61,7 @@ export const BookingItem = ({
           {description}
         </Text>
 
+        {/* User */}
         <View style={styles.userContainer}>
           {user.image && !loadImageError ? (
             <Avatar.Image
@@ -77,6 +81,7 @@ export const BookingItem = ({
           </Text>
         </View>
 
+        {/* Write a review button */}
         {status === "finished" && (
           <Button
             variant="secondary"
@@ -99,6 +104,7 @@ export const BookingItem = ({
         )}
       </View>
 
+      {/* Date and Time */}
       <View style={[styles.wrapper, styles.rightWrapper]}>
         <Text variant="bodyMedium" style={styles.rightText}>
           {dayjs.utc(date).format("MMM")}

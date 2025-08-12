@@ -17,6 +17,15 @@ import { Text, useTheme } from "react-native-paper";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Divider } from "../Divider/Divider";
 
+/**
+ * DatePickerSheet - A bottom sheet component to select a date.
+ *
+ * @param {function} onPressSelect - Callback when user confirms date selection.
+ * @param {Date} initialDate - Initial date to select when opened.
+ * @param {ref} ref - Ref forwarded to expose open and close methods.
+ *
+ * @returns JSX.Element - BottomSheet with date picker UI.
+ */
 export const DatePickerSheet = forwardRef(
   ({ onPressSelect, initialDate }, ref) => {
     const sheetRef = useRef(null);

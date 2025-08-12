@@ -13,7 +13,7 @@ const validationSchema = object({
 });
 
 /**
- * useReplyToReviewForm - Custom hook to manage reply to review form
+ * useReplyToReviewForm - Custom hook to manage reply-to-review form
  *
  * @returns Form methods and submit handler
  */
@@ -31,7 +31,7 @@ export const useReplyToReviewForm = (reviewId) => {
     defaultValues,
   });
 
-  // Reply to review mutation
+  // Reply-to-review mutation
   const { mutateAsync: replyToReview } = useReplyToReviewMutation({
     onSuccess: (response) => {
       Toast.show({ type: "success", text1: response.message });
@@ -42,7 +42,7 @@ export const useReplyToReviewForm = (reviewId) => {
     },
   });
 
-  // Submit handler for adding review
+  // Submit handler for adding a reply to a review
   const onSubmit = async (data) => {
     const payload = { reviewId, ...data };
 

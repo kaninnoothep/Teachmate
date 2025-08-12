@@ -20,7 +20,7 @@ import { PickerButton } from "@/components/Picker/PickerButton";
 import { STATUS, StatusPickerSheet } from "./components/StatusPickerSheet";
 
 /**
- * BookingsPage - Displays a list of active bookings for the current user
+ * BookingsPage - Displays a list of bookings for the current user
  *
  * @returns JSX Element
  */
@@ -84,6 +84,8 @@ export const BookingsPage = () => {
       </Text>
     </Pressable>
   );
+
+  // Renders sticky status picker button
   const renderStickyComponent = () => (
     <Pressable
       style={{
@@ -105,6 +107,7 @@ export const BookingsPage = () => {
   return (
     <>
       <Pressable style={styles.container}>
+        {/* Booking List */}
         <StickyFlatList
           customContainerStyle={{
             flex: 1,
@@ -154,6 +157,7 @@ export const BookingsPage = () => {
         />
       </Pressable>
 
+      {/* Select Status Modal */}
       <Portal>
         <StatusPickerSheet ref={statusSheetRef} onSelect={handleStatusSelect} />
       </Portal>

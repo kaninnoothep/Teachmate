@@ -16,6 +16,7 @@ import { Keyboard, StyleSheet, View } from "react-native";
 import { Text, useTheme } from "react-native-paper";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
+// Status options available for selection, each with a label and corresponding value
 export const STATUS = [
   { label: "Pending", value: "pending" },
   { label: "Confirmed", value: "confirmed" },
@@ -29,14 +30,13 @@ export const STATUS = [
  * StatusPickerSheet - A bottom sheet modal for selecting a status.
  *
  * @param {*} props
- * @param {*} ref
+ * @param {*} ref - Ref forwarded to control opening/closing the sheet externally
  * @returns JSX Element for the filter sheet
  */
 export const StatusPickerSheet = forwardRef(
   ({ initialStatus = STATUS[0], onSelect }, ref) => {
     const sheetRef = useRef(null);
     const [selectedStatus, setSelectedStatus] = useState(initialStatus);
-
     const theme = useTheme();
     const styles = useStyles(theme);
     const insets = useSafeAreaInsets();
@@ -63,6 +63,7 @@ export const StatusPickerSheet = forwardRef(
       []
     );
 
+    // Convert a status value into an object with label and value
     const createSelection = (status) => {
       if (status) {
         const statusLabel = STATUS.find((s) => s.value === status)?.label;
@@ -75,6 +76,7 @@ export const StatusPickerSheet = forwardRef(
       return null;
     };
 
+    // Handler for when user changes status selection in the Picker
     const handleStatusChange = (value) => {
       setSelectedStatus(value);
       onSelect(createSelection(value));
@@ -93,8 +95,10 @@ export const StatusPickerSheet = forwardRef(
         handleComponent={null}
       >
         <View style={styles.container}>
+          {/* Title */}
           <Text style={styles.title}>Select Status</Text>
 
+          {/* Picker to select status */}
           <Picker
             selectedValue={selectedStatus}
             onValueChange={handleStatusChange}
@@ -106,6 +110,7 @@ export const StatusPickerSheet = forwardRef(
             ))}
           </Picker>
 
+          {/* Done button to close the sheet */}
           <Button
             onPress={() => sheetRef.current?.close()}
             style={styles.button}

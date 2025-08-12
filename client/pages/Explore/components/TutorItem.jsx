@@ -19,6 +19,7 @@ export const TutorItem = ({ tutor }) => {
 
   return (
     <View style={styles.container}>
+      {/* Avatar image */}
       {tutor.image && !loadImageError ? (
         <Image
           source={{ uri: tutor.image }}
@@ -33,6 +34,7 @@ export const TutorItem = ({ tutor }) => {
         />
       )}
 
+      {/* Tutor's Info */}
       <View style={styles.rightContainer}>
         <View style={styles.rightTopWrapper}>
           <Text variant="titleMedium" style={styles.title}>
@@ -49,6 +51,8 @@ export const TutorItem = ({ tutor }) => {
             </Text>
           )}
         </View>
+
+        {/* Rating and Hourly Rate */}
         <View style={styles.chipContainer}>
           {tutor?.averageRating !== 0 && (
             <Chip

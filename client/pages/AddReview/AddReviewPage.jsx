@@ -1,3 +1,6 @@
+/**
+ * Import Modules
+ */
 import { FormTextInput } from "@/components/Form/FormTextInput/FormTextInput";
 import { InfoBox } from "@/components/InfoBox/InfoBox";
 import { SafeKeyboardScrollView } from "@/components/SafeKeyboardScrollView/SafeKeyboardScrollView";
@@ -9,12 +12,19 @@ import { useAddReviewForm } from "./hooks/useAddReviewForm";
 import { Button } from "@/components/Button/Button";
 import { FormStarRating } from "@/components/Form/FormStarRating/FormStarRating";
 
+/**
+ * AddReviewPage - Page for writing and submitting a review for a user (tutor or student).
+ *
+ * @returns JSX Element
+ */
 export const AddReviewPage = () => {
   const theme = useTheme();
   const styles = useStyles();
   const { reviewing } = useLocalSearchParams();
   const [reviewingState] = useState(JSON.parse(reviewing));
   const [loadImageError, setLoadImageError] = useState(false);
+
+  // Hook to handle form state and validation
   const { control, handleSubmit } = useAddReviewForm(reviewingState._id);
 
   return (
@@ -83,6 +93,11 @@ export const AddReviewPage = () => {
   );
 };
 
+/**
+ * useStyles - Specify styles to use for adding review page
+ *
+ * @returns StyleSheet object
+ */
 const useStyles = () =>
   StyleSheet.create({
     container: {

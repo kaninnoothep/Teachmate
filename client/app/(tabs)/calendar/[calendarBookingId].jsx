@@ -8,7 +8,7 @@ import { StyleSheet, View } from "react-native";
 import { ActivityIndicator, useTheme } from "react-native-paper";
 
 /**
- * BookingDetailScreen - Displays booking detail page
+ * CalendarBookingDetailScreen - Displays booking detail page
  *
  * @returns JSX Element rendering the booking detail page
  */
