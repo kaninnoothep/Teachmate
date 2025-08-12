@@ -56,7 +56,7 @@ export const CalendarPage = () => {
   const renderFooterComponent = () => <Pressable style={{ height: 50 }} />;
   const renderSeparatorComponent = () => <Pressable style={{ height: 10 }} />;
   return (
-    <Pressable style={{ flex: 1 }}>
+    <Pressable style={styles.container}>
       <CalendarProvider
         date={selectedDate}
         showTodayButton
@@ -67,12 +67,13 @@ export const CalendarPage = () => {
         {/* Calendar */}
         <ExpandableCalendar
           ref={calendarRef}
-          disablePan={true}
+          disablePan
           initialPosition="open"
           hideKnob
           disableWeekScroll
           closeOnDayPress={false}
           markedDates={markedDates}
+          style={styles.calendar}
           theme={{
             ...calendarTheme,
             dayTextColor: theme.colors.text,
@@ -83,11 +84,26 @@ export const CalendarPage = () => {
             todayDotColor: theme.colors.primary,
             textMonthFontWeight: 600,
             textDayFontWeight: 400,
-            textDayStyle: { fontSize: 14, paddingTop: 2 },
+            textDayStyle: {
+              fontSize: 14,
+            },
+            selectedDotColor: theme.colors.primary,
             "stylesheet.day.basic": {
+              base: {
+                width: 32,
+                height: 32,
+                alignItems: "center",
+                justifyContent: "center",
+              },
               selected: {
-                backgroundColor: theme.colors.primary,
+                backgroundColor: theme.colors.onSurfacePrimary,
+                borderWidth: 1,
+                borderColor: theme.colors.primary,
                 borderRadius: 8,
+              },
+              selectedText: {
+                fontWeight: "600",
+                color: theme.colors.primary,
               },
               today: {
                 borderRadius: 8,
@@ -147,6 +163,13 @@ export const CalendarPage = () => {
  */
 const useStyles = (theme) =>
   StyleSheet.create({
+    container: {
+      flex: 1,
+    },
+    calendar: {
+      marginTop: -4,
+      paddingBottom: 2,
+    },
     listContainer: {
       paddingVertical: 16,
       paddingHorizontal: 20,
