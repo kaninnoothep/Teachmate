@@ -1,5 +1,11 @@
+/**
+ * Import modules
+ */
 import mongoose from "mongoose";
 
+/**
+ * Define review model for database
+ */
 const reviewSchema = new mongoose.Schema(
   {
     reviewer: {

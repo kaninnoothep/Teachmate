@@ -32,6 +32,8 @@ router.get(
   bookingControllers.getCalendarBookings
 );
 
+// Get a booking by ID
+// GET request to /:bookingId
 router.get(
   "/:bookingId",
   authMiddleware.authenticate,

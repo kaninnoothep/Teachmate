@@ -100,16 +100,24 @@ async function createBooking(user, data) {
   );
 }
 
-// Confirm booking
+/**
+ * confirmBooking - Confirm a pending booking
+ *
+ * @param {string} bookingId - The ID of the booking to confirm
+ * @returns {Object} - API response object indicating success or failure
+ */
 export async function confirmBooking(bookingId) {
   const booking = await Booking.findById(bookingId);
   if (!booking) return responses.buildFailureResponse("Booking not found", 404);
+
+  // Only bookings with "pending" status can be confirmed
   if (booking.status !== "pending")
     return responses.buildFailureResponse(
       "Only pending bookings can be confirmed",
       403
     );
 
+  // Update booking status and timestamp
   booking.status = "confirmed";
   booking.confirmedAt = new Date();
   await booking.save();
@@ -121,17 +129,26 @@ export async function confirmBooking(bookingId) {
   );
 }
 
-// Reject booking
+/**
+ * rejectBooking - Reject a pending booking and release associated time slots
+ *
+ * @param {Object} user - User object performing the rejection
+ * @param {string} bookingId - The ID of the booking to reject
+ * @param {string} [rejectNote] - Optional note explaining the rejection
+ * @returns {Object} - API response object indicating success or failure
+ */
 export async function rejectBooking(user, bookingId, rejectNote) {
   const booking = await Booking.findById(bookingId);
   if (!booking) return responses.buildFailureResponse("Booking not found", 404);
+
+  // Only bookings with "pending" status can be rejected
   if (booking.status !== "pending")
     return responses.buildFailureResponse(
       "Only pending bookings can be rejected",
       403
     );
 
-  // Find tutor to update their availability
+  // Find tutor to restore availability
   const tutor = await User.findById(booking.tutor);
   const availability = tutor.availability.find((av) =>
     av.date.toISOString().startsWith(booking.date.toISOString().split("T")[0])
@@ -148,6 +165,7 @@ export async function rejectBooking(user, bookingId, rejectNote) {
     await tutor.save();
   }
 
+  // Update booking status and cancelledBy
   booking.status = "rejected";
   booking.cancelledBy = user.role;
   if (rejectNote) booking.cancelNote = rejectNote;
@@ -161,15 +179,18 @@ export async function rejectBooking(user, bookingId, rejectNote) {
 }
 
 /**
- * cancelBooking - Cancel an existing booking
+ * cancelBooking - Cancel an existing booking and restore tutor's availability
  *
  * @param {string} bookingId - ID of the booking to cancel
+ * @param {string} cancelNote - Note explaining the cancellation
  * @returns {Object} Response indicating success or failure
  */
 async function cancelBooking(user, bookingId, cancelNote) {
   // Find booking by ID
   const booking = await Booking.findById(bookingId);
   if (!booking) return responses.buildFailureResponse("Booking not found", 404);
+
+  // Disallow cancellation if booking is already cancelled, rejected, or finished
   if (["cancelled", "rejected", "finished"].includes(booking.status))
     return responses.buildFailureResponse("Cannot cancel this booking", 403);
 
@@ -190,6 +211,7 @@ async function cancelBooking(user, bookingId, cancelNote) {
     await tutor.save();
   }
 
+  // Update booking status and record cancellation details
   booking.status = "cancelled";
   booking.cancelledBy = user.role;
   if (cancelNote) booking.cancelNote = cancelNote;
@@ -232,12 +254,14 @@ async function getMyBookings(user, status) {
   ) {
     query.status = status;
   }
-  let sortOption = { date: 1, startTime: 1 }; // default: upcoming
+
+  // Sorting bookings
+  let sortOption = { date: 1, startTime: 1 }; // earliest upcoming booking first
 
   if (["rejected", "cancelled"].includes(status)) {
-    sortOption = { updatedAt: -1 };
+    sortOption = { updatedAt: -1 }; // show most recently updated first
   } else if (["expired", "finished"].includes(status)) {
-    sortOption = { date: -1, startTime: -1 };
+    sortOption = { date: -1, startTime: -1 }; // show most recent past booking first
   }
 
   // Fetch bookings and populate related fields
@@ -293,7 +317,7 @@ async function getBooking(user, bookingId) {
 }
 
 /**
- * getCalendarBookings - Get bookings for calendar view (3 months range)
+ * getCalendarBookings - Get bookings for calendar view (3-month range)
  * Only returns confirmed and finished bookings for calendar display
  *
  * @param {Object} user - Logged-in user
@@ -304,23 +328,23 @@ async function getCalendarBookings(user, selectedDate) {
   // Parse the selected date or use current date
   const baseDate = selectedDate ? new Date(selectedDate) : new Date();
 
-  // Calculate date range
-  // First day of previous month
+  // Calculate start date: first day of previous month
   const startDate = new Date(
     baseDate.getFullYear(),
     baseDate.getMonth() - 1,
     1
   );
 
-  // Last day of next month
+  // Calculate end date: last day of next month
   const endDate = new Date(baseDate.getFullYear(), baseDate.getMonth() + 2, 0);
 
+  // Build query for confirmed and finished bookings within range
   const query = {
     date: {
       $gte: startDate,
       $lte: endDate,
     },
-    status: { $in: ["confirmed", "finished"] }, // Only confirmed and finished bookings
+    status: { $in: ["confirmed", "finished"] },
   };
 
   // Filter by user role (tutor or student)
@@ -330,20 +354,21 @@ async function getCalendarBookings(user, selectedDate) {
     query.student = user._id;
   }
 
-  // Fetch bookings and populate related fields
+  // Fetch bookings and populate related fields, and sort by date/time
   const bookings = await Booking.find(query)
     .populate("student", "firstName lastName image")
     .populate("tutor", "firstName lastName image")
     .populate("session", "subject")
-    .sort({ date: 1, startTime: 1 });
+    .sort({ date: 1, startTime: 1 }); // earliest first
 
-  // Group bookings by date
+  // Group bookings by date and prepare markedDates for the calendar
   const groupedBookings = {};
   const markedDates = {};
 
   bookings.forEach((booking) => {
     const dateKey = booking.date.toISOString().split("T")[0];
 
+    // Initialize date group if it doesn't exist
     if (!groupedBookings[dateKey]) {
       groupedBookings[dateKey] = [];
     }
@@ -366,11 +391,19 @@ async function getCalendarBookings(user, selectedDate) {
   );
 }
 
+/**
+ * getWeeklyBookingHours - Get total finished booking hours grouped by day for the given week
+ *
+ * @param {Object} user - User object (tutor or student) requesting the data
+ * @param {string} dateStr - Reference date (defaults to current date)
+ * @returns {Object} - API response containing weekly booking hours and date range
+ */
 export async function getWeeklyBookingHours(user, dateStr) {
   const date = dateStr ? new Date(dateStr) : new Date();
   const start = startOfWeek(date, { weekStartsOn: 0 }); // Sunday
   const end = endOfWeek(date, { weekStartsOn: 0 }); // Saturday
 
+  // Build query for finished bookings in the selected week
   const query = {
     date: { $gte: start, $lte: end },
     status: { $in: ["finished"] },
@@ -382,6 +415,7 @@ export async function getWeeklyBookingHours(user, dateStr) {
   const dayLabels = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
   const result = dayLabels.map((label) => ({ label, value: 0 }));
 
+  // Accumulate total hours per day
   bookings.forEach((b) => {
     const dayIndex = new Date(b.date).getUTCDay(); // 0 = Sun ... 6 = Sat
     result[dayIndex].value += b.totalHours;
@@ -393,13 +427,23 @@ export async function getWeeklyBookingHours(user, dateStr) {
   });
 }
 
+/**
+ * getMonthlyBookingHours - Get total finished booking hours grouped by week for the given month
+ *
+ * @param {Object} user - User object (tutor or student) requesting the data
+ * @param {string} dateStr - Reference date (defaults to current date)
+ * @returns {Object} - API response containing weekly booking hours and month label
+ */
 async function getMonthlyBookingHours(user, dateStr) {
   const date = dateStr ? new Date(dateStr) : new Date();
   const monthStart = startOfMonth(date);
   const monthEnd = endOfMonth(date);
+
+  // Extend the range to include the first and last weeks touching the month
   const firstWeekStart = startOfWeek(monthStart, { weekStartsOn: 0 });
   const lastWeekEnd = endOfWeek(monthEnd, { weekStartsOn: 0 });
 
+  // Build query for finished bookings in the extended month range
   const query = {
     date: { $gte: firstWeekStart, $lte: lastWeekEnd },
     status: { $in: ["finished"] },
@@ -411,10 +455,12 @@ async function getMonthlyBookingHours(user, dateStr) {
   const weeklyData = [];
   let cursor = new Date(firstWeekStart);
 
+  // Iterate over each week in the range
   while (cursor <= lastWeekEnd) {
     const weekStart = new Date(cursor);
     const weekEnd = endOfWeek(weekStart, { weekStartsOn: 0 });
 
+    // Sum total hours for bookings within this week
     const weekTotal = bookings
       .filter((b) => b.date >= weekStart && b.date <= weekEnd)
       .reduce((sum, b) => sum + b.totalHours, 0);
@@ -424,6 +470,7 @@ async function getMonthlyBookingHours(user, dateStr) {
       value: weekTotal,
     });
 
+    // Move to the next week
     cursor = addWeeks(cursor, 1);
   }
 

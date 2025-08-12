@@ -3,6 +3,12 @@
  */
 import reviewServices from "../services/review.services.js";
 
+/**
+ * canReview - Check if a user can review on the other user
+ *
+ * @param {object} req - Request Object
+ * @param {object} res - Response Object
+ */
 async function canReview(req, res) {
   try {
     const response = await reviewServices.canReview(
@@ -18,6 +24,12 @@ async function canReview(req, res) {
   }
 }
 
+/**
+ * addReview - Add a review on a user
+ *
+ * @param {object} req - Request Object
+ * @param {object} res - Response Object
+ */
 async function addReview(req, res) {
   try {
     const response = await reviewServices.addReview(req.user, req.body);
@@ -29,6 +41,12 @@ async function addReview(req, res) {
   }
 }
 
+/**
+ * replyToReview - Reply to a review
+ *
+ * @param {object} req - Request Object
+ * @param {object} res - Response Object
+ */
 async function replyToReview(req, res) {
   try {
     const response = await reviewServices.replyToReview(
@@ -44,6 +62,12 @@ async function replyToReview(req, res) {
   }
 }
 
+/**
+ * deleteReview - Delete an existing review
+ *
+ * @param {object} req - Request Object
+ * @param {object} res - Response Object
+ */
 async function deleteReview(req, res) {
   try {
     const response = await reviewServices.deleteReview(
@@ -58,6 +82,12 @@ async function deleteReview(req, res) {
   }
 }
 
+/**
+ * deleteReply - Delete an existing reply
+ *
+ * @param {object} req - Request Object
+ * @param {object} res - Response Object
+ */
 async function deleteReply(req, res) {
   try {
     const response = await reviewServices.deleteReply(
@@ -72,6 +102,12 @@ async function deleteReply(req, res) {
   }
 }
 
+/**
+ * getReviews - Retrieve all reviews of a user by the user's ID
+ *
+ * @param {object} req - Request Object
+ * @param {object} res - Response Object
+ */
 async function getReviews(req, res) {
   try {
     const response = await reviewServices.getReviews(req.params.userId);

@@ -20,6 +20,12 @@ async function createBooking(req, res) {
   }
 }
 
+/**
+ * confirmBooking - Confirm a booking
+ *
+ * @param {object} req - Request Object
+ * @param {object} res - Response Object
+ */
 async function confirmBooking(req, res) {
   try {
     const response = await bookingServices.confirmBooking(req.params.bookingId);
@@ -31,6 +37,12 @@ async function confirmBooking(req, res) {
   }
 }
 
+/**
+ * rejectBooking - Reject a booking
+ *
+ * @param {object} req - Request Object
+ * @param {object} res - Response Object
+ */
 async function rejectBooking(req, res) {
   try {
     const response = await bookingServices.rejectBooking(
@@ -108,7 +120,7 @@ async function getBooking(req, res) {
 }
 
 /**
- * getCalendarBookings - Get bookings for calendar view (3 months range)
+ * getCalendarBookings - Get bookings for calendar view (3 months range: previous, current, next)
  *
  * @param {object} req - Request Object
  * @param {object} res - Response Object
@@ -128,6 +140,12 @@ async function getCalendarBookings(req, res) {
   }
 }
 
+/**
+ * getWeeklyBookingHours - Get weekly booking hours for dashboard
+ *
+ * @param {object} req - Request Object
+ * @param {object} res - Response Object
+ */
 async function getWeeklyBookingHours(req, res) {
   try {
     const response = await bookingServices.getWeeklyBookingHours(
@@ -143,6 +161,12 @@ async function getWeeklyBookingHours(req, res) {
   }
 }
 
+/**
+ * getMonthlyBookingHours - Get monthly booking hours for dashboard
+ *
+ * @param {object} req - Request Object
+ * @param {object} res - Response Object
+ */
 async function getMonthlyBookingHours(req, res) {
   try {
     const response = await bookingServices.getMonthlyBookingHours(

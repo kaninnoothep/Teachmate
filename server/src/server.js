@@ -28,6 +28,9 @@ const app = express();
 connectDB(process.env.ATLAS_URI);
 connectCloudinary();
 
+/**
+ * Start the cron job that updates booking statuses automatically
+ */
 runBookingStatusCron();
 
 /**
