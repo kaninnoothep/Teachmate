@@ -43,6 +43,44 @@ export const DashboardPage = () => {
   const getSpacing = (width, padding = 40, barWidth, data) =>
     (width - padding - barWidth * data.length) / data.length - 1;
 
+  // Determine the number of Y-axis sections on the chart
+  const getNoOfSections = (data, stepValue, defaultNoOfSections) => {
+    if (!Array.isArray(data) || data.length === 0) return defaultNoOfSections;
+
+    const maxVal = Math.max(...data.map((item) => item.value || 0));
+
+    // If no data or all values are small, use default sections
+    if (maxVal === 0 || maxVal < stepValue * defaultNoOfSections) {
+      return defaultNoOfSections;
+    }
+
+    return Math.ceil(maxVal / stepValue);
+  };
+
+  // Determine stepValue and noOfSections for the monthly chart
+  const getMonthlyChartScale = (data, defaultNoOfSections) => {
+    if (!Array.isArray(data) || data.length === 0) {
+      return { stepValue: 10, noOfSections: defaultNoOfSections };
+    }
+
+    const maxVal = Math.max(...data.map((item) => item.value || 0));
+
+    if (maxVal === 0) {
+      return { stepValue: 10, noOfSections: defaultNoOfSections };
+    }
+
+    // Smaller value get 10 steps, bigger value 20 steps
+    const stepValue = maxVal <= 60 ? 10 : 20;
+
+    // Adjust sections dynamically, but don’t go below default
+    let noOfSections = Math.ceil(maxVal / stepValue);
+    if (maxVal < stepValue * defaultNoOfSections) {
+      noOfSections = defaultNoOfSections;
+    }
+
+    return { stepValue, noOfSections };
+  };
+
   // Handle update selected date
   const handleSelectDateTime = (date) => {
     setSelectedDate(date);
@@ -63,7 +101,7 @@ export const DashboardPage = () => {
         {/* Date picker trigger button */}
         <View style={styles.picker}>
           <PickerButton
-            value={dayjs(selectedDate).format("MMMM D, YYYY")}
+            value={dayjs(selectedDate).format("dddd,  MMMM D, YYYY")}
             iconName="calendar"
             iconSize={20}
             iconColor={theme.colors.primary}
@@ -103,8 +141,8 @@ export const DashboardPage = () => {
                     frontColor={theme.colors.primary}
                     yAxisThickness={0}
                     xAxisThickness={1}
-                    noOfSections={4}
                     stepValue={5}
+                    noOfSections={getNoOfSections(weekBarData, 5, 4)}
                     xAxisColor={theme.colors.grey}
                     showValuesAsTopLabel
                     topLabelTextStyle={{
@@ -133,8 +171,9 @@ export const DashboardPage = () => {
             legend="Finished Bookings (hrs)"
           >
             <ViewWithDimensions style={styles.chartWrapper}>
-              {({ width, height }) =>
-                isMonthFetching ? (
+              {({ width, height }) => {
+                const monthScale = getMonthlyChartScale(monthBarData, 4);
+                return isMonthFetching ? (
                   <View
                     style={[
                       styles.loadingContainer,
@@ -160,8 +199,8 @@ export const DashboardPage = () => {
                       width: 26,
                       alignSelf: "center",
                     }}
-                    noOfSections={6}
-                    stepValue={20}
+                    stepValue={monthScale.stepValue}
+                    noOfSections={monthScale.noOfSections}
                     xAxisColor={theme.colors.grey}
                     showValuesAsTopLabel
                     topLabelTextStyle={{
@@ -180,8 +219,8 @@ export const DashboardPage = () => {
                     yAxisExtraHeight={20}
                     disableScroll
                   />
-                )
-              }
+                );
+              }}
             </ViewWithDimensions>
           </ChartSection>
         </Pressable>
