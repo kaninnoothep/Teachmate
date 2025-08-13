@@ -14,8 +14,8 @@ import { ActivityIndicator, useTheme } from "react-native-paper";
  */
 export default function CalendarBookingDetailScreen() {
   const theme = useTheme();
-  const { calendarBookingId } = useLocalSearchParams();
-  const { booking, isFetching } = useBookingQuery(calendarBookingId);
+  const { bookingId } = useLocalSearchParams();
+  const { booking, isFetching } = useBookingQuery(bookingId);
 
   if (isFetching) {
     return (

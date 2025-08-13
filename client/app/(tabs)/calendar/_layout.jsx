@@ -38,7 +38,7 @@ export default function CalendarLayout() {
 
       {/* Booking Details Screen */}
       <Stack.Screen
-        name="[calendarBookingId]"
+        name="[bookingId]"
         options={{
           title: "Booking Details",
           headerTintColor: theme.colors.inverseText,
