@@ -196,6 +196,32 @@ export const BookingDetailPage = ({ booking }) => {
         </View>
       );
     }
+
+    // If booking is finished, show write a review button
+    if (status === "finished") {
+      return (
+        <View style={{ marginTop: 20 }}>
+          <Button
+            variant="secondary"
+            onPress={() =>
+              router.push({
+                pathname: "/addReview",
+                params: {
+                  reviewing: JSON.stringify({
+                    _id: author?._id,
+                    firstName: author?.firstName,
+                    lastName: author?.lastName,
+                    image: author?.image,
+                  }),
+                },
+              })
+            }
+          >
+            Write a review
+          </Button>
+        </View>
+      );
+    }
   };
 
   return (
