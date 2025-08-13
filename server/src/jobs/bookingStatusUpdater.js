@@ -17,9 +17,6 @@ import Booking from "../models/booking.model.js";
 function runBookingStatusCron() {
   // Schedule a cron job to run
   cron.schedule("* * * * *", async () => {
-    console.log("===========================");
-    console.log("Running booking status cron job...");
-
     const now = new Date();
 
     // Find bookings that are either confirmed or pending
@@ -33,11 +30,6 @@ function runBookingStatusCron() {
       const bookingDateTime = new Date(
         `${booking.date.toISOString().split("T")[0]}T${booking.endTime}`
       );
-
-      console.log("booking.status", booking.status);
-      console.log("now", now);
-      console.log("booking.endTime", booking.endTime);
-      console.log("bookingDateTime", bookingDateTime);
 
       // Mark confirmed bookings as finished if past end time
       if (booking.status === "confirmed" && now > bookingDateTime) {
@@ -55,7 +47,6 @@ function runBookingStatusCron() {
 
     // Wait for all updates to finish
     await Promise.all(updates);
-    console.log("Booking statuses updated.");
   });
 }
 

@@ -91,8 +91,8 @@ export const useExperienceForm = () => {
         startDate: parseDateToPickerFormat(parsedExperience?.startDate),
         endDate: parseDateToPickerFormat(parsedExperience?.endDate),
       };
-    } catch (err) {
-      console.warn("Failed to parse experience:", err);
+    } catch {
+      // Failed to parse experience
     }
   }
 

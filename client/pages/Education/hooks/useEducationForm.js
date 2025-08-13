@@ -94,8 +94,8 @@ export const useEducationForm = () => {
         startDate: parseDateToPickerFormat(parsedEducation?.startDate),
         endDate: parseDateToPickerFormat(parsedEducation?.endDate),
       };
-    } catch (err) {
-      console.warn("Failed to parse education:", err);
+    } catch {
+      // Failed to parse education
     }
   }
 

@@ -41,8 +41,8 @@ export const PreferredLocationPage = () => {
           .filter(([, isSelected]) => isSelected)
           .map(([key]) => key);
         setSelectedLocations(selected);
-      } catch (err) {
-        console.warn("Failed to parse preferred locations:", err);
+      } catch {
+        // Failed to parse preferred locations
       }
     }
   }, [preferredLocations, setSelectedLocations]);

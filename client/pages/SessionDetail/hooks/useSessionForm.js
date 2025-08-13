@@ -62,8 +62,8 @@ export const useSessionForm = () => {
         description: parsedSession?.description || "",
         estimatedDuration: parsedSession?.estimatedDuration || "",
       };
-    } catch (err) {
-      console.warn("Failed to parse session:", err);
+    } catch {
+      // Failed to parse session
     }
   }
 
