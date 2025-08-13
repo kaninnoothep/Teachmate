@@ -58,8 +58,7 @@ export const CityPicker = forwardRef(
             const fetched = await GetCity(countryId, stateId);
             const cityData = fetched || [];
             setCities(cityData);
-          } catch (error) {
-            console.error("Failed to fetch cities:", error);
+          } catch {
             setCities([]);
           } finally {
             setLoading(false);

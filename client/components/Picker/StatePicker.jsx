@@ -58,8 +58,7 @@ export const StatePicker = forwardRef(
             const fetched = await GetState(countryId);
             const stateData = fetched || [];
             setStates(stateData);
-          } catch (error) {
-            console.error("Failed to fetch states:", error);
+          } catch {
             setStates([]);
           } finally {
             setLoading(false);

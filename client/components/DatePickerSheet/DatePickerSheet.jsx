@@ -76,6 +76,7 @@ export const DatePickerSheet = forwardRef(
       sheetRef.current?.close();
     };
 
+    // Handle change to today
     const handleTodayPress = () => {
       const today = new Date();
       const localToday = new Date(

@@ -69,7 +69,7 @@ export const TutorItem = ({ tutor }) => {
           {tutor?.hourlyRate && (
             <Chip
               textVariant="bodySmall"
-              value={`$${tutor.hourlyRate}/h`}
+              value={`$${tutor.hourlyRate}/\u200Bh`}
               containerStyle={styles.chip}
             />
           )}

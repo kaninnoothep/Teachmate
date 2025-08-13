@@ -35,6 +35,7 @@ function MainLayout() {
             backgroundColor: theme.colors.primary,
           },
           headerTitle: () => <LogoHeaderTitle />,
+          headerTitleAlign: "center",
         }}
       />
 

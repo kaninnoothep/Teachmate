@@ -55,8 +55,7 @@ export const CountryPicker = forwardRef(({ onSelect, selectedId }, ref) => {
       try {
         const data = await GetCountries();
         setCountries(data || []);
-      } catch (error) {
-        console.error("Failed to fetch countries:", error);
+      } catch {
         setCountries([]);
       } finally {
         setLoading(false);

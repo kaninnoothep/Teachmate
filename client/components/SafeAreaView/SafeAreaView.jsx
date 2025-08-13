@@ -13,7 +13,7 @@ import PropTypes from "prop-types";
  */
 export const SafeAreaView = ({ children, style, ...rest }) => {
   return (
-    <ReactSafeAreaView style={[styles.AndroidSafeArea, style]} {...rest}>
+    <ReactSafeAreaView style={[styles.safeArea, style]} {...rest}>
       {children}
     </ReactSafeAreaView>
   );
