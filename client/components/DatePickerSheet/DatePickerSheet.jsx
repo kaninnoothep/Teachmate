@@ -33,9 +33,14 @@ export const DatePickerSheet = forwardRef(
     const theme = useTheme();
     const styles = useStyles(theme);
     const today = new Date();
+    const localToday = new Date(
+      today.getFullYear(),
+      today.getMonth(),
+      today.getDate()
+    );
     const insets = useSafeAreaInsets();
     const [datePickerKey, setDatePickerKey] = useState(0);
-    const [selectedDate, setSelectedDate] = useState(today);
+    const [selectedDate, setSelectedDate] = useState(localToday);
 
     // Bottom sheet snap point
     const snapPoints = useMemo(() => ["72%"], []);
@@ -45,7 +50,7 @@ export const DatePickerSheet = forwardRef(
       open: () => {
         initialDateRef.current = initialDate;
 
-        const dateToSet = initialDate ?? today;
+        const dateToSet = initialDate ?? localToday;
         setSelectedDate(dateToSet);
 
         setDatePickerKey((prev) => prev + 1);
@@ -73,7 +78,12 @@ export const DatePickerSheet = forwardRef(
 
     const handleTodayPress = () => {
       const today = new Date();
-      setSelectedDate(today);
+      const localToday = new Date(
+        today.getFullYear(),
+        today.getMonth(),
+        today.getDate()
+      );
+      setSelectedDate(localToday);
       setDatePickerKey((prev) => prev + 1); // To update month view
     };
 
@@ -109,12 +119,12 @@ export const DatePickerSheet = forwardRef(
           <TouchableOpacity
             onPress={handleTodayPress}
             style={styles.todayButton}
-            disabled={isSameDay(selectedDate, new Date())}
+            disabled={isSameDay(selectedDate, localToday)}
           >
             <Text
               style={[
                 styles.todayButtonText,
-                isSameDay(selectedDate, new Date()) && {
+                isSameDay(selectedDate, localToday) && {
                   color: theme.colors.textSecondary,
                   opacity: 0.5,
                 },

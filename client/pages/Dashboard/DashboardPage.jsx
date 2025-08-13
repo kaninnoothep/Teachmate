@@ -23,7 +23,10 @@ export const DashboardPage = () => {
   const theme = useTheme();
   const styles = useStyles(theme);
   const datePickerRef = useRef(null);
-  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [selectedDate, setSelectedDate] = useState(() => {
+    const now = new Date();
+    return new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  });
 
   // Fetch weekly booking hour data and range string based on selectedDate
   const {

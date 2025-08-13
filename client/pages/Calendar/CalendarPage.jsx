@@ -14,6 +14,7 @@ import { CalendarItem } from "./components/CalendarItem";
 import { EmptyList } from "@/components/EmptyList/EmptyList";
 import { useBookingsCalendarQuery } from "@/services/api/bookings/useBookingsCalendarQuery";
 import { useUser } from "@/context/UserProvider/UserProvider";
+import dayjs from "dayjs";
 
 /**
  * CalendarPage - Displays a calendar view and a list of bookings/events for the selected date.
@@ -28,7 +29,7 @@ export const CalendarPage = () => {
   const calendarRef = useRef(null);
   const [isManualRefreshing, setIsManualRefreshing] = useState(false);
   const [selectedDate, setSelectedDate] = useState(
-    new Date().toLocaleDateString()
+    dayjs().format("YYYY-MM-DD")
   );
 
   // Fetch bookings and marked dates for calendar based on selectedDate
