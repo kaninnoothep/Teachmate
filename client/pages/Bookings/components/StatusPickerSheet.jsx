@@ -42,7 +42,7 @@ export const StatusPickerSheet = forwardRef(
     const insets = useSafeAreaInsets();
 
     // Define snap points for BottomSheet
-    const snapPoints = useMemo(() => ["44%"], []);
+    const snapPoints = useMemo(() => ["48%"], []);
 
     // Expose methods to open and close the BottomSheet
     useImperativeHandle(ref, () => ({

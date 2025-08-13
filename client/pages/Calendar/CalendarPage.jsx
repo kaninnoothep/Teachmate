@@ -13,6 +13,7 @@ import { useTheme } from "react-native-paper";
 import { CalendarItem } from "./components/CalendarItem";
 import { EmptyList } from "@/components/EmptyList/EmptyList";
 import { useBookingsCalendarQuery } from "@/services/api/bookings/useBookingsCalendarQuery";
+import { useUser } from "@/context/UserProvider/UserProvider";
 
 /**
  * CalendarPage - Displays a calendar view and a list of bookings/events for the selected date.
@@ -20,6 +21,7 @@ import { useBookingsCalendarQuery } from "@/services/api/bookings/useBookingsCal
  * @returns JSX.Element rendering the calendar page
  */
 export const CalendarPage = () => {
+  const { user } = useUser();
   const router = useRouter();
   const theme = useTheme();
   const styles = useStyles(theme);
@@ -136,7 +138,7 @@ export const CalendarPage = () => {
               status={item.status}
               startTime={item.startTime}
               endTime={item.endTime}
-              user={item.student}
+              user={user.role === "tutor" ? item.student : item.tutor}
               onPress={() => router.push(`/calendar/${item._id}`)}
             />
           )}
