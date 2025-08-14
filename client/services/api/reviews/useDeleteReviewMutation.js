@@ -3,6 +3,7 @@
  */
 import {
   REVIEW_API_KEY,
+  GET_USER_API_KEY,
   GET_REVIEWS_API_KEY,
   BOOKING_API_KEY,
 } from "@/services/constants";
@@ -22,6 +23,6 @@ const deleteReviewRequest = (reviewId) =>
 export const useDeleteReviewMutation = (options) =>
   useApiSend(
     deleteReviewRequest,
-    [GET_REVIEWS_API_KEY, BOOKING_API_KEY],
+    [GET_USER_API_KEY, GET_REVIEWS_API_KEY, BOOKING_API_KEY],
     options
   );
