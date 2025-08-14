@@ -17,7 +17,7 @@
     <br />
     <a href="https://drive.google.com/file/d/1lDS2fPy3Nth1clOyNSEFzVpQRRPOf5o2/view?usp=sharing">View Demo (MVP 1)</a>
     ·
-    <a href="#">View Demo (MVP 2)</a>
+    <a href="https://drive.google.com/file/d/1TNpVHSKvIk8csMc1NpRJfYudIDKi-sSn/view?usp=sharing">View Demo (MVP 2)</a>
     ·
     <a href="https://github.com/kaninnoothep/Teachmate/issues/new?labels=bug&template=bug-report---.md">Report Bug</a>
     ·
@@ -115,6 +115,7 @@ Supporting libraries and services:
 - Axios (HTTP client)
 - React Native Paper (UI components)
 - Cloudinary (image handling)
+- React Native Gifted Charts (charting and data visualization)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
